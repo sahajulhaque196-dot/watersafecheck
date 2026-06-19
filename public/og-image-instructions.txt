@@ -1,0 +1,5 @@
+Create a 1200x630 PNG image named og-image.png
+Design: Brand blue background (#0d4a94)
+Text: "WaterSafeCheck.com" + "Is Your Tap Water Safe?"
+Include the shield/water drop logo
+This is your Open Graph image shown in social media link previews

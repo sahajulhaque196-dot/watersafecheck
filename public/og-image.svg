@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d4a94;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e6fd9;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e6fd9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0d4a94;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="dropGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4fc3f7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e88e5;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+
+  <!-- Subtle wave pattern -->
+  <path d="M0 500 Q300 460 600 500 Q900 540 1200 500 L1200 630 L0 630 Z" fill="rgba(255,255,255,0.05)"/>
+  <path d="M0 540 Q300 510 600 540 Q900 570 1200 540 L1200 630 L0 630 Z" fill="rgba(255,255,255,0.05)"/>
+
+  <!-- Shield + Water Drop Icon -->
+  <g transform="translate(120, 150)">
+    <path d="M0 40 L80 10 L160 40 L160 130 Q160 190 80 220 Q0 190 0 130 Z" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+    <path d="M80 60 Q80 60 110 110 Q128 140 110 158 Q100 168 80 168 Q60 168 50 158 Q32 140 50 110 Q80 60 80 60 Z" fill="url(#dropGrad)" opacity="0.9"/>
+    <polyline points="62,128 75,146 102,112" fill="none" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Brand Name -->
+  <text x="330" y="230" font-family="system-ui, -apple-system, Arial, sans-serif" font-weight="900" font-size="80" fill="white" letter-spacing="-2">Water</text>
+  <text x="660" y="230" font-family="system-ui, -apple-system, Arial, sans-serif" font-weight="900" font-size="80" fill="#4fc3f7" letter-spacing="-2">Safe</text>
+  <text x="870" y="230" font-family="system-ui, -apple-system, Arial, sans-serif" font-weight="900" font-size="80" fill="white" letter-spacing="-2">Check</text>
+
+  <!-- Tagline -->
+  <text x="330" y="295" font-family="system-ui, -apple-system, Arial, sans-serif" font-weight="400" font-size="28" fill="rgba(255,255,255,0.75)" letter-spacing="4">IS YOUR TAP WATER SAFE?</text>
+
+  <!-- Divider -->
+  <line x1="330" y1="330" x2="1080" y2="330" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+
+  <!-- Stats -->
+  <g transform="translate(330, 380)">
+    <text font-family="system-ui, -apple-system, Arial, sans-serif" font-weight="900" font-size="44" fill="white">41,000+</text>
+    <text y="50" font-family="system-ui, -apple-system, Arial, sans-serif" font-size="18" fill="rgba(255,255,255,0.65)">ZIP Codes Covered</text>
+  </g>
+  <g transform="translate(600, 380)">
+    <text font-family="system-ui, -apple-system, Arial, sans-serif" font-weight="900" font-size="44" fill="white">50 States</text>
+    <text y="50" font-family="system-ui, -apple-system, Arial, sans-serif" font-size="18" fill="rgba(255,255,255,0.65)">+ DC Included</text>
+  </g>
+  <g transform="translate(870, 380)">
+    <text font-family="system-ui, -apple-system, Arial, sans-serif" font-weight="900" font-size="44" fill="white">Free</text>
+    <text y="50" font-family="system-ui, -apple-system, Arial, sans-serif" font-size="18" fill="rgba(255,255,255,0.65)">EPA-Verified Data</text>
+  </g>
+
+  <!-- Domain -->
+  <text x="600" y="590" font-family="system-ui, -apple-system, Arial, sans-serif" font-size="22" fill="rgba(255,255,255,0.5)" text-anchor="middle" letter-spacing="2">watersafecheck.com</text>
+</svg>

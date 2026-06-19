@@ -1,0 +1,6 @@
+# WaterSafeCheck.com - ads.txt
+# Replace pub-XXXXXXXXXXXXXXXX with your actual Google AdSense Publisher ID
+# Format: google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+# The last field (f08c47fec0942fa0) is Google's TAG ID — keep it as-is
+
+google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
