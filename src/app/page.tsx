@@ -1,7 +1,8 @@
 // src/app/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { getAllStateData } from '@/lib/data'
+import { supabase } from '@/lib/supabase'
+import type { StateData } from '@/lib/types'
 import { SITE_DESCRIPTION, SITE_NAME } from '@/lib/seo'
 import { HomeSearch } from '@/components/sections/HomeSearch'
 import { blogArticles } from '@/data/blog-articles'
@@ -46,16 +47,20 @@ const US_STATES_GRID = [
   ['Wisconsin','wi'],['Wyoming','wy'],
 ]
 
-export default function HomePage() {
-  const allStates = getAllStateData()
+export default async function HomePage() {
+  const { data: statesData } = await supabase.from('states').select('*')
+  const allStates = ((statesData || []) as StateData[]).reduce((acc, curr) => {
+    acc[curr.code] = curr
+    return acc
+  }, {} as Record<string, StateData>)
 
   // National stats
   const totalZips = 41344 // pre-computed from master dataset
   const stateList = Object.values(allStates)
-  const totalViolations = stateList.reduce((s, st) => s + st.health_violations, 0)
-  const highLeadAvg = Math.round(
-    stateList.reduce((s, st) => s + st.high_lead_pct, 0) / stateList.length
-  )
+  const totalViolations = stateList.reduce((s: number, st) => s + st.health_violations, 0)
+  const highLeadAvg = stateList.length
+    ? Math.round(stateList.reduce((s: number, st) => s + st.high_lead_pct, 0) / stateList.length)
+    : 0
 
   return (
     <>

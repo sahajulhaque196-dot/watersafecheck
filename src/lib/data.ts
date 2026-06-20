@@ -1,65 +1,63 @@
 // src/lib/data.ts
-import path from 'path'
-import fs from 'fs'
+import { supabase } from './supabase'
 import type { ZipData, StateData, CityData } from './types'
 
-const dataDir = path.join(process.cwd(), 'src/data')
+// ─── Loaders (server-side only, now querying Supabase asynchronously) ────────
 
-// ─── Loaders (server-side only) ────────────────────────────────────────────
-
-let _zipCache: Record<string, ZipData> | null = null
-export function getAllZipData(): Record<string, ZipData> {
-  if (_zipCache) return _zipCache
+export async function getZipData(zip: string): Promise<ZipData | null> {
   try {
-    const raw = fs.readFileSync(path.join(dataDir, 'zip_data.json'), 'utf-8')
-    _zipCache = JSON.parse(raw) as Record<string, ZipData>
-    return _zipCache
+    const { data, error } = await supabase
+      .from('zips')
+      .select('*')
+      .eq('zip', zip)
+      .maybeSingle()
+    if (error) {
+      console.error(`Error fetching ZIP ${zip}:`, error)
+      return null
+    }
+    return data as ZipData | null
   } catch (e) {
-    console.error('Failed to load zip_data.json:', e)
-    return {}
+    console.error(`Exception fetching ZIP ${zip}:`, e)
+    return null
   }
 }
 
-export function getZipData(zip: string): ZipData | null {
-  const all = getAllZipData()
-  return all[zip] ?? null
-}
-
-let _stateCache: Record<string, StateData> | null = null
-export function getAllStateData(): Record<string, StateData> {
-  if (_stateCache) return _stateCache
+export async function getStateData(code: string): Promise<StateData | null> {
   try {
-    const raw = fs.readFileSync(path.join(dataDir, 'state_data.json'), 'utf-8')
-    _stateCache = JSON.parse(raw) as Record<string, StateData>
-    return _stateCache
+    const { data, error } = await supabase
+      .from('states')
+      .select('*')
+      .eq('code', code.toUpperCase())
+      .maybeSingle()
+    if (error) {
+      console.error(`Error fetching state ${code}:`, error)
+      return null
+    }
+    return data as StateData | null
   } catch (e) {
-    console.error('Failed to load state_data.json:', e)
-    return {}
+    console.error(`Exception fetching state ${code}:`, e)
+    return null
   }
 }
 
-export function getStateData(code: string): StateData | null {
-  const all = getAllStateData()
-  return all[code.toUpperCase()] ?? null
-}
-
-let _cityCache: Record<string, CityData> | null = null
-export function getAllCityData(): Record<string, CityData> {
-  if (_cityCache) return _cityCache
+export async function getCityData(slug: string): Promise<CityData | null> {
   try {
-    const raw = fs.readFileSync(path.join(dataDir, 'city_data.json'), 'utf-8')
-    _cityCache = JSON.parse(raw) as Record<string, CityData>
-    return _cityCache
+    const { data, error } = await supabase
+      .from('cities')
+      .select('*')
+      .eq('slug', slug.toLowerCase())
+      .maybeSingle()
+    if (error) {
+      console.error(`Error fetching city slug ${slug}:`, error)
+      return null
+    }
+    return data as CityData | null
   } catch (e) {
-    console.error('Failed to load city_data.json:', e)
-    return {}
+    console.error(`Exception fetching city slug ${slug}:`, e)
+    return null
   }
 }
 
-export function getCityData(slug: string): CityData | null {
-  const all = getAllCityData()
-  return all[slug.toLowerCase()] ?? null
-}
 
 // ─── Constants ─────────────────────────────────────────────────────────────
 

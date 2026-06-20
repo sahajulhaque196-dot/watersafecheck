@@ -3,7 +3,9 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Script from 'next/script'
-import { getCityData, getAllCityData, getAllZipData, getZipData, STATE_NAMES, STATE_AGENCIES } from '@/lib/data'
+import { getCityData, STATE_NAMES, STATE_AGENCIES } from '@/lib/data'
+import type { ZipData } from '@/lib/types'
+import { supabase } from '@/lib/supabase'
 import { cityPageMeta, breadcrumbJsonLd } from '@/lib/seo'
 import { GradeBadge, Breadcrumb, ZipCard, FaqItem, StatCard } from '@/components/ui'
 import { AdTop, AdInContent, AdBottom } from '@/components/ui/AdSense'
@@ -13,34 +15,38 @@ interface Props { params: { slug: string } }
 export const revalidate = 604800
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const data = getCityData(params.slug)
+  const data = await getCityData(params.slug)
   if (!data) return { title: 'City Not Found | WaterSafeCheck' }
   return cityPageMeta(data)
 }
 
 export async function generateStaticParams() {
   // Only pre-build top 200 cities - rest handled by ISR on-demand
-  const all = getAllCityData()
-  return Object.entries(all)
-    .sort((a, b) => b[1].zip_count - a[1].zip_count)
-    .slice(0, 200)
-    .map(([slug]) => ({ slug }))
+  const { data: cities } = await supabase
+    .from('cities')
+    .select('slug')
+    .order('zip_count', { ascending: false })
+    .limit(200)
+  return (cities || []).map(c => ({ slug: c.slug }))
 }
 
-export default function CityPage({ params }: Props) {
-  const data = getCityData(params.slug)
+export default async function CityPage({ params }: Props) {
+  const data = await getCityData(params.slug)
   if (!data) return notFound()
 
-  const allZips = getAllZipData()
-  const cityZips = data.zips.map(zip => allZips[zip]).filter(Boolean)
+  const { data: zipRows } = await supabase
+    .from('zips')
+    .select('*')
+    .in('zip', data.zips)
+  const cityZips = (zipRows || []) as ZipData[]
   const stateName = data.state_name || STATE_NAMES[data.state] || data.state
 
   // Sort ZIPs by score descending
   const sortedZips = cityZips.sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
   const avgScore = cityZips.length
-    ? Math.round(cityZips.reduce((s, z) => s + (z.score ?? 0), 0) / cityZips.length)
+    ? Math.round(cityZips.reduce((s: number, z) => s + (z.score ?? 0), 0) / cityZips.length)
     : null
-  const totalViol = cityZips.reduce((s, z) => s + z.health_violations, 0)
+  const totalViol = cityZips.reduce((s: number, z) => s + z.health_violations, 0)
   const highLeadCount = cityZips.filter(z => z.lead_risk === 'High' || z.lead_risk === 'Very High').length
 
   // Dynamically calculate Top Contaminants based on City's ZIP data

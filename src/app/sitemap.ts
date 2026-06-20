@@ -4,10 +4,10 @@
 // ZIP sitemaps are split to avoid memory issues
 
 import type { MetadataRoute } from 'next'
-import { getAllStateData, getAllCityData } from '@/lib/data'
+import { supabase } from '@/lib/supabase'
 import { blogArticles } from '@/data/blog-articles'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://www.watersafecheck.com'
   const now = new Date()
 
@@ -22,24 +22,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ]
 
   // State pages (51 — small, safe to include)
-  const statePages: MetadataRoute.Sitemap = Object.keys(getAllStateData()).map(code => ({
-    url: `${baseUrl}/state/${code.toLowerCase()}`,
+  const { data: states } = await supabase.from('states').select('code')
+  const statePages: MetadataRoute.Sitemap = (states || []).map(s => ({
+    url: `${baseUrl}/state/${s.code.toLowerCase()}`,
     lastModified: now,
     changeFrequency: 'monthly' as const,
     priority: 0.85,
   }))
 
   // City pages — top 3000 by zip_count (avoid loading all 29K at build)
-  const allCities = getAllCityData()
-  const cityPages: MetadataRoute.Sitemap = Object.entries(allCities)
-    .sort((a, b) => b[1].zip_count - a[1].zip_count)
-    .slice(0, 3000)
-    .map(([slug]) => ({
-      url: `${baseUrl}/city/${slug}`,
-      lastModified: now,
-      changeFrequency: 'monthly' as const,
-      priority: 0.75,
-    }))
+  const { data: cities } = await supabase
+    .from('cities')
+    .select('slug')
+    .order('zip_count', { ascending: false })
+    .limit(3000)
+
+  const cityPages: MetadataRoute.Sitemap = (cities || []).map(c => ({
+    url: `${baseUrl}/city/${c.slug}`,
+    lastModified: now,
+    changeFrequency: 'monthly' as const,
+    priority: 0.75,
+  }))
 
   // ZIP pages — top 5000 most important (ISR handles the rest on-demand)
   // Full ZIP sitemap is in /sitemap-zips.xml (see public/sitemap-zips.xml)

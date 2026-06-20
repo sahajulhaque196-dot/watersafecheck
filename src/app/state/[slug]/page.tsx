@@ -3,7 +3,9 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Script from 'next/script'
-import { getStateData, getAllStateData, getAllZipData, cityToSlug } from '@/lib/data'
+import { getStateData, cityToSlug } from '@/lib/data'
+import type { ZipData } from '@/lib/types'
+import { supabase } from '@/lib/supabase'
 import { getStateIntro, getStateFAQs } from '@/lib/content'
 import { statePageMeta, stateJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo'
 import { GradeBadge, Breadcrumb, FaqItem, StatCard } from '@/components/ui'
@@ -14,22 +16,36 @@ interface Props { params: { slug: string } }
 export const revalidate = 604800
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const data = getStateData(params.slug)
+  const data = await getStateData(params.slug)
   if (!data) return { title: 'State Not Found | WaterSafeCheck' }
   return statePageMeta(data)
 }
 
 export async function generateStaticParams() {
-  const all = getAllStateData()
-  return Object.keys(all).map(code => ({ slug: code.toLowerCase() }))
+  const { data: states } = await supabase.from('states').select('code')
+  return (states || []).map(s => ({ slug: s.code.toLowerCase() }))
 }
 
-export default function StatePage({ params }: Props) {
-  const data = getStateData(params.slug)
+export default async function StatePage({ params }: Props) {
+  const data = await getStateData(params.slug)
   if (!data) notFound()
 
-  const allZips = getAllZipData()
-  const stateZips = Object.values(allZips).filter(z => z.state === data.code)
+  const { data: zipRows } = await supabase
+    .from('zips')
+    .select('zip, city, state, score, grade, contaminants')
+    .eq('state', data.code)
+  const stateZips = (zipRows || []) as ZipData[]
+
+  const slicedZips = data.zips.slice(0, 300)
+  const { data: zipDetails } = await supabase
+    .from('zips')
+    .select('zip, city, grade')
+    .in('zip', slicedZips)
+  const zipsDetailMap = (zipDetails || []).reduce((acc: any, curr: any) => {
+    acc[curr.zip] = curr
+    return acc
+  }, {} as Record<string, { zip: string; city: string; grade: string }>)
+
   const intro = getStateIntro(data)
   const faqs = getStateFAQs(data)
 
@@ -300,7 +316,7 @@ export default function StatePage({ params }: Props) {
             </p>
             <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-8 lg:grid-cols-10 gap-1 pt-4 border-t border-gray-100">
               {data.zips.slice(0, 300).map(zip => {
-                const zd = allZips[zip]
+                const zd = zipsDetailMap[zip]
                 return (
                   <Link
                     key={zip}

@@ -28,7 +28,7 @@ interface Props { params: { slug: string } }
 export const revalidate = 604800
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const data = getZipData(params.slug)
+  const data = await getZipData(params.slug)
   if (!data) return { title: 'ZIP Code Not Found | WaterSafeCheck' }
   return zipPageMeta(data)
 }
@@ -64,8 +64,8 @@ export async function generateStaticParams() {
   return Array.from(new Set(priority)).map(zip => ({ slug: zip }))
 }
 
-export default function ZipPage({ params }: Props) {
-  const data = getZipData(params.slug)
+export default async function ZipPage({ params }: Props) {
+  const data = await getZipData(params.slug)
   if (!data) notFound()
 
   // Note: nearby ZIPs feature disabled to avoid loading 30MB JSON in each page render

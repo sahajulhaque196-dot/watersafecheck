@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid ZIP code' }, { status: 400 })
   }
 
-  const data = getZipData(zip)
+  const data = await getZipData(zip)
 
   if (!data) {
     return NextResponse.json({ error: 'ZIP code not found in database' }, { status: 404 })

@@ -1,34 +1,34 @@
 // src/app/api/search/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { getAllZipData } from '@/lib/data'
+import { supabase } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
-  const q = request.nextUrl.searchParams.get('q')?.trim().toLowerCase()
+  const q = request.nextUrl.searchParams.get('q')?.trim()
 
   if (!q || q.length < 2) {
     return NextResponse.json({ results: [] })
   }
 
-  const all = getAllZipData()
+  try {
+    const { data, error } = await supabase
+      .from('zips')
+      .select('zip, city, state, grade, score')
+      .or(`zip.ilike.${q}%,city.ilike.${q}%`)
+      .limit(10)
 
-  const results = Object.values(all)
-    .filter(z => {
-      const zipMatch = z.zip.startsWith(q)
-      const cityMatch = z.city?.toLowerCase().startsWith(q)
-      return zipMatch || cityMatch
+    if (error) {
+      console.error('Error searching zips from Supabase:', error)
+      return NextResponse.json({ results: [] })
+    }
+
+    return NextResponse.json({ results: data || [] }, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=3600',
+      },
     })
-    .slice(0, 10)
-    .map(z => ({
-      zip: z.zip,
-      city: z.city,
-      state: z.state,
-      grade: z.grade,
-      score: z.score,
-    }))
-
-  return NextResponse.json({ results }, {
-    headers: {
-      'Cache-Control': 'public, s-maxage=3600',
-    },
-  })
+  } catch (e) {
+    console.error('Search exception:', e)
+    return NextResponse.json({ results: [] })
+  }
 }
+
