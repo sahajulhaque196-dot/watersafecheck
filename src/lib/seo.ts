@@ -14,8 +14,9 @@ export function zipPageMeta(data: ZipData) {
   const state = data.state || ''
   const grade = data.grade || 'N/A'
   const violations = data.health_violations
+  const currentYear = new Date().getFullYear()
 
-  const title = `Is ${data.zip} Tap Water Safe? — ${city}, ${state} Water Quality Report`
+  const title = `Is ${data.zip} Tap Water Safe? EPA Lead Test & Grade (${currentYear})`
   const description = violations === 0
     ? `ZIP code ${data.zip} (${city}, ${state}) has an excellent water quality grade of ${grade} with no health-based violations. View lead levels, contaminants, and full EPA data.`
     : `ZIP code ${data.zip} (${city}, ${state}) has grade ${grade} with ${violations} health-based violation${violations > 1 ? 's' : ''}. Check lead levels, contaminants, and safety data.`
@@ -41,7 +42,8 @@ export function zipPageMeta(data: ZipData) {
 }
 
 export function statePageMeta(data: StateData) {
-  const title = `Is ${data.name} Tap Water Safe? — Water Quality Report by ZIP Code`
+  const currentYear = new Date().getFullYear()
+  const title = `Is ${data.name} Tap Water Safe? EPA Lead Test & Grades (${currentYear})`
   const description = `Is tap water safe in ${data.name}? View water quality grades, lead levels, violations, and contaminant data for all ${data.zip_count.toLocaleString()} ZIP codes across ${data.name}. Powered by EPA data.`
   return {
     title,
@@ -53,7 +55,8 @@ export function statePageMeta(data: StateData) {
 }
 
 export function cityPageMeta(data: CityData) {
-  const title = `Is ${data.city}, ${data.state} Tap Water Safe? — Water Quality Report`
+  const currentYear = new Date().getFullYear()
+  const title = `Is ${data.city}, ${data.state} Tap Water Safe? EPA Lead Test & Grade (${currentYear})`
   const description = `Is tap water safe in ${data.city}, ${data.state}? Check water quality grades, lead levels, and violation history for all ${data.zip_count} ZIP code${data.zip_count > 1 ? 's' : ''} in ${data.city}. Free EPA-verified data.`
   const slug = `${data.city.toLowerCase().replace(/\s+/g, '-')}-${data.state.toLowerCase()}`
   return {
