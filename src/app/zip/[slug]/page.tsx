@@ -7,7 +7,7 @@ import {
   getZipData, STATE_NAMES,
   gradeColor, riskBadgeClass, formatPopulation,
   getContaminantList, getWaterSourceDescription,
-  getRadonZoneDescription, cityToSlug,
+  getRadonZoneDescription, cityToSlug, getNearbyZips,
 } from '@/lib/data'
 import {
   getZipIntro, getLeadSection, getViolationNarrative,
@@ -68,9 +68,7 @@ export default async function ZipPage({ params }: Props) {
   const data = await getZipData(params.slug)
   if (!data) notFound()
 
-  // Note: nearby ZIPs feature disabled to avoid loading 30MB JSON in each page render
-  // Enable by passing all zip data or via API route
-  const nearbyZips: typeof data[] = []
+  const nearbyZips = await getNearbyZips(data.zip, data.city, data.state)
   const intro = getZipIntro(data)
   const leadSection = getLeadSection(data)
   const violationNarrative = getViolationNarrative(data)

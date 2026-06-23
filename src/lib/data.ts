@@ -205,13 +205,24 @@ export function stateToSlug(state: string): string {
 
 // ─── Related content helpers ────────────────────────────────────────────────
 
-export function getNearbyZips(zip: ZipData, all: Record<string, ZipData>, limit = 6): ZipData[] {
-  return Object.values(all)
-    .filter(z =>
-      z.zip !== zip.zip &&
-      z.city === zip.city &&
-      z.state === zip.state &&
-      z.score !== null
-    )
-    .slice(0, limit)
+export async function getNearbyZips(zip: string, city: string, state: string, limit = 6): Promise<ZipData[]> {
+  try {
+    const { data, error } = await supabase
+      .from('zips')
+      .select('*')
+      .eq('city', city)
+      .eq('state', state.toUpperCase())
+      .neq('zip', zip)
+      .order('score', { ascending: false })
+      .limit(limit)
+    if (error) {
+      console.error('Error fetching nearby ZIPs:', error)
+      return []
+    }
+    return (data || []) as ZipData[]
+  } catch (e) {
+    console.error('Exception fetching nearby ZIPs:', e)
+    return []
+  }
 }
+
