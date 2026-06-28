@@ -10,7 +10,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/'],
       },
     ],
-    sitemap: 'https://www.watersafecheck.com/sitemap.xml',
+    sitemap: 'https://www.watersafecheck.com/sitemap-index.xml',
     host: 'https://www.watersafecheck.com',
   }
 }
