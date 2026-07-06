@@ -58,10 +58,24 @@ export default async function StatePage({ params }: Props) {
     citiesMap[key].count++
     citiesMap[key].avg += z.score
   })
+  // Top 40 cities by size (Popular Cities)
   const cities = Object.values(citiesMap)
     .map(c => ({ ...c, avg: Math.round(c.avg / c.count) }))
     .sort((a, b) => b.count - a.count)
     .slice(0, 40)
+
+  // Alphabetical list of all cities (A-Z Directory)
+  const allStateCities = Object.values(citiesMap)
+    .map(c => ({ ...c, avg: Math.round(c.avg / c.count) }))
+    .sort((a, b) => a.city.localeCompare(b.city))
+
+  const groupedCities: Record<string, typeof allStateCities> = {}
+  allStateCities.forEach(c => {
+    const firstLetter = c.city.charAt(0).toUpperCase()
+    if (!groupedCities[firstLetter]) groupedCities[firstLetter] = []
+    groupedCities[firstLetter].push(c)
+  })
+  const alphabet = Object.keys(groupedCities).sort()
 
   // Grade breakdown
   const total = data.zip_count
@@ -206,7 +220,7 @@ export default async function StatePage({ params }: Props) {
 
         {/* ── Cities Grid ── */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-1">Water Quality by City in {data.name}</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-1">Popular Cities in {data.name}</h2>
           <p className="text-sm text-gray-500 mb-5">
             Click any city to view ZIP code-level water quality reports
           </p>
@@ -228,6 +242,39 @@ export default async function StatePage({ params }: Props) {
                 </Link>
               )
             })}
+          </div>
+        </div>
+
+        {/* ── Alphabetical Cities Directory ── */}
+        <div className="card mb-8">
+          <h2 className="text-xl font-bold text-gray-900 mb-2">City A-Z Directory — {data.name}</h2>
+          <p className="text-sm text-gray-500 mb-6">
+            Browse water quality reports for every town and city in {data.name}.
+          </p>
+          
+          <div className="space-y-6 max-h-[600px] overflow-y-auto pr-2 scrollbar-thin">
+            {alphabet.map(letter => (
+              <div key={letter} className="flex flex-col sm:flex-row gap-2 sm:gap-6 border-t border-gray-100 pt-4 first:border-0 first:pt-0">
+                <div className="w-8 h-8 rounded-lg bg-brand-50 text-brand-700 flex items-center justify-center font-bold text-lg flex-shrink-0">
+                  {letter}
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-2 flex-1">
+                  {groupedCities[letter].map(({ city }) => {
+                    const slug = cityToSlug(city, data.code)
+                    return (
+                      <Link
+                        key={city}
+                        href={`/city/${slug}`}
+                        className="text-xs text-gray-600 hover:text-brand-700 transition-colors py-0.5 truncate"
+                        title={`${city} Water Quality`}
+                      >
+                        {city}
+                      </Link>
+                    )
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
