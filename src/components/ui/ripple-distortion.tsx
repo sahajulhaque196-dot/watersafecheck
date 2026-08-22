@@ -32,28 +32,27 @@ varying vec2 vUv;
 void main() {
   vec2 uv = vUv;
 
-  // ── 1. High-Speed Waterfall Stream Flow (Confined strictly to the water column x: 0.71 - 0.79, y: 0.22 - 0.68) ──
-  float inStreamX = smoothstep(0.71, 0.735, uv.x) * (1.0 - smoothstep(0.765, 0.79, uv.x));
-  float inStreamY = smoothstep(0.20, 0.26, uv.y) * (1.0 - smoothstep(0.66, 0.70, uv.y));
+  // ── 1. Silky Smooth Waterfall Stream Flow (Confined strictly to water column x: 0.715 - 0.785, y: 0.22 - 0.68) ──
+  float inStreamX = smoothstep(0.715, 0.735, uv.x) * (1.0 - smoothstep(0.765, 0.785, uv.x));
+  float inStreamY = smoothstep(0.22, 0.26, uv.y) * (1.0 - smoothstep(0.66, 0.69, uv.y));
   float streamMask = inStreamX * inStreamY;
 
-  // Rapid downward waterfall fluid physics
-  float streamVelocity = sin(uv.y * 70.0 + time * 18.0) * 0.004 + cos(uv.y * 120.0 + time * 28.0) * 0.002;
-  float streamLateralNoise = sin(uv.x * 90.0 + uv.y * 40.0 + time * 14.0) * 0.002;
-  vec2 streamDisplacement = vec2(streamLateralNoise, streamVelocity) * streamMask;
+  // Gentle, linear downward laminar fluid flow (Silky smooth, no harsh vibration)
+  float streamVelocity = sin(uv.y * 30.0 + time * 7.0) * 0.0015 + cos(uv.y * 55.0 + time * 11.0) * 0.0008;
+  vec2 streamDisplacement = vec2(0.0, streamVelocity) * streamMask;
 
-  // ── 2. Basin Impact & Water Pool Ripples (Confined strictly to basin pool x: 0.52 - 0.95, y: 0.04 - 0.28) ──
+  // ── 2. Gentle Basin Impact Ripples (Confined strictly to basin pool x: 0.55 - 0.92, y: 0.05 - 0.25) ──
   vec2 splashImpact = vec2(0.745, 0.22);
-  float basinAreaMask = smoothstep(0.52, 0.62, uv.x) * (1.0 - smoothstep(0.92, 0.98, uv.x)) * smoothstep(0.04, 0.08, uv.y) * (1.0 - smoothstep(0.24, 0.29, uv.y));
+  float basinAreaMask = smoothstep(0.55, 0.65, uv.x) * (1.0 - smoothstep(0.88, 0.95, uv.x)) * smoothstep(0.05, 0.09, uv.y) * (1.0 - smoothstep(0.22, 0.26, uv.y));
   
   float distToImpact = distance(uv, splashImpact);
-  float poolRipples = sin(distToImpact * 35.0 - time * 8.0) * exp(-distToImpact * 5.0) * 0.004 * basinAreaMask;
+  float poolRipples = sin(distToImpact * 25.0 - time * 4.5) * exp(-distToImpact * 6.0) * 0.0015 * basinAreaMask;
   vec2 impactDir = distToImpact > 0.001 ? normalize(uv - splashImpact) : vec2(0.0);
   vec2 basinDisplacement = impactDir * poolRipples;
 
-  // ── 3. Subtle Interactive Cursor Ripple (Active ONLY on basin pool water) ──
+  // ── 3. Calm Interactive Cursor Ripple (Active ONLY on basin pool water) ──
   float mouseDist = distance(uv, uMouse);
-  float mouseRipple = sin(mouseDist * 20.0 - time * 4.0) * exp(-mouseDist * 4.0) * 0.003 * basinAreaMask;
+  float mouseRipple = sin(mouseDist * 16.0 - time * 3.0) * exp(-mouseDist * 5.0) * 0.0012 * basinAreaMask;
   vec2 mouseDir = mouseDist > 0.001 ? normalize(uv - uMouse) : vec2(0.0);
   vec2 mouseDisplacement = mouseDir * mouseRipple;
 
@@ -63,10 +62,10 @@ void main() {
 
   vec4 color = texture2D(uTexture, finalUv);
 
-  // Sparkling water flow specular highlight
-  float waterGlint = (sin(uv.y * 90.0 + time * 24.0) * 0.5 + 0.5) * streamMask * 0.08;
-  float poolGlint = (sin(distToImpact * 40.0 - time * 12.0) * 0.5 + 0.5) * basinAreaMask * 0.05;
-  color.rgb += vec3(0.3, 0.65, 0.95) * (waterGlint + poolGlint);
+  // Soft sparkling water flow specular highlight
+  float waterGlint = (sin(uv.y * 45.0 + time * 10.0) * 0.5 + 0.5) * streamMask * 0.05;
+  float poolGlint = (sin(distToImpact * 25.0 - time * 6.0) * 0.5 + 0.5) * basinAreaMask * 0.03;
+  color.rgb += vec3(0.25, 0.55, 0.85) * (waterGlint + poolGlint);
 
   gl_FragColor = color;
 }
