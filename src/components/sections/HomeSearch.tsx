@@ -82,8 +82,8 @@ export function HomeSearch() {
       )}
 
       {/* Quick links */}
-      <div className="mt-4 flex flex-wrap gap-2 justify-center">
-        <span className="text-sm text-blue-200">Try:</span>
+      <div className="mt-4 flex flex-wrap items-center justify-center gap-2.5 py-1.5 px-4 rounded-full bg-black/60 backdrop-blur-md border border-white/20 shadow-xl max-w-fit mx-auto">
+        <span className="text-xs sm:text-sm font-bold text-cyan-300 uppercase tracking-wider">Try:</span>
         {[
           { label: 'New York 10001', zip: '10001' },
           { label: 'Los Angeles 90001', zip: '90001' },
@@ -94,7 +94,7 @@ export function HomeSearch() {
             key={z}
             type="button"
             onClick={() => router.push(`/zip/${z}`)}
-            className="text-sm text-blue-200 hover:text-white underline underline-offset-2 transition-colors"
+            className="text-xs sm:text-sm font-semibold text-white hover:text-cyan-300 underline underline-offset-4 decoration-white/40 hover:decoration-cyan-300 transition-all"
           >
             {label}
           </button>
@@ -103,3 +103,4 @@ export function HomeSearch() {
     </div>
   )
 }
+
