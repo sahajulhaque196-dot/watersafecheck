@@ -67,32 +67,25 @@ export default async function HomePage() {
   return (
     <>
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-gray-950 text-white min-h-[640px] flex items-center justify-center">
+      <section className="relative overflow-hidden bg-slate-900 text-white min-h-[640px] flex items-center justify-center">
         {/* Full-Visibility Interactive WebGL Ripple Distortion Background */}
         <div className="absolute inset-0 z-0">
           <RippleDistortion
-            imageSrc="https://cdn.21st.dev/assets/stock/photo/1015.jpg"
+            imageSrc="/images/water-hero.jpg"
             frequency={18}
             amplitude={0.008}
             speed={2.8}
             antialias={true}
             className="w-full h-full object-cover"
           />
-
         </div>
 
-        {/* Subtle Dark Vignette for contrast */}
-        <div className="absolute inset-0 bg-black/30 backdrop-brightness-90 z-[1] pointer-events-none"></div>
-
-        {/* Top Header Gradient Blend */}
-        <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-brand-950/60 to-transparent z-[2] pointer-events-none"></div>
-
-        {/* Left & Right Edge Vignette Gradients */}
-        <div className="absolute inset-y-0 left-0 w-20 sm:w-44 bg-gradient-to-r from-black/60 via-black/20 to-transparent z-[2] pointer-events-none"></div>
-        <div className="absolute inset-y-0 right-0 w-20 sm:w-44 bg-gradient-to-l from-black/60 via-black/20 to-transparent z-[2] pointer-events-none"></div>
+        {/* Soft top gradient for header clarity */}
+        <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-black/25 to-transparent z-[1] pointer-events-none"></div>
 
         {/* Ultra-Smooth Seamless Bottom Gradient Fade into White Stats Section */}
         <div className="absolute bottom-0 inset-x-0 h-28 sm:h-36 bg-gradient-to-t from-white via-white/80 to-transparent z-[2] pointer-events-none"></div>
+
 
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-28 pb-32 sm:pb-36 text-center pointer-events-auto">
           <FadeIn direction="up">
