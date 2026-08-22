@@ -8,7 +8,9 @@ import type { ZipData } from '@/lib/types'
 import { supabase } from '@/lib/supabase'
 import { cityPageMeta, cityJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo'
 import { GradeBadge, Breadcrumb, ZipCard, FaqItem, StatCard } from '@/components/ui'
+import { CityZipDirectory } from '@/components/sections/CityZipDirectory'
 import { AdTop, AdInContent, AdBottom } from '@/components/ui/AdSense'
+
 import { Sparkles, ShieldCheck, Droplets, Activity } from 'lucide-react'
 
 interface Props { params: { slug: string } }
@@ -228,28 +230,13 @@ export default async function CityPage({ params }: Props) {
           </div>
         )}
 
-        {/* ── ZIP Codes Grid ── */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-1">
-            Water Quality by ZIP Code — {data.city}, {data.state}
-          </h2>
-          <p className="text-sm text-gray-500 mb-5">
-            Click any ZIP code for the full water quality report
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            {sortedZips.map(z => (
-              <ZipCard
-                key={z.zip}
-                zip={z.zip}
-                city={z.city}
-                state={z.state}
-                score={z.score}
-                grade={z.grade}
-                violations={z.health_violations}
-              />
-            ))}
-          </div>
-        </div>
+        {/* ── Interactive ZIP Codes Directory with Filter Tabs & Search ── */}
+        <CityZipDirectory
+          zips={sortedZips}
+          cityName={data.city}
+          stateCode={data.state}
+        />
+
 
         {/* ── FAQ ── */}
         <div className="card mb-8">
