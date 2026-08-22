@@ -7,9 +7,24 @@ import { SITE_DESCRIPTION, SITE_NAME } from '@/lib/seo'
 import { HomeSearch } from '@/components/sections/HomeSearch'
 import { blogArticles } from '@/data/blog-articles'
 import { AdTop, AdInContent } from '@/components/ui/AdSense'
-import { FadeIn } from '@/components/ui/FadeIn'
-import RippleDistortion from '@/components/ui/ripple-distortion'
+import dynamic from 'next/dynamic'
 import { Search, FileText, ShieldAlert, Droplets, Activity, Beaker, AlertTriangle } from 'lucide-react'
+
+// Load WebGL Three.js on client-only with smooth SSR image fallback to prevent any client-side exception
+const RippleDistortion = dynamic(
+  () => import('@/components/ui/ripple-distortion'),
+  {
+    ssr: false,
+    loading: () => (
+      <img
+        src="/images/water-hero.jpg"
+        alt="Water Background"
+        className="w-full h-full object-cover"
+      />
+    ),
+  }
+)
+
 
 
 export const metadata: Metadata = {
