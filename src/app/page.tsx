@@ -29,6 +29,9 @@ const RippleDistortion = dynamic(
 
 
 
+// ISR — revalidate homepage daily (86400 seconds)
+export const revalidate = 86400
+
 export const metadata: Metadata = {
   title: `${SITE_NAME} — Check Tap Water Safety by ZIP Code`,
   description: SITE_DESCRIPTION,

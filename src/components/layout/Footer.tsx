@@ -75,12 +75,11 @@ export function Footer() {
             <ul className="space-y-2">
               {[
                 ['/blog', 'Blog & Articles'],
-              ['/water-quality-guide', 'Water Safety Guide'],
+                ['/water-quality-guide', 'Water Safety Guide'],
                 ['/about', 'About & Our Team'],
                 ['/contact', 'Contact Us'],
                 ['/disclaimer', 'Disclaimer'],
                 ['/privacy', 'Privacy Policy'],
-              ['/disclaimer', 'Disclaimer'],
               ].map(([href, label]) => (
                 <li key={href}>
                   <Link href={href} className="text-sm text-gray-400 hover:text-white transition-colors">

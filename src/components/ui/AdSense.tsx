@@ -1,8 +1,7 @@
 'use client'
 // src/components/ui/AdSense.tsx
-// Client component — safe to import from any server page in Next.js 14 App Router
-// Replace ca-pub-XXXXXXXXXXXXXXXX with your actual AdSense Publisher ID
-// Replace slot IDs (1234567890 etc.) with actual slot IDs from your AdSense dashboard
+// Safe, resilient AdSense component for Next.js 14 App Router.
+// Safely suppresses rendering if AdSense ID is a placeholder or not configured.
 
 import { useEffect } from 'react'
 
@@ -11,6 +10,13 @@ declare global {
     adsbygoogle: any[]
   }
 }
+
+const PUBLISHER_ID = process.env.NEXT_PUBLIC_ADSENSE_ID || 'ca-pub-XXXXXXXXXXXXXXXX'
+const IS_ADSENSE_ACTIVE = Boolean(
+  PUBLISHER_ID &&
+  !PUBLISHER_ID.includes('XXXX') &&
+  !PUBLISHER_ID.includes('your-publisher-id')
+)
 
 interface AdSenseProps {
   slot: string
@@ -21,6 +27,7 @@ interface AdSenseProps {
 
 function AdUnit({ slot, format = 'auto', className = '', style }: AdSenseProps) {
   useEffect(() => {
+    if (!IS_ADSENSE_ACTIVE) return
     try {
       if (typeof window !== 'undefined' && window.adsbygoogle) {
         window.adsbygoogle.push({})
@@ -30,12 +37,16 @@ function AdUnit({ slot, format = 'auto', className = '', style }: AdSenseProps) 
     }
   }, [])
 
+  if (!IS_ADSENSE_ACTIVE) {
+    return null
+  }
+
   return (
     <div className={`adsense-container ${className}`}>
       <ins
         className="adsbygoogle"
         style={{ display: 'block', ...style }}
-        data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+        data-ad-client={PUBLISHER_ID}
         data-ad-slot={slot}
         data-ad-format={format}
         data-full-width-responsive="true"
@@ -45,10 +56,8 @@ function AdUnit({ slot, format = 'auto', className = '', style }: AdSenseProps) 
 }
 
 // ─── Pre-configured ad positions ───────────────────────────────────────────
-// IMPORTANT: Replace slot IDs with your actual slot IDs from AdSense dashboard
-// Create 4 ad units in AdSense: Top Banner, Sidebar, In-Content, Bottom Banner
-
 export function AdTop() {
+  if (!IS_ADSENSE_ACTIVE) return null
   return (
     <div className="w-full my-1 empty:hidden no-print" aria-label="Advertisement">
       <AdUnit slot="1111111111" format="horizontal" />
@@ -57,6 +66,7 @@ export function AdTop() {
 }
 
 export function AdSidebar() {
+  if (!IS_ADSENSE_ACTIVE) return null
   return (
     <div className="sticky top-20 empty:hidden no-print" aria-label="Advertisement">
       <AdUnit slot="2222222222" format="vertical" />
@@ -65,6 +75,7 @@ export function AdSidebar() {
 }
 
 export function AdInContent() {
+  if (!IS_ADSENSE_ACTIVE) return null
   return (
     <div className="my-2 empty:hidden no-print" aria-label="Advertisement">
       <AdUnit slot="3333333333" format="rectangle" />
@@ -73,9 +84,11 @@ export function AdInContent() {
 }
 
 export function AdBottom() {
+  if (!IS_ADSENSE_ACTIVE) return null
   return (
     <div className="w-full my-2 empty:hidden no-print" aria-label="Advertisement">
       <AdUnit slot="4444444444" format="auto" />
     </div>
   )
 }
+

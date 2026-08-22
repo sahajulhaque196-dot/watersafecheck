@@ -75,7 +75,7 @@ export default function AboutPage() {
                 <strong>Regular Updates:</strong> Data is synchronized regularly when the EPA updates its quarterly compliance tracking datasets.
               </li>
               <li>
-                <strong>Complete Independence:</strong> WaterSafeCheck has no financial relationship or affiliate partnerships with water utilities, municipal governments, or public service corporations. Our platform is funded entirely through transparent display advertising.
+                <strong>Complete Independence:</strong> WaterSafeCheck has no financial relationship or affiliate partnerships with water utilities, municipal governments, or public service corporations. To keep our public health database 100% free, our platform is funded through transparent display advertising and affiliate referral links for certified water filtration products (e.g., Amazon Associates), at zero extra cost to you.
               </li>
             </ul>
           </div>

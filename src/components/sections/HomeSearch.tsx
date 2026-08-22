@@ -1,58 +1,125 @@
 'use client'
 // src/components/sections/HomeSearch.tsx
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { cityToSlug } from '@/lib/data'
+
+interface SearchResult {
+  zip: string
+  city: string
+  state: string
+  grade: string
+  score: number | null
+}
 
 export function HomeSearch() {
-  const [zip, setZip] = useState('')
+  const [query, setQuery] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [results, setResults] = useState<SearchResult[]>([])
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  // Live autocomplete search
+  useEffect(() => {
+    const trimmed = query.trim()
+    if (trimmed.length < 2) {
+      setResults([])
+      setIsDropdownOpen(false)
+      return
+    }
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(trimmed)}`)
+        if (res.ok) {
+          const data = await res.json()
+          setResults(data.results || [])
+          setIsDropdownOpen((data.results || []).length > 0)
+        }
+      } catch (err) {
+        console.error('Search fetch error:', err)
+      }
+    }, 200)
+
+    return () => clearTimeout(timer)
+  }, [query])
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setIsDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    const clean = zip.replace(/\D/g, '').slice(0, 5)
-    if (clean.length !== 5) {
-      setError('Please enter a valid 5-digit U.S. ZIP code')
+    const trimmed = query.trim()
+
+    // 1. If 5-digit ZIP entered
+    const numericZip = trimmed.replace(/\D/g, '')
+    if (numericZip.length === 5) {
+      setError('')
+      setLoading(true)
+      setIsDropdownOpen(false)
+      router.push(`/zip/${numericZip}`)
+      return
+    }
+
+    // 2. If results exist, pick first result
+    if (results.length > 0) {
+      const top = results[0]
+      setError('')
+      setLoading(true)
+      setIsDropdownOpen(false)
+      router.push(`/zip/${top.zip}`)
+      return
+    }
+
+    if (trimmed.length < 2) {
+      setError('Please enter a 5-digit ZIP code or City name')
       inputRef.current?.focus()
       return
     }
-    setError('')
+
+    setError('No matching ZIP code or city found. Please check spelling.')
+  }
+
+  function handleSelectResult(r: SearchResult) {
+    setIsDropdownOpen(false)
     setLoading(true)
-    router.push(`/zip/${clean}`)
+    router.push(`/zip/${r.zip}`)
   }
 
   return (
-    <div className="w-full max-w-lg mx-auto">
+    <div ref={containerRef} className="w-full max-w-xl mx-auto relative">
       <form onSubmit={handleSubmit} className="flex gap-2" role="search">
         <div className="relative flex-1">
-          <label htmlFor="zip-search" className="sr-only">Enter your ZIP code</label>
+          <label htmlFor="zip-search" className="sr-only">Enter ZIP code or City name</label>
           <input
             id="zip-search"
             ref={inputRef}
             type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            value={zip}
+            value={query}
             onChange={e => {
-              setZip(e.target.value.replace(/\D/g, '').slice(0, 5))
+              setQuery(e.target.value)
               setError('')
             }}
-            placeholder="Enter ZIP code (e.g. 90210)"
+            onFocus={() => {
+              if (results.length > 0) setIsDropdownOpen(true)
+            }}
+            placeholder="Enter ZIP code or City (e.g. 90210, Dallas, Miami)"
             className="w-full px-4 sm:px-5 py-3 sm:py-4 text-gray-900 text-base sm:text-lg rounded-xl border-0 focus:outline-none focus:ring-4 focus:ring-white/30 shadow-lg placeholder-gray-400 font-medium"
-            maxLength={5}
-            autoComplete="postal-code"
-            aria-label="ZIP code"
+            autoComplete="off"
+            aria-label="ZIP code or City"
             aria-describedby={error ? 'zip-error' : undefined}
           />
-
-          {/* Live char counter */}
-          {zip.length > 0 && zip.length < 5 && (
-            <span className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-xs text-gray-400">
-              {5 - zip.length} more
-            </span>
-          )}
         </div>
         <button
           type="submit"
@@ -74,6 +141,35 @@ export function HomeSearch() {
         </button>
       </form>
 
+      {/* Autocomplete Dropdown Results */}
+      {isDropdownOpen && results.length > 0 && (
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-50 divide-y divide-gray-100 max-h-80 overflow-y-auto">
+          {results.map(r => (
+            <button
+              key={r.zip}
+              type="button"
+              onClick={() => handleSelectResult(r)}
+              className="w-full px-4 py-3 text-left hover:bg-brand-50 flex items-center justify-between transition-colors group"
+            >
+              <div>
+                <span className="font-bold text-gray-900 group-hover:text-brand-700">{r.zip}</span>
+                <span className="text-gray-500 ml-2 text-sm">{r.city}, {r.state}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                  r.grade === 'A' ? 'bg-emerald-100 text-emerald-800' :
+                  r.grade === 'B' ? 'bg-blue-100 text-blue-800' :
+                  r.grade === 'C' ? 'bg-amber-100 text-amber-800' :
+                  'bg-rose-100 text-rose-800'
+                }`}>
+                  Grade {r.grade}
+                </span>
+                <span className="text-xs text-gray-400 font-medium">{r.score ?? '—'}/100</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
 
       {error && (
         <p id="zip-error" className="mt-2 text-sm text-red-300 text-center" role="alert">
@@ -99,8 +195,8 @@ export function HomeSearch() {
           </button>
         ))}
       </div>
-
     </div>
   )
 }
+
 

@@ -681,6 +681,10 @@ export default async function ZipPage({ params }: Props) {
                     </div>
                   </>
                 )}
+                {/* FTC Disclosure */}
+                <p className="text-[11px] text-gray-400 mt-4 text-center italic">
+                  *Affiliate Disclosure: As an Amazon Associate, WaterSafeCheck may earn an affiliate commission from qualifying purchases through the product links above, at no extra cost to you.
+                </p>
               </div>
             </div>
 

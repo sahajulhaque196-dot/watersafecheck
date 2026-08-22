@@ -203,8 +203,19 @@ const RippleDistortion: React.FC<RippleDistortionProps> = ({
 
     window.addEventListener("mousemove", handleMouseMove);
 
+    let isVisible = true;
+    let observer: IntersectionObserver | null = null;
+    if (typeof IntersectionObserver !== 'undefined') {
+      observer = new IntersectionObserver(([entry]) => {
+        isVisible = entry.isIntersecting;
+      }, { threshold: 0.05 });
+      observer.observe(container);
+    }
+
     const animate = () => {
       animationIdRef.current = requestAnimationFrame(animate);
+      if (!isVisible) return; // Pause rendering calculations when scrolled out of view
+
       uniforms.time.value += 0.016;
 
       // Animate 3D water droplets
@@ -227,9 +238,10 @@ const RippleDistortion: React.FC<RippleDistortionProps> = ({
 
     return () => {
       if (animationIdRef.current) cancelAnimationFrame(animationIdRef.current);
+      if (observer) observer.disconnect();
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", handleMouseMove);
-      renderer.dispose();
+      if (renderer) renderer.dispose();
       geometry.dispose();
       material.dispose();
       particleGeo.dispose();

@@ -3,18 +3,29 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
-  const q = request.nextUrl.searchParams.get('q')?.trim()
+  const rawQ = request.nextUrl.searchParams.get('q')?.trim()
 
-  if (!q || q.length < 2) {
+  if (!rawQ || rawQ.length < 2) {
+    return NextResponse.json({ results: [] })
+  }
+
+  // Sanitize input strictly to prevent PostgREST syntax injection / AST breaking
+  const sanitized = rawQ.replace(/[^a-zA-Z0-9\s-]/g, '').trim()
+  if (!sanitized) {
     return NextResponse.json({ results: [] })
   }
 
   try {
-    const { data, error } = await supabase
-      .from('zips')
-      .select('zip, city, state, grade, score')
-      .or(`zip.ilike.${q}%,city.ilike.${q}%`)
-      .limit(10)
+    const isNumeric = /^\d+$/.test(sanitized)
+    let query = supabase.from('zips').select('zip, city, state, grade, score')
+
+    if (isNumeric) {
+      query = query.ilike('zip', `${sanitized}%`).limit(8)
+    } else {
+      query = query.ilike('city', `${sanitized}%`).limit(8)
+    }
+
+    const { data, error } = await query
 
     if (error) {
       console.error('Error searching zips from Supabase:', error)
@@ -23,7 +34,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ results: data || [] }, {
       headers: {
-        'Cache-Control': 'public, s-maxage=3600',
+        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
       },
     })
   } catch (e) {
@@ -31,4 +42,5 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ results: [] })
   }
 }
+
 

@@ -31,11 +31,22 @@ export default async function StatePage({ params }: Props) {
   const data = await getStateData(params.slug)
   if (!data) notFound()
 
-  const { data: zipRows } = await supabase
-    .from('zips')
-    .select('zip, city, state, score, grade, contaminants')
-    .eq('state', data.code)
-  const stateZips = (zipRows || []) as ZipData[]
+  // Fetch all ZIP rows for this state in chunks of 1000 (bypasses Supabase default 1,000 row limit for CA, TX, FL, etc.)
+  const stateZips: ZipData[] = []
+  let from = 0
+  const step = 1000
+  while (true) {
+    const { data: chunk, error } = await supabase
+      .from('zips')
+      .select('zip, city, state, score, grade, contaminants')
+      .eq('state', data.code)
+      .range(from, from + step - 1)
+
+    if (error || !chunk || chunk.length === 0) break
+    stateZips.push(...(chunk as ZipData[]))
+    if (chunk.length < step) break
+    from += step
+  }
 
   // In-memory mapping to eliminate redundant database query and prevent 5xx timeouts
   const zipsDetailMap = stateZips.reduce((acc: any, curr: any) => {
