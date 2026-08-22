@@ -32,45 +32,46 @@ varying vec2 vUv;
 void main() {
   vec2 uv = vUv;
 
-  // ── 1. Downward Falling Water Stream Animation (Right side x: 0.68 - 0.82, y: 0.22 - 0.78) ──
-  float streamX = smoothstep(0.66, 0.72, uv.x) * (1.0 - smoothstep(0.76, 0.82, uv.x));
-  float streamY = smoothstep(0.20, 0.28, uv.y) * (1.0 - smoothstep(0.72, 0.78, uv.y));
-  float streamMask = streamX * streamY;
+  // ── 1. High-Speed Waterfall Stream Flow (Confined strictly to the water column x: 0.71 - 0.79, y: 0.22 - 0.68) ──
+  float inStreamX = smoothstep(0.71, 0.735, uv.x) * (1.0 - smoothstep(0.765, 0.79, uv.x));
+  float inStreamY = smoothstep(0.20, 0.26, uv.y) * (1.0 - smoothstep(0.66, 0.70, uv.y));
+  float streamMask = inStreamX * inStreamY;
 
-  // Rapid downward fluid displacement
-  float verticalFlow = sin(uv.y * 55.0 + time * 14.0) * 0.006 + cos(uv.y * 95.0 + time * 22.0) * 0.003;
-  float horizontalTurbulence = sin(uv.x * 60.0 + uv.y * 30.0 + time * 10.0) * 0.004;
-  vec2 streamDisplacement = vec2(horizontalTurbulence, verticalFlow) * streamMask;
+  // Rapid downward waterfall fluid physics
+  float streamVelocity = sin(uv.y * 70.0 + time * 18.0) * 0.004 + cos(uv.y * 120.0 + time * 28.0) * 0.002;
+  float streamLateralNoise = sin(uv.x * 90.0 + uv.y * 40.0 + time * 14.0) * 0.002;
+  vec2 streamDisplacement = vec2(streamLateralNoise, streamVelocity) * streamMask;
 
-  // ── 2. Basin Water Impact & Splash Ripples (Center ~ (0.73, 0.22)) ──
-  vec2 splashCenter = vec2(0.73, 0.22);
-  float splashDist = distance(uv, splashCenter);
-  float basinMask = smoothstep(0.48, 0.65, uv.x) * (1.0 - smoothstep(0.85, 0.98, uv.x)) * (1.0 - smoothstep(0.28, 0.40, uv.y));
-  float basinRipples = sin(splashDist * 40.0 - time * 7.5) * exp(-splashDist * 4.5) * 0.007 * basinMask;
-  vec2 splashDir = splashDist > 0.001 ? normalize(uv - splashCenter) : vec2(0.0);
-  vec2 basinDisplacement = splashDir * basinRipples;
+  // ── 2. Basin Impact & Water Pool Ripples (Confined strictly to basin pool x: 0.52 - 0.95, y: 0.04 - 0.28) ──
+  vec2 splashImpact = vec2(0.745, 0.22);
+  float basinAreaMask = smoothstep(0.52, 0.62, uv.x) * (1.0 - smoothstep(0.92, 0.98, uv.x)) * smoothstep(0.04, 0.08, uv.y) * (1.0 - smoothstep(0.24, 0.29, uv.y));
+  
+  float distToImpact = distance(uv, splashImpact);
+  float poolRipples = sin(distToImpact * 35.0 - time * 8.0) * exp(-distToImpact * 5.0) * 0.004 * basinAreaMask;
+  vec2 impactDir = distToImpact > 0.001 ? normalize(uv - splashImpact) : vec2(0.0);
+  vec2 basinDisplacement = impactDir * poolRipples;
 
-  // ── 3. Interactive Cursor Fluid Ripples ──
+  // ── 3. Subtle Interactive Cursor Ripple (Active ONLY on basin pool water) ──
   float mouseDist = distance(uv, uMouse);
-  float mouseFalloff = exp(-mouseDist * 3.2);
-  float mouseRipples = sin(mouseDist * 22.0 - time * 3.5) * 0.005 * mouseFalloff;
+  float mouseRipple = sin(mouseDist * 20.0 - time * 4.0) * exp(-mouseDist * 4.0) * 0.003 * basinAreaMask;
   vec2 mouseDir = mouseDist > 0.001 ? normalize(uv - uMouse) : vec2(0.0);
-  vec2 mouseDisplacement = mouseDir * mouseRipples;
+  vec2 mouseDisplacement = mouseDir * mouseRipple;
 
-  // Combine displacements
+  // Final displacement is 100% ZERO on background wall, text, and faucet metal!
   vec2 finalUv = uv + streamDisplacement + basinDisplacement + mouseDisplacement;
   finalUv = clamp(finalUv, 0.001, 0.999);
 
   vec4 color = texture2D(uTexture, finalUv);
 
-  // Add realistic sparkling caustics shimmer on the active stream & splash
-  float shimmer = (sin(uv.y * 80.0 + time * 18.0) * 0.5 + 0.5) * streamMask * 0.12;
-  float splashShimmer = (sin(splashDist * 50.0 - time * 10.0) * 0.5 + 0.5) * basinMask * 0.08;
-  color.rgb += vec3(0.2, 0.5, 0.8) * (shimmer + splashShimmer);
+  // Sparkling water flow specular highlight
+  float waterGlint = (sin(uv.y * 90.0 + time * 24.0) * 0.5 + 0.5) * streamMask * 0.08;
+  float poolGlint = (sin(distToImpact * 40.0 - time * 12.0) * 0.5 + 0.5) * basinAreaMask * 0.05;
+  color.rgb += vec3(0.3, 0.65, 0.95) * (waterGlint + poolGlint);
 
   gl_FragColor = color;
 }
 `;
+
 
 const RippleDistortion: React.FC<RippleDistortionProps> = ({
   imageSrc,
