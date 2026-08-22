@@ -32,40 +32,48 @@ varying vec2 vUv;
 void main() {
   vec2 uv = vUv;
 
-  // ── 1. Silky Smooth Waterfall Stream Flow (Confined strictly to water column x: 0.715 - 0.785, y: 0.22 - 0.68) ──
-  float inStreamX = smoothstep(0.715, 0.735, uv.x) * (1.0 - smoothstep(0.765, 0.785, uv.x));
-  float inStreamY = smoothstep(0.22, 0.26, uv.y) * (1.0 - smoothstep(0.66, 0.69, uv.y));
+  // ── 1. Realistic Waterfall Stream (Confined strictly to water column x: 0.71 - 0.79, y: 0.22 - 0.68) ──
+  float inStreamX = smoothstep(0.705, 0.730, uv.x) * (1.0 - smoothstep(0.770, 0.795, uv.x));
+  float inStreamY = smoothstep(0.20, 0.25, uv.y) * (1.0 - smoothstep(0.66, 0.70, uv.y));
   float streamMask = inStreamX * inStreamY;
 
-  // Gentle, linear downward laminar fluid flow (Silky smooth, no harsh vibration)
-  float streamVelocity = sin(uv.y * 30.0 + time * 7.0) * 0.0015 + cos(uv.y * 55.0 + time * 11.0) * 0.0008;
-  vec2 streamDisplacement = vec2(0.0, streamVelocity) * streamMask;
+  // Downward flowing fluid motion (continuous stream translation)
+  float flowSpeed = time * 8.5;
+  float streamDisplaceY = sin(uv.y * 40.0 + flowSpeed) * 0.003 + cos(uv.y * 75.0 + flowSpeed * 1.5) * 0.0015;
+  float streamDisplaceX = sin(uv.x * 50.0 + uv.y * 25.0 + flowSpeed * 0.8) * 0.0012;
+  vec2 streamDisplacement = vec2(streamDisplaceX, streamDisplaceY) * streamMask;
 
-  // ── 2. Gentle Basin Impact Ripples (Confined strictly to basin pool x: 0.55 - 0.92, y: 0.05 - 0.25) ──
-  vec2 splashImpact = vec2(0.745, 0.22);
-  float basinAreaMask = smoothstep(0.55, 0.65, uv.x) * (1.0 - smoothstep(0.88, 0.95, uv.x)) * smoothstep(0.05, 0.09, uv.y) * (1.0 - smoothstep(0.22, 0.26, uv.y));
+  // ── 2. Basin Impact Splash & Expanding Ripples (Center at (0.748, 0.22)) ──
+  vec2 splashImpact = vec2(0.748, 0.22);
+  float basinAreaMask = smoothstep(0.53, 0.63, uv.x) * (1.0 - smoothstep(0.90, 0.96, uv.x)) * smoothstep(0.04, 0.08, uv.y) * (1.0 - smoothstep(0.23, 0.27, uv.y));
   
   float distToImpact = distance(uv, splashImpact);
-  float poolRipples = sin(distToImpact * 25.0 - time * 4.5) * exp(-distToImpact * 6.0) * 0.0015 * basinAreaMask;
+  float poolRipples = sin(distToImpact * 32.0 - time * 6.5) * exp(-distToImpact * 5.0) * 0.003 * basinAreaMask;
   vec2 impactDir = distToImpact > 0.001 ? normalize(uv - splashImpact) : vec2(0.0);
   vec2 basinDisplacement = impactDir * poolRipples;
 
-  // ── 3. Calm Interactive Cursor Ripple (Active ONLY on basin pool water) ──
+  // ── 3. Subtle Interactive Cursor Ripple (Active ONLY on basin pool water) ──
   float mouseDist = distance(uv, uMouse);
-  float mouseRipple = sin(mouseDist * 16.0 - time * 3.0) * exp(-mouseDist * 5.0) * 0.0012 * basinAreaMask;
+  float mouseRipple = sin(mouseDist * 18.0 - time * 3.5) * exp(-mouseDist * 4.5) * 0.0015 * basinAreaMask;
   vec2 mouseDir = mouseDist > 0.001 ? normalize(uv - uMouse) : vec2(0.0);
   vec2 mouseDisplacement = mouseDir * mouseRipple;
 
-  // Final displacement is 100% ZERO on background wall, text, and faucet metal!
+  // Final displacement (100% zero on background wall, text, and faucet metal)
   vec2 finalUv = uv + streamDisplacement + basinDisplacement + mouseDisplacement;
   finalUv = clamp(finalUv, 0.001, 0.999);
 
   vec4 color = texture2D(uTexture, finalUv);
 
-  // Soft sparkling water flow specular highlight
-  float waterGlint = (sin(uv.y * 45.0 + time * 10.0) * 0.5 + 0.5) * streamMask * 0.05;
-  float poolGlint = (sin(distToImpact * 25.0 - time * 6.0) * 0.5 + 0.5) * basinAreaMask * 0.03;
-  color.rgb += vec3(0.25, 0.55, 0.85) * (waterGlint + poolGlint);
+  // ── 4. Refractive Water Caustics & Aeration Bubbles Shimmer (Real Water Glow) ──
+  float caustics1 = sin(uv.x * 70.0 + uv.y * 35.0 - flowSpeed * 1.2);
+  float caustics2 = cos(uv.x * 50.0 - uv.y * 60.0 + flowSpeed * 1.6);
+  float internalFlowShimmer = max(0.0, caustics1 * caustics2) * streamMask * 0.15;
+  
+  // Splash ring light reflection
+  float splashRingGlow = (sin(distToImpact * 32.0 - time * 6.5) * 0.5 + 0.5) * exp(-distToImpact * 4.0) * basinAreaMask * 0.08;
+
+  // Add crystal water highlights
+  color.rgb += vec3(0.25, 0.65, 0.95) * (internalFlowShimmer + splashRingGlow);
 
   gl_FragColor = color;
 }
