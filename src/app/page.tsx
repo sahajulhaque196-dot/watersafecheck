@@ -7,7 +7,9 @@ import { SITE_DESCRIPTION, SITE_NAME } from '@/lib/seo'
 import { HomeSearch } from '@/components/sections/HomeSearch'
 import { blogArticles } from '@/data/blog-articles'
 import { AdTop, AdInContent } from '@/components/ui/AdSense'
+import { FadeIn } from '@/components/ui/FadeIn'
 import dynamic from 'next/dynamic'
+
 import { Search, FileText, ShieldAlert, Droplets, Activity, Beaker, AlertTriangle } from 'lucide-react'
 
 // Load WebGL Three.js on client-only with smooth SSR image fallback to prevent any client-side exception
