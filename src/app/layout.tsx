@@ -124,14 +124,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
 
         {/* ── Google AdSense ── */}
-        {/* Replace ca-pub-XXXXXXXXXXXXXXXX with your actual Publisher ID */}
-        <Script
-          id="adsense"
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_PUBLISHER_ID}`}
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
+        {ADSENSE_PUBLISHER_ID && !ADSENSE_PUBLISHER_ID.includes('XXXX') && (
+          <Script
+            id="adsense"
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_PUBLISHER_ID}`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
 
         {/* ── Structured Data: WebSite + SearchAction ── */}
         <Script

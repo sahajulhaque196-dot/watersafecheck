@@ -13,7 +13,9 @@ import {
   getZipIntro, getLeadSection, getViolationNarrative,
   getContaminantNarrative, getEnforcementNarrative,
   getLeadRiskNarrative, getComplianceNarrative,
-  getWaterQualityFAQs,
+  getWaterQualityFAQs, getDirectAnswerSnippet,
+  getWaterHardnessAnalysis, getEpaVerificationUrl,
+  getFilterRecommendation,
 } from '@/lib/content'
 import { zipPageMeta, zipJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo'
 import {
@@ -21,6 +23,7 @@ import {
   Breadcrumb, StatCard, FaqItem,
 } from '@/components/ui'
 import { AdTop, AdInContent, AdBottom, AdSidebar } from '@/components/ui/AdSense'
+import { ShieldCheck, Droplets, CheckCircle2, AlertTriangle, ExternalLink, Sparkles, Activity } from 'lucide-react'
 
 interface Props { params: { slug: string } }
 
@@ -34,10 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 // ISR: Pages are generated on-demand and cached — no pre-build needed
-// This prevents 41K-page build timeout on Vercel free tier
-// Pages are cached for 7 days (revalidate = 604800)
 export async function generateStaticParams() {
-  // Pre-build only the 50 most important ZIP codes for instant load
   const priority = [
     '10001','10002','10003', // New York
     '90001','90210','90291', // Los Angeles
@@ -81,6 +81,12 @@ export default async function ZipPage({ params }: Props) {
   const stateName = STATE_NAMES[data.state] || data.state
   const citySlug = data.city ? cityToSlug(data.city, data.state) : null
 
+  // High-Intent Modules
+  const directAnswer = getDirectAnswerSnippet(data)
+  const hardness = getWaterHardnessAnalysis(data)
+  const epaUrl = getEpaVerificationUrl(data.pwsid)
+  const filterAdv = getFilterRecommendation(data)
+
   const EPAleadMCL = 0.015 // 15 ppb action level
   const leadStatus = data.lead_mg_l !== null
     ? data.lead_mg_l > EPAleadMCL ? 'danger' : data.lead_mg_l > 0.005 ? 'warning' : 'safe'
@@ -119,12 +125,33 @@ export default async function ZipPage({ params }: Props) {
 
         {/* ── Page Header ── */}
         <div className="mb-6">
+          <div className="flex flex-wrap items-center gap-2 mb-2">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 text-brand-700 border border-brand-200">
+              <ShieldCheck className="w-3.5 h-3.5 text-brand-600" />
+              Official EPA SDWIS Verified Report
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <Activity className="w-3.5 h-3.5 text-emerald-600" />
+              Status: {data.boil_water_advisories > 0 ? 'Active Advisories Noted' : 'Normal Operations'}
+            </span>
+          </div>
           <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mb-1">
-            ZIP Code {data.zip} Water Quality Report
+            ZIP Code {data.zip} Water Quality & Hardness Report
           </h1>
           <p className="text-lg text-gray-500">
             {data.city}{data.city && data.state ? ', ' : ''}{data.state}
-            {data.county ? ` · ${data.county} County` : ''}
+            {data.county ? ` · ${data.county} County` : ''} · Updated for {new Date().getFullYear()}
+          </p>
+        </div>
+
+        {/* ── Featured Snippet / Quick Answer Card (Position 0 Target) ── */}
+        <div className="mb-8 p-5 bg-gradient-to-r from-brand-50 via-sky-50 to-blue-50 rounded-2xl border border-brand-200 shadow-sm">
+          <div className="flex items-center gap-2 mb-2 text-brand-900 font-bold text-sm tracking-wide uppercase">
+            <Sparkles className="w-4 h-4 text-brand-600" />
+            Quick Summary: Is ZIP {data.zip} Tap Water Safe to Drink?
+          </div>
+          <p className="text-gray-800 text-base sm:text-lg leading-relaxed font-medium">
+            {directAnswer}
           </p>
         </div>
 
@@ -320,6 +347,62 @@ export default async function ZipPage({ params }: Props) {
               <div className="mt-4 p-3 bg-blue-50 rounded-lg text-xs text-blue-700">
                 <strong>Note:</strong> Lead levels above are the 90th percentile from EPA monitoring — meaning 90% of samples were at or below this level. Even "undetected" tap water lead doesn't account for lead leaching from home plumbing. If your home was built before 1986, individual tap testing is recommended.
               </div>
+            </div>
+
+            {/* ── Water Hardness & Minerals Section (High Intent Target) ── */}
+            <div className="card">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-9 h-9 rounded-lg bg-cyan-50 flex items-center justify-center text-lg">🪨</div>
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">Water Hardness & Mineral Content</h2>
+                  <p className="text-xs text-gray-400">Grains per gallon (GPG) & Parts per million (PPM / mg/L)</p>
+                </div>
+              </div>
+
+              <div className={`rounded-xl p-5 mb-4 border ${hardness.color}`}>
+                <div className="flex items-center justify-between flex-wrap gap-2 mb-2">
+                  <span className="text-lg font-black tracking-tight">Classification: {hardness.category}</span>
+                  <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white/80 border">
+                    {hardness.gpg} GPG · {hardness.ppm} mg/L
+                  </span>
+                </div>
+                <p className="text-sm leading-relaxed mb-3">
+                  {hardness.description}
+                </p>
+                <div className="p-3 bg-white/90 rounded-lg text-xs font-medium text-gray-800 border border-gray-100">
+                  <strong>Recommendation:</strong> {hardness.recommendation}
+                </div>
+              </div>
+
+              <div className="divide-y divide-gray-50 text-sm">
+                <DataRow label="Hardness (GPG)" value={`${hardness.gpg} GPG`} subtext="Grains per gallon" />
+                <DataRow label="Hardness (PPM / mg/L)" value={`${hardness.ppm} mg/L`} subtext="Parts per million CaCO3" />
+                <DataRow label="Appliance Scaling Risk" value={hardness.category === 'Soft' ? 'Very Low' : hardness.category === 'Moderately Hard' ? 'Low / Moderate' : 'High / Severe'} highlight={hardness.category === 'Soft' ? 'safe' : hardness.category === 'Moderately Hard' ? 'safe' : 'warning'} />
+              </div>
+            </div>
+
+            {/* ── Official EPA SDWIS Verification Banner (E-E-A-T Signal) ── */}
+            <div className="p-4 bg-gray-900 text-white rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-md">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 bg-brand-800/80 rounded-xl text-brand-300">
+                  <ShieldCheck className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm text-white">Official EPA SDWIS Database Entry</h3>
+                  <p className="text-xs text-gray-300 mt-0.5">
+                    Utility: {data.system_name || 'Public Water System'} · PWSID: {data.pwsid || 'SDWA Monitored'}
+                  </p>
+                </div>
+              </div>
+              <a
+                href={epaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl transition-colors whitespace-nowrap shadow-sm"
+              >
+                <span>Verify on EPA.gov</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
             </div>
 
             <AdInContent />

@@ -8,7 +8,9 @@ import { HomeSearch } from '@/components/sections/HomeSearch'
 import { blogArticles } from '@/data/blog-articles'
 import { AdTop, AdInContent } from '@/components/ui/AdSense'
 import { FadeIn } from '@/components/ui/FadeIn'
+import RippleDistortion from '@/components/ui/ripple-distortion'
 import { Search, FileText, ShieldAlert, Droplets, Activity, Beaker, AlertTriangle } from 'lucide-react'
+
 
 export const metadata: Metadata = {
   title: `${SITE_NAME} — Check Tap Water Safety by ZIP Code`,
@@ -65,29 +67,50 @@ export default async function HomePage() {
   return (
     <>
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-brand-900 text-white">
-        {/* Background Gradients */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-brand-700/50 via-brand-900 to-brand-900"></div>
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-water-500/20 blur-3xl rounded-full"></div>
-        <div className="absolute top-20 -left-20 w-72 h-72 bg-brand-500/20 blur-3xl rounded-full"></div>
-        
-        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-32 text-center">
+      <section className="relative overflow-hidden bg-gray-950 text-white min-h-[640px] flex items-center justify-center">
+        {/* Full-Visibility Interactive WebGL Ripple Distortion Background */}
+        <div className="absolute inset-0 z-0">
+          <RippleDistortion
+            imageSrc="https://cdn.21st.dev/assets/stock/photo/1015.jpg"
+            frequency={18}
+            amplitude={0.008}
+            speed={2.8}
+            antialias={true}
+            className="w-full h-full object-cover"
+          />
+
+        </div>
+
+        {/* Subtle Dark Vignette for contrast */}
+        <div className="absolute inset-0 bg-black/30 backdrop-brightness-90 z-[1] pointer-events-none"></div>
+
+        {/* Top Header Gradient Blend */}
+        <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-brand-950/60 to-transparent z-[2] pointer-events-none"></div>
+
+        {/* Left & Right Edge Vignette Gradients */}
+        <div className="absolute inset-y-0 left-0 w-20 sm:w-44 bg-gradient-to-r from-black/60 via-black/20 to-transparent z-[2] pointer-events-none"></div>
+        <div className="absolute inset-y-0 right-0 w-20 sm:w-44 bg-gradient-to-l from-black/60 via-black/20 to-transparent z-[2] pointer-events-none"></div>
+
+        {/* Ultra-Smooth Seamless Bottom Gradient Fade into White Stats Section */}
+        <div className="absolute bottom-0 inset-x-0 h-28 sm:h-36 bg-gradient-to-t from-white via-white/80 to-transparent z-[2] pointer-events-none"></div>
+
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-28 pb-32 sm:pb-36 text-center pointer-events-auto">
           <FadeIn direction="up">
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-5 py-2 text-sm font-medium mb-8 shadow-xl">
-              <span className="w-2.5 h-2.5 bg-water-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
-              Free EPA Data — Updated 2024
+            <div className="inline-flex items-center gap-2 bg-black/50 backdrop-blur-md border border-white/20 rounded-full px-5 py-2 text-sm font-medium mb-8 shadow-2xl">
+              <span className="w-2.5 h-2.5 bg-cyan-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
+              Free EPA Data — Updated {new Date().getFullYear()}
             </div>
           </FadeIn>
-          
+
           <FadeIn direction="up" delay={0.1}>
-            <h1 className="text-white text-4xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tight">
+            <h1 className="text-white text-4xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tight drop-shadow-xl">
               Is Your Tap Water<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-water-300 to-water-500 drop-shadow-sm">Safe to Drink?</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-200 to-blue-400 drop-shadow-md">Safe to Drink?</span>
             </h1>
           </FadeIn>
 
           <FadeIn direction="up" delay={0.2}>
-            <p className="text-lg sm:text-xl text-brand-100 mb-10 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-gray-100 mb-10 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
               Search 41,000+ U.S. ZIP codes for lead levels, water quality grades,
               violations, and contaminant data — powered by official EPA records.
             </p>
@@ -97,39 +120,42 @@ export default async function HomePage() {
             <div className="relative z-10 max-w-3xl mx-auto">
               <HomeSearch />
             </div>
-            <p className="text-sm text-brand-300 mt-5 font-medium">
-              No sign-up required. 100% free. Data from EPA SDWIS & Consumer Confidence Reports.
-            </p>
+            <div className="mt-6 flex justify-center">
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-xs sm:text-sm text-gray-100 font-medium shadow-xl">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                No sign-up required &bull; 100% Free &bull; Data from EPA SDWIS & Consumer Confidence Reports
+              </span>
+            </div>
           </FadeIn>
         </div>
-        
       </section>
 
-      {/* ── National Stats ── */}
-      <section className="bg-white border-b border-gray-100">
+      {/* ── National Stats with Smooth Top & Bottom Blends ── */}
+      <section className="relative bg-gradient-to-b from-white via-white to-sky-50/50 border-b border-sky-100/50">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
             <div>
               <p className="text-3xl font-black text-brand-700">{totalZips.toLocaleString()}+</p>
-              <p className="text-sm text-gray-500 mt-1">ZIP Codes Covered</p>
+              <p className="text-sm text-gray-500 mt-1 font-medium">ZIP Codes Covered</p>
             </div>
             <div>
               <p className="text-3xl font-black text-brand-700">50</p>
-              <p className="text-sm text-gray-500 mt-1">States + DC</p>
+              <p className="text-sm text-gray-500 mt-1 font-medium">States + DC</p>
             </div>
             <div>
               <p className="text-3xl font-black text-orange-600">{(totalViolations / 1000).toFixed(0)}K+</p>
-              <p className="text-sm text-gray-500 mt-1">Health Violations Found</p>
+              <p className="text-sm text-gray-500 mt-1 font-medium">Health Violations Found</p>
             </div>
             <div>
               <p className="text-3xl font-black text-red-600">{highLeadAvg}%</p>
-              <p className="text-sm text-gray-500 mt-1">High Lead Risk ZIPs</p>
+              <p className="text-sm text-gray-500 mt-1 font-medium">High Lead Risk ZIPs</p>
             </div>
           </div>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="bg-gradient-to-b from-sky-50/50 via-white to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <AdTop />
 
         {/* ── How It Works ── */}
@@ -344,6 +370,8 @@ export default async function HomePage() {
           </p>
         </section>
       </div>
+    </div>
     </>
   )
 }
+

@@ -40,15 +40,16 @@ export function HomeSearch() {
               setError('')
             }}
             placeholder="Enter ZIP code (e.g. 90210)"
-            className="w-full px-5 py-4 text-gray-900 text-lg rounded-xl border-0 focus:outline-none focus:ring-4 focus:ring-white/30 shadow-lg placeholder-gray-400"
+            className="w-full px-4 sm:px-5 py-3 sm:py-4 text-gray-900 text-base sm:text-lg rounded-xl border-0 focus:outline-none focus:ring-4 focus:ring-white/30 shadow-lg placeholder-gray-400 font-medium"
             maxLength={5}
             autoComplete="postal-code"
             aria-label="ZIP code"
             aria-describedby={error ? 'zip-error' : undefined}
           />
+
           {/* Live char counter */}
           {zip.length > 0 && zip.length < 5 && (
-            <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-gray-400">
+            <span className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-xs text-gray-400">
               {5 - zip.length} more
             </span>
           )}
@@ -56,7 +57,7 @@ export function HomeSearch() {
         <button
           type="submit"
           disabled={loading}
-          className="px-6 py-4 bg-gradient-to-r from-brand-500 to-water-500 hover:from-brand-400 hover:to-water-400 disabled:from-brand-800 disabled:to-brand-800 text-white font-bold text-lg rounded-xl shadow-[0_4px_14px_rgba(45,212,191,0.4)] hover:shadow-[0_6px_20px_rgba(45,212,191,0.6)] transition-all duration-200 whitespace-nowrap flex items-center gap-2 border border-white/20"
+          className="px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-brand-500 to-water-500 hover:from-brand-400 hover:to-water-400 disabled:from-brand-800 disabled:to-brand-800 text-white font-bold text-base sm:text-lg rounded-xl shadow-[0_4px_14px_rgba(45,212,191,0.4)] hover:shadow-[0_6px_20px_rgba(45,212,191,0.6)] transition-all duration-200 whitespace-nowrap flex items-center gap-1.5 sm:gap-2 border border-white/20 flex-shrink-0"
           aria-label="Check water quality"
         >
           {loading ? (
@@ -72,6 +73,7 @@ export function HomeSearch() {
           Check
         </button>
       </form>
+
 
       {error && (
         <p id="zip-error" className="mt-2 text-sm text-red-300 text-center" role="alert">

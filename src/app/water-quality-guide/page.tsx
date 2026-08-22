@@ -384,10 +384,11 @@ export default function WaterQualityGuidePage() {
             Key regulated contaminants, their EPA MCLs, public health goals, health effects, and common sources. This covers the contaminants most commonly found in violation records. The EPA regulates over 90 contaminants in total.
           </p>
 
-          <div className="table-scroll rounded-xl border border-gray-100 overflow-hidden">
-            <table className="w-full text-xs sm:text-sm border-collapse min-w-[600px]">
+          <div className="w-full overflow-x-auto rounded-xl border border-gray-200 shadow-sm my-4">
+            <table className="w-full text-xs sm:text-sm border-collapse min-w-[550px]">
               <thead>
                 <tr className="bg-brand-800 text-white text-xs uppercase tracking-wide">
+
                   <th className="text-left px-3 py-3">Contaminant</th>
                   <th className="text-left px-3 py-3">EPA MCL</th>
                   <th className="text-left px-3 py-3 hidden sm:table-cell">Health Goal</th>

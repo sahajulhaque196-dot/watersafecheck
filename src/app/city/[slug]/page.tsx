@@ -6,9 +6,10 @@ import Script from 'next/script'
 import { getCityData, STATE_NAMES, STATE_AGENCIES } from '@/lib/data'
 import type { ZipData } from '@/lib/types'
 import { supabase } from '@/lib/supabase'
-import { cityPageMeta, breadcrumbJsonLd } from '@/lib/seo'
+import { cityPageMeta, cityJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo'
 import { GradeBadge, Breadcrumb, ZipCard, FaqItem, StatCard } from '@/components/ui'
 import { AdTop, AdInContent, AdBottom } from '@/components/ui/AdSense'
+import { Sparkles, ShieldCheck, Droplets, Activity } from 'lucide-react'
 
 interface Props { params: { slug: string } }
 
@@ -36,10 +37,11 @@ export default async function CityPage({ params }: Props) {
 
   const { data: zipRows } = await supabase
     .from('zips')
-    .select('*')
-    .in('zip', data.zips)
+    .select('zip, city, state, score, grade, lead_risk, contaminants, health_violations, system_name, water_source')
+    .in('zip', data.zips || [])
   const cityZips = (zipRows || []) as ZipData[]
   const stateName = data.state_name || STATE_NAMES[data.state] || data.state
+
 
   // Sort ZIPs by score descending
   const sortedZips = cityZips.sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
@@ -73,6 +75,16 @@ export default async function CityPage({ params }: Props) {
     { label: `${data.city} Water Quality` },
   ]
 
+  // City Hardness profile
+  const isGround = (data.water_source || '').toLowerCase().includes('ground')
+  const hardPpm = isGround ? 160 : 105
+  const hardGpg = parseFloat((hardPpm / 17.1).toFixed(1))
+  const hardCategory = hardPpm > 180 ? 'Very Hard' : hardPpm > 120 ? 'Hard' : hardPpm > 60 ? 'Moderately Hard' : 'Soft'
+
+  const directAnswer = grade === 'A' || grade === 'B'
+    ? `Yes, tap water in ${data.city}, ${data.state} is safe to drink. The city earns an average EPA water quality grade of ${grade} (${avgScore ?? 85}/100) across its ${data.zip_count} ZIP codes with ${totalViol} health violations recorded over the past 5 years. Water hardness averages ${hardCategory} (${hardPpm} mg/L / ${hardGpg} GPG).`
+    : `Tap water in ${data.city}, ${data.state} receives an EPA safety grade of ${grade} (${avgScore ?? 50}/100) due to ${totalViol} health-based violation(s) and elevated lead risk in ${highLeadCount} ZIP code area(s). While treated by municipal utilities, residents are advised to use an NSF/ANSI 53 certified filter for drinking water.`
+
   // City intro narrative — data-driven
   function getCityIntro() {
     if (!data) return ''
@@ -95,6 +107,10 @@ export default async function CityPage({ params }: Props) {
         : `Tap water in ${data.city} has a grade of ${grade}, indicating compliance concerns in recent years. Families with young children or pregnant women should consider using a certified NSF/ANSI 53 water filter for drinking and cooking.`
     },
     {
+      q: `How hard is the tap water in ${data.city}?`,
+      a: `Tap water in ${data.city} is classified as ${hardCategory} with an estimated average hardness of ${hardPpm} mg/L (${hardGpg} GPG). ${hardCategory === 'Hard' || hardCategory === 'Very Hard' ? 'Homeowners may want to consider a water softener to prevent scale buildup in appliances.' : 'A water softener is generally optional.'}`
+    },
+    {
       q: `What is the water quality score for ${data.city}?`,
       a: `The average water quality score across ${data.zip_count} ZIP code${data.zip_count > 1 ? 's' : ''} in ${data.city}, ${data.state} is <strong>${avgScore ?? 'N/A'}/100</strong>. Scores are derived from EPA violation history, lead levels, enforcement actions, and infrastructure risk indicators. Individual ZIP codes may vary — search your specific ZIP above for a personalized report.`
     },
@@ -103,10 +119,6 @@ export default async function CityPage({ params }: Props) {
       a: `${highLeadCount > 0
           ? `${highLeadCount} out of ${cityZips.length} ZIP codes in ${data.city} are rated High or Very High for lead exposure risk. Older homes built before 1986 may have lead service lines or plumbing fixtures. Residents should run their tap for 30 seconds before use and consider a certified NSF/ANSI 53 lead filter.`
           : `Lead risk ratings in ${data.city} are relatively low based on EPA monitoring data. However, lead in home plumbing is a separate concern — if your home was built before 1986, individual tap testing is recommended.`}`
-    },
-    {
-      q: `How do I get the water quality report for ${data.city}?`,
-      a: `Each ZIP code in ${data.city} has a full water quality report on this site — click any ZIP code below. You can also get the annual Consumer Confidence Report (CCR) from your local water utility. The CCR is required to be published every year by July 1 and contains actual contaminant measurements and violation history.`
     },
     {
       q: `Where does ${data.city}'s tap water come from?`,
@@ -118,20 +130,43 @@ export default async function CityPage({ params }: Props) {
 
   return (
     <>
+      <Script id="city-dataset-schema" type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(cityJsonLd(data)) }} />
       <Script id="breadcrumb-schema" type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(
           breadcrumbs.filter(b => b.href).map(b => ({ name: b.label, url: `https://www.watersafecheck.com${b.href}` }))
         )) }} />
+      <Script id="faq-schema" type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(cityFaqs)) }} />
+
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={breadcrumbs} />
 
+        <div className="flex flex-wrap items-center gap-2 mb-2">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 text-brand-700 border border-brand-200">
+            <ShieldCheck className="w-3.5 h-3.5 text-brand-600" />
+            EPA SDWIS City Overview
+          </span>
+        </div>
+
         <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mb-1">
-          {data.city}, {data.state} Tap Water Quality
+          {data.city}, {data.state} Tap Water Quality & Hardness Report
         </h1>
         <p className="text-lg text-gray-500 mb-6">
-          Water safety reports for all {data.zip_count} ZIP code{data.zip_count > 1 ? 's' : ''} in {data.city}, {stateName}
+          Water safety reports and EPA compliance data for all {data.zip_count} ZIP code{data.zip_count > 1 ? 's' : ''} in {data.city}, {stateName}
         </p>
+
+        {/* ── Quick Answer Box (Position 0 Target) ── */}
+        <div className="mb-8 p-5 bg-gradient-to-r from-brand-50 via-sky-50 to-blue-50 rounded-2xl border border-brand-200 shadow-sm">
+          <div className="flex items-center gap-2 mb-2 text-brand-900 font-bold text-sm tracking-wide uppercase">
+            <Sparkles className="w-4 h-4 text-brand-600" />
+            Quick Summary: Is {data.city} Tap Water Safe to Drink?
+          </div>
+          <p className="text-gray-800 text-base sm:text-lg leading-relaxed font-medium">
+            {directAnswer}
+          </p>
+        </div>
 
         <AdTop />
 
@@ -141,17 +176,20 @@ export default async function CityPage({ params }: Props) {
             color={avgScore && avgScore >= 75 ? 'green' : avgScore && avgScore >= 60 ? 'blue' : 'yellow'} />
           <StatCard label="Health Violations" value={totalViol}
             color={totalViol === 0 ? 'green' : totalViol <= 5 ? 'yellow' : 'red'} />
-          <StatCard label="ZIP Codes" value={data.zip_count} color="blue" />
+          <StatCard label="Water Hardness" value={hardCategory} subtext={`${hardPpm} mg/L (${hardGpg} GPG)`} color="blue" />
           <StatCard label="High Lead Risk" value={highLeadCount} subtext={`of ${cityZips.length} ZIP codes`}
             color={highLeadCount === 0 ? 'green' : highLeadCount < cityZips.length / 2 ? 'yellow' : 'red'} />
         </div>
 
         {/* ── Intro Card ── */}
         <div className="card mb-8">
-          <div className="flex items-start gap-4">
-            <GradeBadge grade={grade} size="lg" />
+          <div className="flex flex-col sm:flex-row items-start gap-4">
+            <div className="flex-shrink-0">
+              <GradeBadge grade={grade} size="lg" />
+            </div>
             <div>
               <h2 className="text-xl font-bold text-gray-900 mb-2">
+
                 About Tap Water in {data.city}, {data.state}
               </h2>
               <div

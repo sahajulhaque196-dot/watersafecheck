@@ -215,14 +215,32 @@ export async function getNearbyZips(zip: string, city: string, state: string, li
       .neq('zip', zip)
       .order('score', { ascending: false })
       .limit(limit)
-    if (error) {
-      console.error('Error fetching nearby ZIPs:', error)
-      return []
+
+    const cityZips = (!error && data) ? (data as ZipData[]) : []
+    if (cityZips.length >= limit) {
+      return cityZips
     }
-    return (data || []) as ZipData[]
+
+    // Fallback: fetch state-level zips to guarantee at least 'limit' contextual internal links
+    const needed = limit - cityZips.length
+    const excludeZips = [zip, ...cityZips.map(z => z.zip)]
+    const { data: stateZips, error: stateErr } = await supabase
+      .from('zips')
+      .select('*')
+      .eq('state', state.toUpperCase())
+      .not('zip', 'in', `(${excludeZips.join(',')})`)
+      .order('score', { ascending: false })
+      .limit(needed)
+
+    if (!stateErr && stateZips) {
+      return [...cityZips, ...(stateZips as ZipData[])]
+    }
+
+    return cityZips
   } catch (e) {
     console.error('Exception fetching nearby ZIPs:', e)
     return []
   }
 }
+
 

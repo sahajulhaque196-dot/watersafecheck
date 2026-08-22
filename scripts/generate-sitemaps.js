@@ -7,9 +7,15 @@ const { createClient } = require('@supabase/supabase-js');
 const supabaseUrl = 'https://qhhamaaveozfanixkkqd.supabase.co';
 const supabaseKey = 'sb_publishable_suP6DNVdVwJfuEEwhEEM9g_zJk0779G';
 
+if (typeof global.WebSocket === 'undefined') {
+  global.WebSocket = class DummyWebSocket {};
+}
+
 const supabase = createClient(supabaseUrl, supabaseKey, {
-  auth: { persistSession: false }
+  auth: { persistSession: false, autoRefreshToken: false }
 });
+
+
 
 // Helper to fetch all rows using pagination
 async function fetchAllRows(tableName, orderColumn, selectColumns) {
