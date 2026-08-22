@@ -88,18 +88,18 @@ export function HomeSearch() {
           { label: 'New York 10001', zip: '10001' },
           { label: 'Los Angeles 90001', zip: '90001' },
           { label: 'Chicago 60601', zip: '60601' },
-          { label: 'Houston 77001', zip: '77001' },
         ].map(({ label, zip: z }) => (
           <button
             key={z}
             type="button"
             onClick={() => router.push(`/zip/${z}`)}
-            className="text-xs sm:text-sm font-semibold text-white hover:text-cyan-300 underline underline-offset-4 decoration-white/40 hover:decoration-cyan-300 transition-all"
+            className="text-xs sm:text-sm font-semibold text-white hover:text-cyan-300 underline underline-offset-4 decoration-white/40 hover:decoration-cyan-300 transition-all whitespace-nowrap"
           >
             {label}
           </button>
         ))}
       </div>
+
     </div>
   )
 }
