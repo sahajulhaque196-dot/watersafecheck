@@ -86,17 +86,46 @@ export function cityPageMeta(data: CityData) {
 
 // ─── JSON-LD structured data ───────────────────────────────────────────────
 
-export function zipJsonLd(data: ZipData) {
+export function breadcrumbJsonLd(items: { name: string; url: string }[], id?: string) {
+  const schema: Record<string, any> = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: item.name,
+      item: item.url.startsWith('http') ? item.url : `${SITE_URL}${item.url.startsWith('/') ? '' : '/'}${item.url}`,
+    })),
+  }
+  if (id) {
+    schema['@id'] = id
+  }
+  return schema
+}
+
+export function zipJsonLd(data: ZipData, breadcrumbItems?: { name: string; url: string }[]) {
   const ppb = data.lead_mg_l !== null ? data.lead_mg_l * 1000 : (data.ccr_lead_ppb ?? 0)
+  const pageUrl = `${SITE_URL}/zip/${data.zip}`
+  const stateCode = (data.state || '').toLowerCase()
+  const citySlug = data.city ? `${data.city.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${stateCode}` : null
+
+  // Ensure default full breadcrumb chain if not passed
+  const items = breadcrumbItems && breadcrumbItems.length > 0 ? breadcrumbItems : [
+    { name: 'Home', url: SITE_URL },
+    { name: data.state || 'State', url: `${SITE_URL}/state/${stateCode}` },
+    ...(data.city && citySlug ? [{ name: data.city, url: `${SITE_URL}/city/${citySlug}` }] : []),
+    { name: `ZIP ${data.zip}`, url: pageUrl }
+  ]
+
   return {
     '@context': 'https://schema.org',
     '@graph': [
       {
         '@type': 'Dataset',
-        '@id': `${SITE_URL}/zip/${data.zip}#dataset`,
+        '@id': `${pageUrl}#dataset`,
         name: `EPA Drinking Water Quality Data for ZIP Code ${data.zip}`,
         description: `Official Safe Drinking Water Act (SDWA) compliance and water quality metrics for ZIP code ${data.zip} (${data.city}, ${data.state}), supplied by ${data.system_name || 'local utility'}.`,
-        url: `${SITE_URL}/zip/${data.zip}`,
+        url: pageUrl,
         creator: {
           '@type': 'Organization',
           name: 'WaterSafeCheck',
@@ -135,29 +164,69 @@ export function zipJsonLd(data: ZipData) {
       },
       {
         '@type': 'ItemPage',
-        '@id': `${SITE_URL}/zip/${data.zip}#webpage`,
-        url: `${SITE_URL}/zip/${data.zip}`,
+        '@id': `${pageUrl}#webpage`,
+        url: pageUrl,
         name: `${data.zip} Water Quality & Safety Report`,
         isPartOf: { '@id': `${SITE_URL}/#website` },
-        breadcrumb: { '@id': `${SITE_URL}/zip/${data.zip}#breadcrumb` },
+        breadcrumb: { '@id': `${pageUrl}#breadcrumb` },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${pageUrl}#breadcrumb`,
+        itemListElement: items.map((item, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: item.name,
+          item: item.url.startsWith('http') ? item.url : `${SITE_URL}${item.url.startsWith('/') ? '' : '/'}${item.url}`,
+        })),
       }
     ]
   }
 }
 
-export function stateJsonLd(data: StateData) {
+export function stateJsonLd(data: StateData, breadcrumbItems?: { name: string; url: string }[]) {
+  const pageUrl = `${SITE_URL}/state/${data.code.toLowerCase()}`
+  const items = breadcrumbItems && breadcrumbItems.length > 0 ? breadcrumbItems : [
+    { name: 'Home', url: SITE_URL },
+    { name: `${data.name} Water Quality`, url: pageUrl }
+  ]
+
   return {
     '@context': 'https://schema.org',
-    '@type': 'Dataset',
-    name: `Drinking Water Quality in ${data.name}`,
-    description: `Comprehensive EPA drinking water quality data for ${data.zip_count.toLocaleString()} ZIP codes in ${data.name}, including safety grades, violations, lead levels, and contaminant reports.`,
-    url: `${SITE_URL}/state/${data.code.toLowerCase()}`,
-    creator: { '@type': 'Organization', name: 'WaterSafeCheck', url: SITE_URL },
-    spatialCoverage: { '@type': 'State', name: data.name, containedIn: { '@type': 'Country', name: 'United States' } },
-    isBasedOn: [
-      'https://www.epa.gov/enviro/sdwis-search',
-      'https://echo.epa.gov',
-    ],
+    '@graph': [
+      {
+        '@type': 'Dataset',
+        '@id': `${pageUrl}#dataset`,
+        name: `Drinking Water Quality in ${data.name}`,
+        description: `Comprehensive EPA drinking water quality data for ${data.zip_count.toLocaleString()} ZIP codes in ${data.name}, including safety grades, violations, lead levels, and contaminant reports.`,
+        url: pageUrl,
+        creator: { '@type': 'Organization', name: 'WaterSafeCheck', url: SITE_URL },
+        publisher: { '@type': 'Organization', name: 'WaterSafeCheck', url: SITE_URL },
+        spatialCoverage: { '@type': 'State', name: data.name, containedIn: { '@type': 'Country', name: 'United States' } },
+        isBasedOn: [
+          'https://www.epa.gov/enviro/sdwis-search',
+          'https://echo.epa.gov',
+        ],
+      },
+      {
+        '@type': 'ItemPage',
+        '@id': `${pageUrl}#webpage`,
+        url: pageUrl,
+        name: `${data.name} Drinking Water Quality & Safety Report`,
+        isPartOf: { '@id': `${SITE_URL}/#website` },
+        breadcrumb: { '@id': `${pageUrl}#breadcrumb` },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${pageUrl}#breadcrumb`,
+        itemListElement: items.map((item, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: item.name,
+          item: item.url.startsWith('http') ? item.url : `${SITE_URL}${item.url.startsWith('/') ? '' : '/'}${item.url}`,
+        })),
+      }
+    ]
   }
 }
 
@@ -177,52 +246,68 @@ export function homePageJsonLd() {
   }
 }
 
-export function breadcrumbJsonLd(items: { name: string; url: string }[]) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: items.map((item, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      name: item.name,
-      item: item.url.startsWith('http') ? item.url : `${SITE_URL}${item.url}`,
-    })),
-  }
-}
-
-export function cityJsonLd(data: CityData) {
+export function cityJsonLd(data: CityData, breadcrumbItems?: { name: string; url: string }[]) {
   const slug = `${data.city.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${data.state.toLowerCase()}`
+  const pageUrl = `${SITE_URL}/city/${slug}`
+  const items = breadcrumbItems && breadcrumbItems.length > 0 ? breadcrumbItems : [
+    { name: 'Home', url: SITE_URL },
+    { name: data.state_name || data.state, url: `${SITE_URL}/state/${data.state.toLowerCase()}` },
+    { name: `${data.city} Water Quality`, url: pageUrl }
+  ]
+
   return {
     '@context': 'https://schema.org',
-    '@type': 'Dataset',
-    '@id': `${SITE_URL}/city/${slug}#dataset`,
-    name: `${data.city}, ${data.state} Drinking Water Quality & Safety Data`,
-    description: `Official EPA Safe Drinking Water Act (SDWA) water quality metrics, lead levels, water hardness, and compliance reports for ${data.city}, ${data.state} across ${data.zip_count} ZIP codes.`,
-    url: `${SITE_URL}/city/${slug}`,
-    creator: {
-      '@type': 'Organization',
-      name: 'WaterSafeCheck',
-      url: SITE_URL,
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'WaterSafeCheck',
-      url: SITE_URL,
-    },
-    license: 'https://creativecommons.org/licenses/by/4.0/',
-    spatialCoverage: {
-      '@type': 'City',
-      name: data.city,
-      containedIn: {
-        '@type': 'State',
-        name: data.state_name || data.state,
+    '@graph': [
+      {
+        '@type': 'Dataset',
+        '@id': `${pageUrl}#dataset`,
+        name: `${data.city}, ${data.state} Drinking Water Quality & Safety Data`,
+        description: `Official EPA Safe Drinking Water Act (SDWA) water quality metrics, lead levels, water hardness, and compliance reports for ${data.city}, ${data.state} across ${data.zip_count} ZIP codes.`,
+        url: pageUrl,
+        creator: {
+          '@type': 'Organization',
+          name: 'WaterSafeCheck',
+          url: SITE_URL,
+        },
+        publisher: {
+          '@type': 'Organization',
+          name: 'WaterSafeCheck',
+          url: SITE_URL,
+        },
+        license: 'https://creativecommons.org/licenses/by/4.0/',
+        spatialCoverage: {
+          '@type': 'City',
+          name: data.city,
+          containedIn: {
+            '@type': 'State',
+            name: data.state_name || data.state,
+          },
+        },
+        variableMeasured: [
+          { '@type': 'PropertyValue', name: 'Composite Safety Grade', value: data.best_grade },
+          { '@type': 'PropertyValue', name: 'Monitored ZIP Codes', value: data.zip_count },
+          { '@type': 'PropertyValue', name: 'Primary Water Source', value: data.water_source },
+        ],
       },
-    },
-    variableMeasured: [
-      { '@type': 'PropertyValue', name: 'Composite Safety Grade', value: data.best_grade },
-      { '@type': 'PropertyValue', name: 'Monitored ZIP Codes', value: data.zip_count },
-      { '@type': 'PropertyValue', name: 'Primary Water Source', value: data.water_source },
-    ],
+      {
+        '@type': 'ItemPage',
+        '@id': `${pageUrl}#webpage`,
+        url: pageUrl,
+        name: `${data.city}, ${data.state} Water Quality & Testing Report`,
+        isPartOf: { '@id': `${SITE_URL}/#website` },
+        breadcrumb: { '@id': `${pageUrl}#breadcrumb` },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': `${pageUrl}#breadcrumb`,
+        itemListElement: items.map((item, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: item.name,
+          item: item.url.startsWith('http') ? item.url : `${SITE_URL}${item.url.startsWith('/') ? '' : '/'}${item.url}`,
+        })),
+      }
+    ]
   }
 }
 

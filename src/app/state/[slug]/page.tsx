@@ -124,15 +124,16 @@ export default async function StatePage({ params }: Props) {
     { label: `${data.name} Water Quality` },
   ]
 
+  const breadcrumbItems = [
+    { name: 'Home', url: 'https://www.watersafecheck.com' },
+    { name: `${data.name} Water Quality`, url: `https://www.watersafecheck.com/state/${data.code.toLowerCase()}` }
+  ]
+
   return (
     <>
+      {/* Structured Data — Unified @graph containing Dataset, ItemPage, and BreadcrumbList */}
       <Script id="state-schema" type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(stateJsonLd(data)) }} />
-      <Script id="breadcrumb-schema" type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(
-          [{ name: 'Home', url: 'https://www.watersafecheck.com' },
-           { name: `${data.name} Water Quality`, url: `https://www.watersafecheck.com/state/${data.code.toLowerCase()}` }]
-        )) }} />
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(stateJsonLd(data, breadcrumbItems)) }} />
       <Script id="faq-schema" type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(faqs)) }} />
 

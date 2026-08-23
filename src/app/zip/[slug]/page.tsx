@@ -99,20 +99,20 @@ export default async function ZipPage({ params }: Props) {
     { label: `ZIP ${data.zip}` },
   ]
 
+  const breadcrumbItems = [
+    { name: 'Home', url: 'https://www.watersafecheck.com' },
+    { name: stateName, url: `https://www.watersafecheck.com/state/${data.state.toLowerCase()}` },
+    ...(data.city && citySlug ? [{ name: data.city, url: `https://www.watersafecheck.com/city/${citySlug}` }] : []),
+    { name: `ZIP ${data.zip}`, url: `https://www.watersafecheck.com/zip/${data.zip}` },
+  ]
+
   return (
     <>
-      {/* Structured Data */}
+      {/* Structured Data — Unified @graph containing Dataset, ItemPage, and BreadcrumbList */}
       <Script
         id="zip-schema"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(zipJsonLd(data)) }}
-      />
-      <Script
-        id="breadcrumb-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(
-          breadcrumbs.filter(b => b.href).map(b => ({ name: b.label, url: `https://www.watersafecheck.com${b.href}` }))
-        )) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(zipJsonLd(data, breadcrumbItems)) }}
       />
       <Script
         id="faq-schema"

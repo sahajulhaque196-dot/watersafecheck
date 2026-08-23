@@ -130,14 +130,18 @@ export default async function CityPage({ params }: Props) {
     },
   ]
 
+  const slug = `${data.city.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${data.state.toLowerCase()}`
+  const breadcrumbItems = [
+    { name: 'Home', url: 'https://www.watersafecheck.com' },
+    { name: stateName, url: `https://www.watersafecheck.com/state/${data.state.toLowerCase()}` },
+    { name: `${data.city} Water Quality`, url: `https://www.watersafecheck.com/city/${slug}` }
+  ]
+
   return (
     <>
+      {/* Structured Data — Unified @graph containing Dataset, ItemPage, and BreadcrumbList */}
       <Script id="city-dataset-schema" type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(cityJsonLd(data)) }} />
-      <Script id="breadcrumb-schema" type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd(
-          breadcrumbs.filter(b => b.href).map(b => ({ name: b.label, url: `https://www.watersafecheck.com${b.href}` }))
-        )) }} />
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(cityJsonLd(data, breadcrumbItems)) }} />
       <Script id="faq-schema" type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(cityFaqs)) }} />
 

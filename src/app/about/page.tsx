@@ -17,6 +17,14 @@ const orgSchema = {
   url: SITE_URL,
   logo: `${SITE_URL}/favicon.svg`,
   description: 'An independent data transparency project that simplifies public U.S. EPA drinking water compliance records for local communities.',
+  founder: {
+    '@type': 'Person',
+    name: 'Marcus J. Webb',
+    jobTitle: 'Lead Environmental Data Analyst',
+    url: `${SITE_URL}/about`,
+    sameAs: [],
+    knowsAbout: ['EPA SDWIS Compliance', 'Safe Drinking Water Act', 'Water Contaminant Analysis', 'Lead and Copper Rule']
+  },
   knowsAbout: [
     'Drinking Water Quality',
     'EPA SDWIS Compliance',
@@ -191,6 +199,39 @@ export default function AboutPage() {
                 <p>{item}</p>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* ── Editorial Leadership & Authors (E-E-A-T) ── */}
+        <section className="mb-12" aria-labelledby="team-heading">
+          <h2 id="team-heading" className="text-2xl font-bold text-gray-900 mb-4">Editorial Leadership & Research</h2>
+          <p className="text-gray-700 leading-relaxed mb-6">
+            All data ingestion pipelines, scoring models, and educational articles are reviewed by our dedicated environmental data research team to maintain high technical accuracy and strict alignment with Safe Drinking Water Act (SDWA) standards.
+          </p>
+          <div className="card bg-gradient-to-br from-brand-50 via-white to-sky-50 border-brand-100 p-6 rounded-2xl shadow-sm">
+            <div className="flex flex-col sm:flex-row gap-5 items-start">
+              <div className="w-16 h-16 rounded-2xl bg-brand-700 text-white flex items-center justify-center font-black text-2xl flex-shrink-0 shadow-md">
+                MW
+              </div>
+              <div className="flex-1">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
+                  <h3 className="font-bold text-gray-900 text-lg">Marcus J. Webb</h3>
+                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-brand-100 text-brand-800 border border-brand-200">
+                    Lead Environmental Data Analyst
+                  </span>
+                </div>
+                <p className="text-xs text-gray-500 mb-3 font-medium">10+ Years EPA Compliance Research & Public Utility Data Ingestion</p>
+                <p className="text-sm text-gray-600 leading-relaxed mb-4">
+                  Marcus specializes in environmental informatics, geospatial database modeling, and federal Safe Drinking Water Act compliance reporting. He has spent over a decade parsing municipal water utility filings, Consumer Confidence Reports, and EPA SDWIS/ECHO enforcement logs to translate dense federal regulatory documentation into accessible, data-driven consumer guidance.
+                </p>
+                <div className="flex flex-wrap gap-2 text-xs">
+                  <span className="bg-white border border-gray-200 px-2.5 py-1 rounded-md text-gray-700 font-medium">SDWA Compliance</span>
+                  <span className="bg-white border border-gray-200 px-2.5 py-1 rounded-md text-gray-700 font-medium">EPA ECHO Analysis</span>
+                  <span className="bg-white border border-gray-200 px-2.5 py-1 rounded-md text-gray-700 font-medium">Lead & Copper Rule</span>
+                  <span className="bg-white border border-gray-200 px-2.5 py-1 rounded-md text-gray-700 font-medium">UCMR5 PFAS Data</span>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
