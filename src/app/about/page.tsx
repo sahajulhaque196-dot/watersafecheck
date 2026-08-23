@@ -38,8 +38,10 @@ const orgSchema = {
 export default function AboutPage() {
   return (
     <>
-      <Script id="org-about-schema" type="application/ld+json" strategy="afterInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+      />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <nav className="mb-6 text-sm text-gray-500" aria-label="Breadcrumb">

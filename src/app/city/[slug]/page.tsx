@@ -140,10 +140,14 @@ export default async function CityPage({ params }: Props) {
   return (
     <>
       {/* Structured Data — Unified @graph containing Dataset, ItemPage, and BreadcrumbList */}
-      <Script id="city-dataset-schema" type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(cityJsonLd(data, breadcrumbItems)) }} />
-      <Script id="faq-schema" type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(cityFaqs)) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(cityJsonLd(data, breadcrumbItems)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(cityFaqs)) }}
+      />
 
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

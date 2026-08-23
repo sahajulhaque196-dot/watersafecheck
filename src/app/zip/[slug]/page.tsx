@@ -109,13 +109,11 @@ export default async function ZipPage({ params }: Props) {
   return (
     <>
       {/* Structured Data — Unified @graph containing Dataset, ItemPage, and BreadcrumbList */}
-      <Script
-        id="zip-schema"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(zipJsonLd(data, breadcrumbItems)) }}
       />
-      <Script
-        id="faq-schema"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(faqs)) }}
       />

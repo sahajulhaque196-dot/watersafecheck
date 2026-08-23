@@ -132,10 +132,14 @@ export default async function StatePage({ params }: Props) {
   return (
     <>
       {/* Structured Data — Unified @graph containing Dataset, ItemPage, and BreadcrumbList */}
-      <Script id="state-schema" type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(stateJsonLd(data, breadcrumbItems)) }} />
-      <Script id="faq-schema" type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(faqs)) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(stateJsonLd(data, breadcrumbItems)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(faqs)) }}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumb items={breadcrumbs} />
