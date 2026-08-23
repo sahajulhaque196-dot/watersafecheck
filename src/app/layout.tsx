@@ -1,18 +1,25 @@
 // src/app/layout.tsx
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
+import { Inter } from 'next/font/google'
 import './globals.css'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from '@/lib/seo'
 import Script from 'next/script'
 
-// ─────────────────────────────────────────────────────────
-// CONFIGURATION — Replace these 3 values before deploying
-// ─────────────────────────────────────────────────────────
-const GA_MEASUREMENT_ID = 'G-WN6QCSJNY3'          // Google Analytics 4 ID
-const ADSENSE_PUBLISHER_ID = 'ca-pub-XXXXXXXXXXXXXXXX' // AdSense Publisher ID
-const SEARCH_CONSOLE_TOKEN = '4rwnkoJKqRTw6f1ePOF3zd-m7qzxtOCTh0t80dymWR8' // GSC verification
-// ─────────────────────────────────────────────────────────
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+
+// Configuration — reads from env with fallback
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-WN6QCSJNY3'
+const ADSENSE_PUBLISHER_ID = process.env.NEXT_PUBLIC_ADSENSE_ID || 'ca-pub-XXXXXXXXXXXXXXXX'
+const SEARCH_CONSOLE_TOKEN = '4rwnkoJKqRTw6f1ePOF3zd-m7qzxtOCTh0t80dymWR8'
+
+export const viewport: Viewport = {
+  themeColor: '#0d4a94',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -63,18 +70,50 @@ export const metadata: Metadata = {
   },
 }
 
-import { Inter } from 'next/font/google'
-
-// ... existing code ...
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const isAdSenseActive = Boolean(
+    ADSENSE_PUBLISHER_ID &&
+    !ADSENSE_PUBLISHER_ID.includes('XXXX') &&
+    !ADSENSE_PUBLISHER_ID.includes('your-publisher-id')
+  )
+
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: SITE_DESCRIPTION,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: { '@type': 'EntryPoint', urlTemplate: `${SITE_URL}/zip/{zip_code}` },
+      'query-input': 'required name=zip_code',
+    },
+  }
+
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: `${SITE_URL}/favicon.svg`,
+    email: 'contact@watersafecheck.com',
+    founder: {
+      '@type': 'Person',
+      name: 'Marcus J. Webb',
+      jobTitle: 'Lead Environmental Data Analyst',
+      url: `${SITE_URL}/about`,
+    },
+    contactPoint: {
+      '@type': 'ContactPoint',
+      email: 'contact@watersafecheck.com',
+      contactType: 'customer support',
+      availableLanguage: 'English',
+    },
+  }
+
   return (
     <html lang="en" className={`${inter.variable} font-sans`}>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-        <meta name="theme-color" content="#0d4a94" />
         {/* Preconnect to Google services for faster loading */}
         <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
@@ -84,6 +123,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Favicon variants */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="shortcut icon" href="/favicon.svg" />
+
+        {/* ── SSR Structured Data: WebSite & Organization (Instant Crawler Parsing) ── */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
       </head>
       <body>
         {/* Accessibility: skip navigation link */}
@@ -99,13 +148,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
 
         {/* ── Google Analytics 4 ── */}
-        {/* Step 1: Load the gtag.js library */}
         <Script
           id="ga-script"
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="afterInteractive"
         />
-        {/* Step 2: Initialize GA4 with your Measurement ID */}
         <Script
           id="ga-init"
           strategy="afterInteractive"
@@ -124,7 +171,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
 
         {/* ── Google AdSense ── */}
-        {ADSENSE_PUBLISHER_ID && !ADSENSE_PUBLISHER_ID.includes('XXXX') && (
+        {isAdSenseActive && (
           <Script
             id="adsense"
             async
@@ -133,52 +180,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             strategy="afterInteractive"
           />
         )}
-
-        {/* ── Structured Data: WebSite + SearchAction ── */}
-        <Script
-          id="website-schema"
-          type="application/ld+json"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'WebSite',
-              name: SITE_NAME,
-              url: SITE_URL,
-              description: SITE_DESCRIPTION,
-              potentialAction: {
-                '@type': 'SearchAction',
-                target: { '@type': 'EntryPoint', urlTemplate: `${SITE_URL}/zip/{zip_code}` },
-                'query-input': 'required name=zip_code',
-              },
-            }),
-          }}
-        />
-
-        {/* ── Structured Data: Organization (EEAT) ── */}
-        <Script
-          id="org-schema"
-          type="application/ld+json"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'Organization',
-              name: SITE_NAME,
-              url: SITE_URL,
-              logo: `${SITE_URL}/favicon.svg`,
-              email: 'contact@watersafecheck.com',
-              contactPoint: {
-                '@type': 'ContactPoint',
-                email: 'contact@watersafecheck.com',
-                contactType: 'customer support',
-                availableLanguage: 'English',
-              },
-              sameAs: [],
-            }),
-          }}
-        />
       </body>
     </html>
   )
 }
+
