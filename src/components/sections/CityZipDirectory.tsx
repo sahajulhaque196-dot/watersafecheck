@@ -311,6 +311,24 @@ export function CityZipDirectory({ zips, cityName, stateCode }: CityZipDirectory
           </button>
         </div>
       )}
+
+      {/* ── Complete SSR Crawl Directory (Ensures 100% Googlebot Crawl Coverage) ── */}
+      <div className="mt-8 pt-6 border-t border-gray-100">
+        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">
+          All {cityName}, {stateCode} ZIP Code Reports ({zips.length} Total)
+        </h3>
+        <div className="flex flex-wrap gap-1.5 text-xs">
+          {zips.map(z => (
+            <Link
+              key={`dir-${z.zip}`}
+              href={`/zip/${z.zip}`}
+              className="px-2.5 py-1 rounded bg-gray-50 hover:bg-brand-50 text-gray-700 hover:text-brand-700 font-mono text-xs border border-gray-200 hover:border-brand-200 transition-colors"
+            >
+              {z.zip}
+            </Link>
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

@@ -55,11 +55,11 @@ function AdUnit({ slot, format = 'auto', className = '', style }: AdSenseProps) 
   )
 }
 
-// ─── Pre-configured ad positions ───────────────────────────────────────────
+// ─── Pre-configured ad positions with CLS-prevention reserved heights ──────
 export function AdTop() {
   if (!IS_ADSENSE_ACTIVE) return null
   return (
-    <div className="w-full my-1 empty:hidden no-print" aria-label="Advertisement">
+    <div className="w-full my-4 min-h-[90px] flex items-center justify-center overflow-hidden bg-gray-50/50 rounded-lg no-print" aria-label="Advertisement">
       <AdUnit slot="1111111111" format="horizontal" />
     </div>
   )
@@ -68,7 +68,7 @@ export function AdTop() {
 export function AdSidebar() {
   if (!IS_ADSENSE_ACTIVE) return null
   return (
-    <div className="sticky top-20 empty:hidden no-print" aria-label="Advertisement">
+    <div className="sticky top-20 min-h-[250px] flex items-center justify-center overflow-hidden bg-gray-50/50 rounded-lg no-print" aria-label="Advertisement">
       <AdUnit slot="2222222222" format="vertical" />
     </div>
   )
@@ -77,7 +77,7 @@ export function AdSidebar() {
 export function AdInContent() {
   if (!IS_ADSENSE_ACTIVE) return null
   return (
-    <div className="my-2 empty:hidden no-print" aria-label="Advertisement">
+    <div className="my-6 min-h-[250px] flex items-center justify-center overflow-hidden bg-gray-50/50 rounded-lg no-print" aria-label="Advertisement">
       <AdUnit slot="3333333333" format="rectangle" />
     </div>
   )
@@ -86,7 +86,7 @@ export function AdInContent() {
 export function AdBottom() {
   if (!IS_ADSENSE_ACTIVE) return null
   return (
-    <div className="w-full my-2 empty:hidden no-print" aria-label="Advertisement">
+    <div className="w-full my-6 min-h-[90px] flex items-center justify-center overflow-hidden bg-gray-50/50 rounded-lg no-print" aria-label="Advertisement">
       <AdUnit slot="4444444444" format="auto" />
     </div>
   )

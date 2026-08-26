@@ -9,6 +9,11 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
         disallow: ['/api/'],
       },
+      {
+        userAgent: ['GPTBot', 'OAI-SearchBot', 'ClaudeBot', 'PerplexityBot', 'Google-Extended', 'bingbot'],
+        allow: '/',
+        disallow: ['/api/'],
+      },
     ],
     sitemap: 'https://www.watersafecheck.com/sitemap-index.xml',
     host: 'https://www.watersafecheck.com',

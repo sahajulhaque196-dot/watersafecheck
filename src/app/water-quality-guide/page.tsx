@@ -70,7 +70,7 @@ const articleSchema = {
     url: 'https://www.watersafecheck.com',
   },
   datePublished: '2024-01-01',
-  dateModified: '2025-01-01',
+  dateModified: '2026-08-26',
   mainEntityOfPage: 'https://www.watersafecheck.com/water-quality-guide',
 }
 

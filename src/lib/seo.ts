@@ -16,12 +16,14 @@ export function zipPageMeta(data: ZipData) {
   const currentYear = new Date().getFullYear()
   const ppb = data.lead_mg_l !== null ? (data.lead_mg_l * 1000).toFixed(1) : (data.ccr_lead_ppb !== null ? data.ccr_lead_ppb.toFixed(1) : '0')
   const violations = data.health_violations
-  const boilAlert = data.boil_water_advisories > 0 ? ' [Advisory Alert]' : ''
+  const hasBoil = data.boil_water_advisories > 0
 
-  // Precision-tuned for Top 1-3 SERP on: "[ZIP] water quality", "[ZIP] boil water", "is tap water safe [ZIP]"
-  const title = `${data.zip} Water Quality & Boil Water Status (${currentYear}) — Is Tap Water Safe? (Grade ${grade})${boilAlert}`
+  // High-CTR, compact 55-62 char title optimized against SERP truncation
+  const title = hasBoil
+    ? `${data.zip} Boil Water Advisory & Quality (${currentYear}) — Grade ${grade}`
+    : `${data.zip} Water Quality (${currentYear}): Is ${city} Tap Water Safe? (Grade ${grade})`
   
-  const description = `Is tap water safe in ${data.zip} (${city}, ${state})? Official ${currentYear} EPA Report: Grade ${grade} (${data.score ?? 'N/A'}/100), ${violations} health violations, ${ppb} ppb lead & mineral hardness. Check boil water history & utility testing.`
+  const description = `Official ${currentYear} EPA water report for ZIP ${data.zip} (${city}, ${state}): Grade ${grade} (${data.score ?? 'N/A'}/100), ${violations} violations, ${ppb} ppb lead & mineral hardness data.`
 
   return {
     title,
@@ -45,8 +47,9 @@ export function zipPageMeta(data: ZipData) {
 
 export function statePageMeta(data: StateData) {
   const currentYear = new Date().getFullYear()
-  const title = `${data.name} Drinking Water Quality & Safety Report (${currentYear}) — EPA Testing Data | ${SITE_NAME}`
-  const description = `Is tap water safe in ${data.name}? Comprehensive ${currentYear} EPA water report covering all ${data.zip_count.toLocaleString()} ZIP codes. View water hardness, lead testing, PFAS violations & city rankings.`
+  // High-CTR 55-60 char title
+  const title = `${data.name} Drinking Water Quality & Safety (${currentYear} EPA Report)`
+  const description = `Statewide ${currentYear} EPA water report for ${data.name}. View safety grades, lead testing, PFAS violations & city rankings across ${data.zip_count.toLocaleString()} ZIP codes.`
   return {
     title,
     description,
@@ -65,9 +68,9 @@ export function cityPageMeta(data: CityData) {
   const currentYear = new Date().getFullYear()
   const state = data.state || ''
   const grade = data.best_grade || 'B'
-  // Tuned for #1 on: "water quality testing [city] [state]", "[city] water hardness", "[city] tap water"
-  const title = `${data.city}, ${state} Water Quality & Testing Report (${currentYear}) — Hardness & EPA Grade ${grade}`
-  const description = `Is tap water safe in ${data.city}, ${state}? Composite ${currentYear} EPA Grade: ${grade} across ${data.zip_count} ZIP code${data.zip_count > 1 ? 's' : ''}. Check water hardness, lead violations, boil water notices & utility testing.`
+  // High-CTR 55-62 char title
+  const title = `${data.city}, ${state} Water Quality & Hardness (${currentYear} EPA Report)`
+  const description = `Is tap water safe in ${data.city}, ${state}? Official ${currentYear} EPA Grade: ${grade} across ${data.zip_count} ZIP codes. Check lead violations, water hardness & utility data.`
   const slug = `${data.city.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${data.state.toLowerCase()}`
   return {
     title,

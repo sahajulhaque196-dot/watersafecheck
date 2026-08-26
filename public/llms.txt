@@ -1,0 +1,33 @@
+﻿# WaterSafeCheck — U.S. Drinking Water Quality & Safety Database
+> Independent data transparency platform providing free, localized drinking water quality reports, lead risk levels, water hardness, and EPA compliance records for 41,000+ U.S. ZIP codes.
+
+## Core Purpose & Authority
+WaterSafeCheck aggregates and normalizes public environmental datasets from the U.S. Environmental Protection Agency (EPA) to provide transparent, plain-English drinking water reports for consumers, researchers, and public health advocates.
+
+## Primary Datasets & Sources
+- **EPA SDWIS:** Safe Drinking Water Information System (Federal compliance & violation records for 150,000+ public water systems)
+- **EPA ECHO:** Enforcement and Compliance History Online
+- **EPA UCMR5:** 5th Unregulated Contaminant Monitoring Rule (PFAS & lithium screening)
+- **Consumer Confidence Reports (CCRs):** Annual utility water testing filings
+- **USGS:** Regional water hardness and mineral content baselines
+
+## URL Routing Structure
+- Homepage: https://www.watersafecheck.com
+- ZIP Code Reports: https://www.watersafecheck.com/zip/{5-digit-zip-code} (e.g., `/zip/77001`, `/zip/90210`, `/zip/10001`)
+- City Composite Reports: https://www.watersafecheck.com/city/{city-name}-{state-code} (e.g., `/city/houston-tx`, `/city/los-angeles-ca`)
+- Statewide Reports: https://www.watersafecheck.com/state/{2-letter-state-code} (e.g., `/state/ca`, `/state/tx`, `/state/ny`)
+- Water Quality & Filtration Guide: https://www.watersafecheck.com/water-quality-guide
+- Editorial & Methodology: https://www.watersafecheck.com/about
+
+## Scoring Methodology
+- **Grade A (85–100):** Meets all EPA National Primary Drinking Water Standards with 0 health violations.
+- **Grade B (70–84):** Good compliance; minor past monitoring or administrative notifications.
+- **Grade C (55–69):** Moderate compliance concerns; 1–2 health-based violations or elevated lead risk.
+- **Grade D (40–54):** Poor compliance; multiple recurring health violations.
+- **Grade F (<40):** Significant non-compliance; unresolved violations or active boil water advisories.
+
+## Contact & Transparency
+- Lead Analyst: Marcus J. Webb (Lead Environmental Data Analyst)
+- Organization: WaterSafeCheck
+- Website: https://www.watersafecheck.com
+- Contact: contact@watersafecheck.com

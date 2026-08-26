@@ -243,4 +243,22 @@ export async function getNearbyZips(zip: string, city: string, state: string, li
   }
 }
 
+export async function getUtilityZips(pwsid: string | null, currentZip: string, limit = 6): Promise<ZipData[]> {
+  if (!pwsid || pwsid.trim() === '') return []
+  try {
+    const { data, error } = await supabase
+      .from('zips')
+      .select('zip, city, state, score, grade, health_violations, system_name')
+      .eq('pwsid', pwsid.trim())
+      .neq('zip', currentZip)
+      .limit(limit)
+
+    if (error || !data) return []
+    return data as ZipData[]
+  } catch (e) {
+    console.error('Exception fetching utility ZIPs:', e)
+    return []
+  }
+}
+
 

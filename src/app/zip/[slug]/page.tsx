@@ -8,6 +8,7 @@ import {
   gradeColor, riskBadgeClass, formatPopulation,
   getContaminantList, getWaterSourceDescription,
   getRadonZoneDescription, cityToSlug, getNearbyZips,
+  getUtilityZips,
 } from '@/lib/data'
 import {
   getZipIntro, getLeadSection, getViolationNarrative,
@@ -68,7 +69,10 @@ export default async function ZipPage({ params }: Props) {
   const data = await getZipData(params.slug)
   if (!data) notFound()
 
-  const nearbyZips = await getNearbyZips(data.zip, data.city, data.state)
+  const [nearbyZips, utilityZips] = await Promise.all([
+    getNearbyZips(data.zip, data.city, data.state),
+    getUtilityZips(data.pwsid, data.zip, 8),
+  ])
   const intro = getZipIntro(data)
   const leadSection = getLeadSection(data)
   const violationNarrative = getViolationNarrative(data)
@@ -143,15 +147,21 @@ export default async function ZipPage({ params }: Props) {
         </div>
 
         {/* ── Featured Snippet / Quick Answer Card (Position 0 Target) ── */}
-        <div className="mb-8 p-5 bg-gradient-to-r from-brand-50 via-sky-50 to-blue-50 rounded-2xl border border-brand-200 shadow-sm">
-          <div className="flex items-center gap-2 mb-2 text-brand-900 font-bold text-sm tracking-wide uppercase">
+        <section
+          aria-label="Direct Water Safety Summary"
+          className="mb-8 p-5 bg-gradient-to-r from-brand-50 via-sky-50 to-blue-50 rounded-2xl border border-brand-200 shadow-sm"
+        >
+          <div className="flex items-center gap-2 mb-2 text-brand-900 font-bold text-xs uppercase tracking-wider">
             <Sparkles className="w-4 h-4 text-brand-600" />
-            Quick Summary: Is ZIP {data.zip} Tap Water Safe to Drink?
+            Quick EPA Verified Answer
           </div>
+          <h2 className="text-xl sm:text-2xl font-bold text-brand-950 mb-2">
+            Is Tap Water Safe to Drink in ZIP {data.zip} ({data.city || 'Local Area'}, {data.state})?
+          </h2>
           <p className="text-gray-800 text-base sm:text-lg leading-relaxed font-medium">
             {directAnswer}
           </p>
-        </div>
+        </section>
 
         <AdTop />
 
@@ -770,6 +780,35 @@ export default async function ZipPage({ params }: Props) {
                       <span className="text-sm font-mono text-gray-700 group-hover:text-brand-700">{z.zip}</span>
                       <div className="flex items-center gap-2">
                         <span className="text-xs text-gray-400">{z.score ?? '—'}/100</span>
+                        <GradeBadge grade={z.grade} size="sm" />
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Same Water Utility ZIPs Silo (Topical Authority Cluster) */}
+            {utilityZips.length > 0 && (
+              <div className="card">
+                <h3 className="font-bold text-gray-900 mb-1 text-sm uppercase tracking-wide">
+                  Same Water Utility
+                </h3>
+                <p className="text-xs text-gray-500 mb-3 truncate" title={data.system_name || 'Public Utility'}>
+                  Also supplied by {data.system_name || 'this provider'}
+                </p>
+                <div className="space-y-1">
+                  {utilityZips.map(z => (
+                    <Link
+                      key={`util-${z.zip}`}
+                      href={`/zip/${z.zip}`}
+                      className="flex items-center justify-between px-2 py-1.5 rounded hover:bg-gray-50 group"
+                    >
+                      <div>
+                        <span className="text-sm font-mono text-gray-700 group-hover:text-brand-700 font-medium">{z.zip}</span>
+                        {z.city && <span className="text-[11px] text-gray-400 ml-1.5">{z.city}</span>}
+                      </div>
+                      <div className="flex items-center gap-2">
                         <GradeBadge grade={z.grade} size="sm" />
                       </div>
                     </Link>

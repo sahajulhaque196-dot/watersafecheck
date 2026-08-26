@@ -168,15 +168,21 @@ export default async function CityPage({ params }: Props) {
         </p>
 
         {/* ── Quick Answer Box (Position 0 Target) ── */}
-        <div className="mb-8 p-5 bg-gradient-to-r from-brand-50 via-sky-50 to-blue-50 rounded-2xl border border-brand-200 shadow-sm">
-          <div className="flex items-center gap-2 mb-2 text-brand-900 font-bold text-sm tracking-wide uppercase">
+        <section
+          aria-label="Direct Water Safety Summary"
+          className="mb-8 p-5 bg-gradient-to-r from-brand-50 via-sky-50 to-blue-50 rounded-2xl border border-brand-200 shadow-sm"
+        >
+          <div className="flex items-center gap-2 mb-2 text-brand-900 font-bold text-xs uppercase tracking-wider">
             <Sparkles className="w-4 h-4 text-brand-600" />
-            Quick Summary: Is {data.city} Tap Water Safe to Drink?
+            Quick EPA Verified Summary
           </div>
+          <h2 className="text-xl sm:text-2xl font-bold text-brand-950 mb-2">
+            Is Tap Water Safe to Drink in {data.city}, {data.state}?
+          </h2>
           <p className="text-gray-800 text-base sm:text-lg leading-relaxed font-medium">
             {directAnswer}
           </p>
-        </div>
+        </section>
 
         <AdTop />
 
