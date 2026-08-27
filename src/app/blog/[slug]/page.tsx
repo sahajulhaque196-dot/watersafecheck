@@ -73,6 +73,7 @@ export default function BlogArticlePage({ params }: Props) {
     dateModified: article.updateDate,
     mainEntityOfPage: `${SITE_URL}/blog/${article.slug}`,
     url: `${SITE_URL}/blog/${article.slug}`,
+    isPartOf: { '@id': `${SITE_URL}/#website` },
     articleSection: article.category,
     keywords: article.tags.join(', '),
     about: { '@type': 'Thing', name: 'Drinking Water Safety' },
@@ -84,7 +85,10 @@ export default function BlogArticlePage({ params }: Props) {
     mainEntity: article.faqs.map(faq => ({
       '@type': 'Question',
       name: faq.q,
-      acceptedAnswer: { '@type': 'Answer', text: faq.a },
+      acceptedAnswer: { 
+        '@type': 'Answer', 
+        text: faq.a.replace(/<[^>]*>?/gm, '').replace(/\*\*/g, '') 
+      },
     })),
   } : null
 

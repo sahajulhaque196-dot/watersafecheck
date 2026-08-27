@@ -7,6 +7,18 @@ export const metadata: Metadata = {
   description: 'Privacy policy for WaterSafeCheck.com — how we collect, use, and protect your information. We collect minimal data and never sell your personal information.',
   alternates: { canonical: 'https://www.watersafecheck.com/privacy' },
   robots: { index: true, follow: true },
+  openGraph: {
+    title: 'Privacy Policy | WaterSafeCheck',
+    description: 'Privacy policy for WaterSafeCheck.com — how we collect, use, and protect your information.',
+    url: 'https://www.watersafecheck.com/privacy',
+    type: 'website',
+    siteName: 'WaterSafeCheck',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Privacy Policy | WaterSafeCheck',
+    description: 'Privacy policy for WaterSafeCheck.com.',
+  },
 }
 
 export default function PrivacyPage() {
@@ -19,7 +31,7 @@ export default function PrivacyPage() {
       </nav>
 
       <h1 className="text-3xl font-black text-gray-900 mb-2">Privacy Policy</h1>
-      <p className="text-sm text-gray-400 mb-8">Last updated: January 1, 2025</p>
+      <p className="text-sm text-gray-400 mb-8">Last updated: January 1, 2026</p>
 
       <div className="space-y-8 text-sm text-gray-700 leading-relaxed">
 

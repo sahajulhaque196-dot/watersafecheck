@@ -7,6 +7,18 @@ export const metadata: Metadata = {
   description: 'Terms of service and user agreement for WaterSafeCheck.com. Learn about our terms of use, content guidelines, disclaimers, and user responsibilities.',
   alternates: { canonical: 'https://www.watersafecheck.com/terms' },
   robots: { index: true, follow: true },
+  openGraph: {
+    title: 'Terms of Service | WaterSafeCheck',
+    description: 'Terms of service and user agreement for WaterSafeCheck.com.',
+    url: 'https://www.watersafecheck.com/terms',
+    type: 'website',
+    siteName: 'WaterSafeCheck',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Terms of Service | WaterSafeCheck',
+    description: 'Terms of service and user agreement for WaterSafeCheck.com.',
+  },
 }
 
 export default function TermsPage() {

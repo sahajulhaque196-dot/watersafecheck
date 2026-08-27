@@ -7,7 +7,19 @@ import { SITE_URL } from '@/lib/seo'
 export const metadata: Metadata = {
   title: 'About WaterSafeCheck — Our Mission, Data Sources & Methodology',
   description: 'Learn about the WaterSafeCheck project. Discover how we parse public EPA Safe Drinking Water Act compliance databases to make water safety information accessible for every American household.',
-  alternates: { canonical: 'https://www.watersafecheck.com/about' },
+  alternates: { canonical: `${SITE_URL}/about` },
+  openGraph: {
+    title: 'About WaterSafeCheck — Our Mission, Data Sources & Methodology',
+    description: 'Learn about the WaterSafeCheck project, our EPA compliance parsing methodology, and our commitment to public health transparency.',
+    url: `${SITE_URL}/about`,
+    type: 'website',
+    siteName: 'WaterSafeCheck',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'About WaterSafeCheck — Mission & Data Sources',
+    description: 'Learn how WaterSafeCheck translates public EPA compliance records into free water safety reports.',
+  },
 }
 
 const orgSchema = {

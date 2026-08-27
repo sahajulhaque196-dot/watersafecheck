@@ -7,6 +7,18 @@ export const metadata: Metadata = {
   title: 'Contact WaterSafeCheck — Data Questions, Corrections & Inquiries',
   description: 'Contact WaterSafeCheck for data questions, corrections, media inquiries, or general help understanding your tap water quality report. We respond within 1–2 business days.',
   alternates: { canonical: 'https://www.watersafecheck.com/contact' },
+  openGraph: {
+    title: 'Contact WaterSafeCheck — Inquiries & Data Questions',
+    description: 'Get in touch with the WaterSafeCheck editorial and environmental data analysis team.',
+    url: 'https://www.watersafecheck.com/contact',
+    type: 'website',
+    siteName: 'WaterSafeCheck',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Contact WaterSafeCheck',
+    description: 'Contact our data team for inquiries or corrections.',
+  },
 }
 
 export default function ContactPage() {

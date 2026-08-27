@@ -20,7 +20,7 @@ const RippleDistortion = dynamic(
     loading: () => (
       <img
         src="/images/water-hero.jpg"
-        alt="Water Background"
+        alt="Clean drinking water ripple background — EPA drinking water quality database"
         className="w-full h-full object-cover"
       />
     ),

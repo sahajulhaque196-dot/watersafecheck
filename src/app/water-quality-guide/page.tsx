@@ -62,15 +62,17 @@ const articleSchema = {
   author: {
     '@type': 'Person',
     name: 'Marcus J. Webb',
+    jobTitle: 'Lead Environmental Data Analyst',
     url: 'https://www.watersafecheck.com/about',
   },
   publisher: {
     '@type': 'Organization',
     name: 'WaterSafeCheck',
     url: 'https://www.watersafecheck.com',
+    logo: { '@type': 'ImageObject', url: 'https://www.watersafecheck.com/favicon.svg' },
   },
-  datePublished: '2024-01-01',
-  dateModified: '2026-08-26',
+  datePublished: '2025-01-01',
+  dateModified: '2026-08-27',
   mainEntityOfPage: 'https://www.watersafecheck.com/water-quality-guide',
 }
 
@@ -131,7 +133,7 @@ export default function WaterQualityGuidePage() {
               </p>
             </div>
             <div className="ml-auto text-xs text-gray-400 hidden sm:block">
-              Updated Jan 2025
+              Updated {new Date().getFullYear()}
             </div>
           </div>
         </div>

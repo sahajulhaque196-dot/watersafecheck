@@ -6,6 +6,18 @@ export const metadata: Metadata = {
   title: 'Disclaimer | WaterSafeCheck',
   description: 'Important disclaimer about WaterSafeCheck data — what we can and cannot tell you about your drinking water safety. Read before making health decisions.',
   alternates: { canonical: 'https://www.watersafecheck.com/disclaimer' },
+  openGraph: {
+    title: 'Disclaimer | WaterSafeCheck',
+    description: 'Important disclaimer about WaterSafeCheck drinking water data and educational guidance.',
+    url: 'https://www.watersafecheck.com/disclaimer',
+    type: 'website',
+    siteName: 'WaterSafeCheck',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Disclaimer | WaterSafeCheck',
+    description: 'Important disclaimer about WaterSafeCheck drinking water data.',
+  },
 }
 
 export default function DisclaimerPage() {
@@ -18,7 +30,7 @@ export default function DisclaimerPage() {
       </nav>
 
       <h1 className="text-3xl font-black text-gray-900 mb-2">Disclaimer</h1>
-      <p className="text-sm text-gray-400 mb-8">Last updated: January 1, 2025</p>
+      <p className="text-sm text-gray-400 mb-8">Last updated: January 1, 2026</p>
 
       <div className="space-y-8 text-sm text-gray-700 leading-relaxed">
 

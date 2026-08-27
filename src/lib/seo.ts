@@ -205,10 +205,19 @@ export function stateJsonLd(data: StateData, breadcrumbItems?: { name: string; u
         url: pageUrl,
         creator: { '@type': 'Organization', name: 'WaterSafeCheck', url: SITE_URL },
         publisher: { '@type': 'Organization', name: 'WaterSafeCheck', url: SITE_URL },
+        license: 'https://creativecommons.org/licenses/by/4.0/',
+        temporalCoverage: '2020/2026',
         spatialCoverage: { '@type': 'State', name: data.name, containedIn: { '@type': 'Country', name: 'United States' } },
         isBasedOn: [
           'https://www.epa.gov/enviro/sdwis-search',
           'https://echo.epa.gov',
+          'https://www.epa.gov/ground-water-and-drinking-water'
+        ],
+        variableMeasured: [
+          { '@type': 'PropertyValue', name: 'Statewide Average Score', value: data.avg_score },
+          { '@type': 'PropertyValue', name: 'Monitored ZIP Codes', value: data.zip_count },
+          { '@type': 'PropertyValue', name: 'Health-Based Violations', value: data.health_violations },
+          { '@type': 'PropertyValue', name: 'Surface Water Ratio', value: `${data.surface_water_pct}%` },
         ],
       },
       {
@@ -278,6 +287,12 @@ export function cityJsonLd(data: CityData, breadcrumbItems?: { name: string; url
           url: SITE_URL,
         },
         license: 'https://creativecommons.org/licenses/by/4.0/',
+        temporalCoverage: '2020/2026',
+        isBasedOn: [
+          'https://www.epa.gov/enviro/sdwis-search',
+          'https://echo.epa.gov',
+          'https://www.epa.gov/ground-water-and-drinking-water'
+        ],
         spatialCoverage: {
           '@type': 'City',
           name: data.city,
