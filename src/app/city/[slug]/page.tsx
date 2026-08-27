@@ -89,8 +89,8 @@ export default async function CityPage({ params }: Props) {
   const hardCategory = hardPpm > 180 ? 'Very Hard' : hardPpm > 120 ? 'Hard' : hardPpm > 60 ? 'Moderately Hard' : 'Soft'
 
   const directAnswer = grade === 'A' || grade === 'B'
-    ? `Yes, tap water in ${data.city}, ${data.state} is safe to drink. The city earns an average EPA water quality grade of ${grade} (${avgScore ?? 85}/100) across its ${data.zip_count} ZIP codes with ${totalViol} health violations recorded over the past 5 years. Water hardness averages ${hardCategory} (${hardPpm} mg/L / ${hardGpg} GPG). Local water testing is recommended for older plumbing or private wells.`
-    : `Tap water in ${data.city}, ${data.state} receives an EPA safety grade of ${grade} (${avgScore ?? 50}/100) due to ${totalViol} health-based violation(s) and elevated lead risk in ${highLeadCount} ZIP code area(s). While treated by municipal utilities, residents are advised to perform water testing and use an NSF/ANSI 53 certified filter for drinking water.`
+    ? `Yes, tap water in ${data.city}, ${data.state} is safe to drink under EPA Safe Drinking Water Act standards. The city earns an average EPA Safety Grade of ${grade} (${avgScore ?? 85}/100) across ${data.zip_count} ZIP codes with ${totalViol} health violations and ${hardCategory.toLowerCase()} (${hardPpm} mg/L / ${hardGpg} GPG) water. Certified testing is recommended for older plumbing or private wells.`
+    : `Tap water in ${data.city}, ${data.state} receives an EPA Safety Grade of ${grade} (${avgScore ?? 50}/100) due to ${totalViol} health-based violation(s) and elevated lead risk. While treated by local utilities, residents are advised to test tap water and use an NSF/ANSI 53 certified filter for drinking and cooking.`
 
   // City intro narrative — data-driven
   function getCityIntro() {

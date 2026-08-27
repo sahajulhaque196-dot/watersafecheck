@@ -8,18 +8,19 @@ import { getContaminantList, STATE_AGENCIES, STATE_NAMES } from './data'
 // ─── Featured Snippet / Position 0 Direct Answer ──────────────────────────
 
 export function getDirectAnswerSnippet(d: ZipData): string {
-  const city = d.city || 'this area'
+  const city = d.city || 'Local Area'
   const stateCode = d.state || ''
   const grade = d.grade || 'C'
   const ppb = d.lead_mg_l !== null ? (d.lead_mg_l * 1000).toFixed(1) : (d.ccr_lead_ppb !== null ? d.ccr_lead_ppb.toFixed(1) : '0')
   const violations = d.health_violations
   const sysName = d.system_name || 'local utility'
+  const hardness = getWaterHardnessAnalysis(d)
 
   if (grade === 'A' || grade === 'B') {
-    return `Yes, tap water in ZIP code ${d.zip} (${city}, ${stateCode}) is safe to drink according to official EPA Safe Drinking Water Act standards. Served by ${sysName}, the area earns an EPA Grade of ${grade} (${d.score ?? 85}/100) with ${violations} health violations and a 90th percentile lead level of ${ppb} ppb (below the 15 ppb federal action limit).`
+    return `Yes, tap water in ZIP code ${d.zip} (${city}, ${stateCode}) is safe to drink under EPA Safe Drinking Water Act standards. Supplied by ${sysName}, the area earns an EPA Safety Grade of ${grade} (${d.score ?? 85}/100) with ${violations} health violations, ${ppb} ppb lead, and ${hardness.category.toLowerCase()} (${hardness.ppm} mg/L / ${hardness.gpg} GPG) water.`
   }
 
-  return `Tap water in ZIP code ${d.zip} (${city}, ${stateCode}) earns an EPA Safety Grade of ${grade} (${d.score ?? 50}/100) due to ${violations} health-based violation(s) and recorded lead levels of ${ppb} ppb. While treated by ${sysName}, residents—especially households with infants or pregnant individuals—are advised to use an NSF/ANSI 53 certified water filter for drinking and cooking.`
+  return `Tap water in ZIP code ${d.zip} (${city}, ${stateCode}) earns an EPA Safety Grade of ${grade} (${d.score ?? 50}/100) due to ${violations} health violation(s) and ${ppb} ppb lead. While treated by ${sysName}, residents are advised to use an NSF/ANSI 53 certified water filter for drinking and cooking.`
 }
 
 // ─── Water Hardness Calculation & Analysis ────────────────────────────────

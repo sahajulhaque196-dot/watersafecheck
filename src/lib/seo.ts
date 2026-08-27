@@ -18,10 +18,10 @@ export function zipPageMeta(data: ZipData) {
   const violations = data.health_violations
   const hasBoil = data.boil_water_advisories > 0
 
-  // High-CTR, search-intent aligned title (under 65 chars to prevent SERP truncation)
+  // High-CTR, search-intent aligned title (under 60 chars to prevent SERP truncation)
   const title = hasBoil
-    ? `${data.zip} Boil Water Advisory & Testing Report (${currentYear})`
-    : `${data.zip} Water Quality & Testing Guide: Is ${city} Tap Water Safe? (Grade ${grade})`
+    ? `${data.zip} Boil Water Notice & Water Quality Report (${currentYear})`
+    : `${data.zip} Water Quality Testing & Safety Report (${currentYear} EPA)`
   
   const description = `Official ${currentYear} EPA drinking water report & testing guide for ZIP ${data.zip} (${city}, ${state}): Grade ${grade} (${data.score ?? 'N/A'}/100), ${violations} violations, ${ppb} ppb lead & hardness data.`
 
