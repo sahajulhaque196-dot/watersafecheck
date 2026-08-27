@@ -23,19 +23,30 @@ export async function getZipData(zip: string): Promise<ZipData | null> {
 }
 
 export async function getStateData(code: string): Promise<StateData | null> {
+  const upper = code.toUpperCase()
   try {
     const { data, error } = await supabase
       .from('states')
       .select('*')
-      .eq('code', code.toUpperCase())
+      .eq('code', upper)
       .maybeSingle()
-    if (error) {
-      console.error(`Error fetching state ${code}:`, error)
-      return null
+    if (data && !error) {
+      return data as StateData
     }
-    return data as StateData | null
+    // Fallback to local state dataset if database is unreachable
+    const localStates = require('@/data/state_data.json')
+    if (localStates && localStates[upper]) {
+      return localStates[upper] as StateData
+    }
+    return null
   } catch (e) {
     console.error(`Exception fetching state ${code}:`, e)
+    try {
+      const localStates = require('@/data/state_data.json')
+      if (localStates && localStates[upper]) {
+        return localStates[upper] as StateData
+      }
+    } catch {}
     return null
   }
 }
@@ -260,5 +271,25 @@ export async function getUtilityZips(pwsid: string | null, currentZip: string, l
     return []
   }
 }
+
+export async function getNearbyCities(state: string, currentCity: string, limit = 8): Promise<{ city: string; state: string; slug: string; zip_count: number; best_grade: string }[]> {
+  try {
+    const { data, error } = await supabase
+      .from('cities')
+      .select('city, state, slug, zip_count, best_grade')
+      .eq('state', state.toUpperCase())
+      .neq('city', currentCity)
+      .order('zip_count', { ascending: false })
+      .limit(limit)
+
+    if (error || !data) return []
+    return data as { city: string; state: string; slug: string; zip_count: number; best_grade: string }[]
+  } catch (e) {
+    console.error('Exception fetching nearby cities:', e)
+    return []
+  }
+}
+
+
 
 

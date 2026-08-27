@@ -3,7 +3,8 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Script from 'next/script'
-import { getCityData, STATE_NAMES, STATE_AGENCIES } from '@/lib/data'
+import { getCityData, getNearbyCities, STATE_NAMES, STATE_AGENCIES } from '@/lib/data'
+import { getCityTestingGuide } from '@/lib/content'
 import type { ZipData } from '@/lib/types'
 import { supabase } from '@/lib/supabase'
 import { cityPageMeta, cityJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo'
@@ -11,7 +12,7 @@ import { GradeBadge, Breadcrumb, ZipCard, FaqItem, StatCard } from '@/components
 import { CityZipDirectory } from '@/components/sections/CityZipDirectory'
 import { AdTop, AdInContent, AdBottom } from '@/components/ui/AdSense'
 
-import { Sparkles, ShieldCheck, Droplets, Activity } from 'lucide-react'
+import { Sparkles, ShieldCheck, Droplets, Activity, Beaker, CheckCircle2, AlertTriangle, ArrowRight, MapPin } from 'lucide-react'
 
 interface Props { params: { slug: string } }
 
@@ -37,13 +38,17 @@ export default async function CityPage({ params }: Props) {
   const data = await getCityData(params.slug)
   if (!data) return notFound()
 
-  const { data: zipRows } = await supabase
-    .from('zips')
-    .select('zip, city, state, score, grade, lead_risk, contaminants, health_violations, system_name, water_source')
-    .in('zip', data.zips || [])
+  const [{ data: zipRows }, nearbyCities] = await Promise.all([
+    supabase
+      .from('zips')
+      .select('zip, city, state, score, grade, lead_risk, contaminants, health_violations, system_name, water_source')
+      .in('zip', data.zips || []),
+    getNearbyCities(data.state, data.city, 8),
+  ])
+
   const cityZips = (zipRows || []) as ZipData[]
   const stateName = data.state_name || STATE_NAMES[data.state] || data.state
-
+  const testingGuide = getCityTestingGuide(data)
 
   // Sort ZIPs by score descending
   const sortedZips = cityZips.sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
@@ -74,7 +79,7 @@ export default async function CityPage({ params }: Props) {
   const breadcrumbs = [
     { label: 'Home', href: '/' },
     { label: stateName, href: `/state/${data.state.toLowerCase()}` },
-    { label: `${data.city} Water Quality` },
+    { label: `${data.city} Water Quality & Testing` },
   ]
 
   // City Hardness profile
@@ -84,8 +89,8 @@ export default async function CityPage({ params }: Props) {
   const hardCategory = hardPpm > 180 ? 'Very Hard' : hardPpm > 120 ? 'Hard' : hardPpm > 60 ? 'Moderately Hard' : 'Soft'
 
   const directAnswer = grade === 'A' || grade === 'B'
-    ? `Yes, tap water in ${data.city}, ${data.state} is safe to drink. The city earns an average EPA water quality grade of ${grade} (${avgScore ?? 85}/100) across its ${data.zip_count} ZIP codes with ${totalViol} health violations recorded over the past 5 years. Water hardness averages ${hardCategory} (${hardPpm} mg/L / ${hardGpg} GPG).`
-    : `Tap water in ${data.city}, ${data.state} receives an EPA safety grade of ${grade} (${avgScore ?? 50}/100) due to ${totalViol} health-based violation(s) and elevated lead risk in ${highLeadCount} ZIP code area(s). While treated by municipal utilities, residents are advised to use an NSF/ANSI 53 certified filter for drinking water.`
+    ? `Yes, tap water in ${data.city}, ${data.state} is safe to drink. The city earns an average EPA water quality grade of ${grade} (${avgScore ?? 85}/100) across its ${data.zip_count} ZIP codes with ${totalViol} health violations recorded over the past 5 years. Water hardness averages ${hardCategory} (${hardPpm} mg/L / ${hardGpg} GPG). Local water testing is recommended for older plumbing or private wells.`
+    : `Tap water in ${data.city}, ${data.state} receives an EPA safety grade of ${grade} (${avgScore ?? 50}/100) due to ${totalViol} health-based violation(s) and elevated lead risk in ${highLeadCount} ZIP code area(s). While treated by municipal utilities, residents are advised to perform water testing and use an NSF/ANSI 53 certified filter for drinking water.`
 
   // City intro narrative — data-driven
   function getCityIntro() {
@@ -105,8 +110,16 @@ export default async function CityPage({ params }: Props) {
     {
       q: `Is tap water safe to drink in ${data.city}, ${data.state}?`,
       a: grade === 'A' || grade === 'B'
-        ? `Yes — tap water in ${data.city} meets all federal EPA standards and earns a ${grade} grade. It is generally safe for healthy adults. As always, running your tap for 30 seconds before use and using a filter adds extra protection for vulnerable populations.`
+        ? `Yes — tap water in ${data.city} meets federal EPA standards and earns a ${grade} grade. It is generally safe for healthy adults. As always, running your tap for 30 seconds before use and using a filter adds extra protection for vulnerable populations.`
         : `Tap water in ${data.city} has a grade of ${grade}, indicating compliance concerns in recent years. Families with young children or pregnant women should consider using a certified NSF/ANSI 53 water filter for drinking and cooking.`
+    },
+    {
+      q: `How do I test water quality in ${data.city}, ${data.state}?`,
+      a: `To test water quality in ${data.city}, you can order an EPA-compliant drinking water test kit or submit samples to a state-certified environmental testing laboratory in ${data.state}. Testing is especially recommended for homes built before 1986 (to check for lead in plumbing) and for properties with private well systems.`
+    },
+    {
+      q: `Should I test private well water in ${data.city}?`,
+      a: `Yes. Unlike municipal tap water, private wells in ${data.city}, ${data.state} are not monitored or regulated by the EPA or local utilities. Private well owners are responsible for testing their water annually for coliform bacteria and nitrates, and every 3 to 5 years for heavy metals (lead, arsenic) and volatile organic compounds.`
     },
     {
       q: `How hard is the tap water in ${data.city}?`,
@@ -134,7 +147,7 @@ export default async function CityPage({ params }: Props) {
   const breadcrumbItems = [
     { name: 'Home', url: 'https://www.watersafecheck.com' },
     { name: stateName, url: `https://www.watersafecheck.com/state/${data.state.toLowerCase()}` },
-    { name: `${data.city} Water Quality`, url: `https://www.watersafecheck.com/city/${slug}` }
+    { name: `${data.city} Water Quality & Testing`, url: `https://www.watersafecheck.com/city/${slug}` }
   ]
 
   return (
@@ -158,13 +171,17 @@ export default async function CityPage({ params }: Props) {
             <ShieldCheck className="w-3.5 h-3.5 text-brand-600" />
             EPA SDWIS City Overview
           </span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+            <Beaker className="w-3.5 h-3.5 text-blue-600" />
+            Water Testing & Safety Guide
+          </span>
         </div>
 
         <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mb-1">
-          {data.city}, {data.state} Tap Water Quality & Hardness Report
+          {data.city}, {data.state} Water Quality Testing & Safety Report
         </h1>
         <p className="text-lg text-gray-500 mb-6">
-          Water safety reports and EPA compliance data for all {data.zip_count} ZIP code{data.zip_count > 1 ? 's' : ''} in {data.city}, {stateName}
+          EPA compliance records, water testing guidelines, and hardness metrics for all {data.zip_count} ZIP code{data.zip_count > 1 ? 's' : ''} in {data.city}, {stateName}
         </p>
 
         {/* ── Quick Answer Box (Position 0 Target) ── */}
@@ -205,7 +222,6 @@ export default async function CityPage({ params }: Props) {
             </div>
             <div>
               <h2 className="text-xl font-bold text-gray-900 mb-2">
-
                 About Tap Water in {data.city}, {data.state}
               </h2>
               <div
@@ -221,6 +237,92 @@ export default async function CityPage({ params }: Props) {
             </div>
           )}
         </div>
+
+        {/* ── Dedicated Water Quality Testing Guide ── */}
+        <section className="card mb-8 bg-white border-blue-100 shadow-sm">
+          <div className="flex items-center gap-2.5 mb-3">
+            <div className="p-2 rounded-lg bg-blue-100 text-blue-700">
+              <Beaker className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-gray-900">
+                Water Quality Testing in {data.city}, {data.state}
+              </h2>
+              <p className="text-xs text-gray-500">Tap Water & Well Water Testing Recommendations</p>
+            </div>
+          </div>
+
+          <p className="text-sm text-gray-700 leading-relaxed mb-6">
+            {testingGuide.summary}
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            {/* Tap Water Testing Checklist */}
+            <div className="bg-slate-50 rounded-xl p-5 border border-slate-200">
+              <h3 className="text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                Tap Water Testing Checklist
+              </h3>
+              <ul className="space-y-2.5 text-xs text-gray-700 leading-relaxed">
+                {testingGuide.tapTestingSteps.map((step, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="font-bold text-brand-600 min-w-[16px]">{idx + 1}.</span>
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Well Water Testing Checklist */}
+            <div className="bg-amber-50/50 rounded-xl p-5 border border-amber-200">
+              <h3 className="text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 text-amber-600" />
+                Private Well Water Testing Checklist
+              </h3>
+              <ul className="space-y-2.5 text-xs text-gray-700 leading-relaxed">
+                {testingGuide.wellTestingSteps.map((step, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <span className="font-bold text-amber-700 min-w-[16px]">•</span>
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Key Parameters Table */}
+          <div className="border border-gray-200 rounded-xl overflow-hidden mb-4">
+            <div className="bg-gray-50 px-4 py-2.5 border-b border-gray-200">
+              <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wider">
+                Critical Water Testing Parameters for {data.city} Residents
+              </h4>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200 text-xs">
+                <thead className="bg-gray-50 text-gray-600 font-semibold">
+                  <tr>
+                    <th className="px-4 py-2.5 text-left">Parameter</th>
+                    <th className="px-4 py-2.5 text-left">Health Reason</th>
+                    <th className="px-4 py-2.5 text-left">EPA Limit / Standard</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 bg-white">
+                  {testingGuide.keyParameters.map((param, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50">
+                      <td className="px-4 py-2.5 font-bold text-gray-900 whitespace-nowrap">{param.name}</td>
+                      <td className="px-4 py-2.5 text-gray-600">{param.why}</td>
+                      <td className="px-4 py-2.5 text-brand-700 font-medium whitespace-nowrap">{param.limit}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-800">
+            <strong>State Regulatory Oversight:</strong> Environmental standards and certified water lab registries in {data.state} are maintained by the <strong>{testingGuide.agencyName}</strong>.
+          </div>
+        </section>
 
         <AdInContent />
 
@@ -251,11 +353,49 @@ export default async function CityPage({ params }: Props) {
           stateCode={data.state}
         />
 
+        {/* ── Nearby Cities Water Quality & Testing (Horizontal Internal Silo) ── */}
+        {nearbyCities.length > 0 && (
+          <div className="card mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <MapPin className="w-5 h-5 text-brand-600" />
+              <h2 className="text-xl font-bold text-gray-900">
+                Nearby Cities Water Quality & Testing in {stateName}
+              </h2>
+            </div>
+            <p className="text-sm text-gray-600 mb-4">
+              Compare tap water safety, EPA test scores, and water hardness across neighboring cities in {stateName}:
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {nearbyCities.map((nc) => (
+                <Link
+                  key={nc.slug}
+                  href={`/city/${nc.slug}`}
+                  className="p-3.5 rounded-xl border border-gray-200 hover:border-brand-500 hover:bg-brand-50/40 transition group flex flex-col justify-between"
+                >
+                  <div>
+                    <span className="font-semibold text-gray-900 group-hover:text-brand-700 text-sm block">
+                      {nc.city}, {nc.state}
+                    </span>
+                    <span className="text-xs text-gray-500 block mt-0.5">
+                      {nc.zip_count} ZIP code{nc.zip_count > 1 ? 's' : ''}
+                    </span>
+                  </div>
+                  <div className="mt-2 flex items-center justify-between">
+                    <span className="text-xs font-bold px-2 py-0.5 rounded bg-gray-100 text-gray-700 group-hover:bg-brand-100 group-hover:text-brand-800">
+                      Grade {nc.best_grade || 'B'}
+                    </span>
+                    <ArrowRight className="w-3.5 h-3.5 text-gray-400 group-hover:text-brand-600 transition-transform group-hover:translate-x-0.5" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* ── FAQ ── */}
         <div className="card mb-8">
           <h2 className="text-xl font-bold text-gray-900 mb-5">
-            Frequently Asked Questions — {data.city} Water Quality
+            Frequently Asked Questions — {data.city} Water Quality & Testing
           </h2>
           <div className="space-y-2">
             {cityFaqs.map((faq, i) => (
@@ -267,10 +407,10 @@ export default async function CityPage({ params }: Props) {
         {/* ── Nearby State Link ── */}
         <div className="bg-brand-50 rounded-xl p-6 text-center mb-8">
           <p className="text-gray-700 mb-3">
-            Looking for water quality in other cities in {stateName}?
+            Looking for water quality reports in other cities in {stateName}?
           </p>
-          <Link href={`/state/${data.state.toLowerCase()}`} className="btn-primary inline-flex">
-            View All Cities in {stateName} →
+          <Link href={`/state/${data.state.toLowerCase()}`} className="btn-primary inline-flex items-center gap-2">
+            View All Cities & ZIPs in {stateName} <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
@@ -279,3 +419,4 @@ export default async function CityPage({ params }: Props) {
     </>
   )
 }
+

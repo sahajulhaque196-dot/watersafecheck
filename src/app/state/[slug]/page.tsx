@@ -149,13 +149,17 @@ export default async function StatePage({ params }: Props) {
             <ShieldCheck className="w-3.5 h-3.5 text-brand-600" />
             Official EPA SDWIS Statewide Analysis
           </span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+            <Activity className="w-3.5 h-3.5 text-blue-600" />
+            State Water Quality & Testing Directory
+          </span>
         </div>
 
         <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mb-1">
-          {data.name} Tap Water Quality & Safety Report
+          {data.name} Drinking Water Quality & Testing Directory
         </h1>
         <p className="text-lg text-gray-500 mb-6">
-          Comprehensive EPA water report covering all {data.zip_count.toLocaleString()} ZIP codes across {data.name}
+          Comprehensive EPA compliance records, water testing guidelines, and city rankings covering all {data.zip_count.toLocaleString()} ZIP codes across {data.name}
         </p>
 
         {/* ── Quick Answer Box (Position 0 Target) ── */}

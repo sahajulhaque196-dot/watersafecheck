@@ -16,7 +16,7 @@ import {
   getLeadRiskNarrative, getComplianceNarrative,
   getWaterQualityFAQs, getDirectAnswerSnippet,
   getWaterHardnessAnalysis, getEpaVerificationUrl,
-  getFilterRecommendation,
+  getFilterRecommendation, getZipTestingGuide,
 } from '@/lib/content'
 import { zipPageMeta, zipJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo'
 import {
@@ -24,7 +24,7 @@ import {
   Breadcrumb, StatCard, FaqItem,
 } from '@/components/ui'
 import { AdTop, AdInContent, AdBottom, AdSidebar } from '@/components/ui/AdSense'
-import { ShieldCheck, Droplets, CheckCircle2, AlertTriangle, ExternalLink, Sparkles, Activity } from 'lucide-react'
+import { ShieldCheck, Droplets, CheckCircle2, AlertTriangle, ExternalLink, Sparkles, Activity, Beaker } from 'lucide-react'
 
 interface Props { params: { slug: string } }
 
@@ -84,6 +84,7 @@ export default async function ZipPage({ params }: Props) {
   const contaminants = getContaminantList(data.contaminants)
   const stateName = STATE_NAMES[data.state] || data.state
   const citySlug = data.city ? cityToSlug(data.city, data.state) : null
+  const testingGuide = getZipTestingGuide(data)
 
   // High-Intent Modules
   const directAnswer = getDirectAnswerSnippet(data)
@@ -132,13 +133,17 @@ export default async function ZipPage({ params }: Props) {
               <ShieldCheck className="w-3.5 h-3.5 text-brand-600" />
               Official EPA SDWIS Verified Report
             </span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+              <Beaker className="w-3.5 h-3.5 text-blue-600" />
+              Water Quality & Testing Guide
+            </span>
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
               <Activity className="w-3.5 h-3.5 text-emerald-600" />
               Status: {data.boil_water_advisories > 0 ? 'Active Advisories Noted' : 'Normal Operations'}
             </span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mb-1">
-            ZIP Code {data.zip} Water Quality & Hardness Report
+            ZIP Code {data.zip} Water Quality & Testing Report
           </h1>
           <p className="text-lg text-gray-500">
             {data.city}{data.city && data.state ? ', ' : ''}{data.state}
@@ -551,6 +556,61 @@ export default async function ZipPage({ params }: Props) {
                 <p className="mt-3 text-xs text-gray-500">{getRadonZoneDescription(data.radon_zone)}</p>
               )}
             </div>
+
+            {/* ── Water Quality Testing Guide (ZIP-Level) ── */}
+            <section className="card bg-white border-blue-100 shadow-sm">
+              <div className="flex items-center gap-2.5 mb-3">
+                <div className="p-2 rounded-lg bg-blue-100 text-blue-700">
+                  <Beaker className="w-5 h-5" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">
+                    Water Quality Testing in ZIP {data.zip}
+                  </h2>
+                  <p className="text-xs text-gray-500">Tap Water & Well Testing Recommendations</p>
+                </div>
+              </div>
+
+              <p className="text-sm text-gray-700 leading-relaxed mb-4">
+                {testingGuide.summary}
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                  <h3 className="text-xs font-bold uppercase text-slate-800 tracking-wider mb-2 flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                    Tap Water Testing Steps
+                  </h3>
+                  <ul className="space-y-2 text-xs text-gray-600">
+                    {testingGuide.tapTestingSteps.map((step, idx) => (
+                      <li key={idx} className="flex items-start gap-1.5">
+                        <span className="font-bold text-brand-600">{idx + 1}.</span>
+                        <span>{step}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="bg-amber-50/50 rounded-xl p-4 border border-amber-200">
+                  <h3 className="text-xs font-bold uppercase text-amber-900 tracking-wider mb-2 flex items-center gap-1.5">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
+                    Private Well Testing Steps
+                  </h3>
+                  <ul className="space-y-2 text-xs text-gray-600">
+                    {testingGuide.wellTestingSteps.map((step, idx) => (
+                      <li key={idx} className="flex items-start gap-1.5">
+                        <span className="font-bold text-amber-700">•</span>
+                        <span>{step}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-800">
+                <strong>Certified Lab Testing:</strong> Always use an EPA-certified drinking water laboratory in {data.state} for formal legal or real estate compliance testing.
+              </div>
+            </section>
 
             {/* ── What To Do Section ── */}
             <div className="card bg-gradient-to-br from-brand-50 to-blue-50 border-brand-100">

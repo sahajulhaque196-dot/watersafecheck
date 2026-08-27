@@ -144,6 +144,7 @@ export function Header() {
                 ['/water-quality-guide', '📖 Water Safety Guide'],
                 ['/about', '👤 About & Our Team'],
                 ['/contact', '✉ Contact Us'],
+                ['/terms', '⚖ Terms of Service'],
                 ['/disclaimer', '📋 Disclaimer'],
                 ['/privacy', '🔒 Privacy Policy'],
               ].map(([href, label]) => (

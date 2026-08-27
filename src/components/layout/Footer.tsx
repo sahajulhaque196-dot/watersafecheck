@@ -78,6 +78,7 @@ export function Footer() {
                 ['/water-quality-guide', 'Water Safety Guide'],
                 ['/about', 'About & Our Team'],
                 ['/contact', 'Contact Us'],
+                ['/terms', 'Terms of Service'],
                 ['/disclaimer', 'Disclaimer'],
                 ['/privacy', 'Privacy Policy'],
               ].map(([href, label]) => (
@@ -136,10 +137,11 @@ export function Footer() {
               © {year} WaterSafeCheck.com · All rights reserved · Made with ❤️ for cleaner drinking water
             </p>
             <div className="flex gap-4 flex-wrap">
-              <Link href="/privacy" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">Privacy</Link>
+              <Link href="/privacy" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">Privacy Policy</Link>
+              <Link href="/terms" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">Terms of Service</Link>
               <Link href="/disclaimer" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">Disclaimer</Link>
               <Link href="/contact" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">Contact</Link>
-              <Link href="/about" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">About</Link>
+              <Link href="/about" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">About Us</Link>
             </div>
           </div>
         </div>

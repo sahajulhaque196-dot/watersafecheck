@@ -283,12 +283,83 @@ export function getComplianceNarrative(d: ZipData): string {
   return `Regulatory compliance risk for this utility is rated <strong>${risk}</strong> based on past reporting and enforcement records.`
 }
 
+// ─── Water Quality & Well Water Testing Guides ─────────────────────────────
+
+export interface TestingGuide {
+  title: string
+  summary: string
+  tapTestingSteps: string[]
+  wellTestingSteps: string[]
+  keyParameters: { name: string; why: string; limit: string }[]
+  agencyName: string
+}
+
+export function getCityTestingGuide(d: CityData): TestingGuide {
+  const stateCode = (d.state || '').toUpperCase()
+  const agency = STATE_AGENCIES[stateCode] || 'State Drinking Water Authority'
+  const isGround = (d.water_source || '').toLowerCase().includes('ground')
+
+  return {
+    title: `Water Quality Testing in ${d.city}, ${d.state}: Tap & Well Water Guide`,
+    summary: `Testing your drinking water in ${d.city} confirms whether contaminants like lead, nitrates, bacteria, and PFAS are entering your home. While municipal utilities test water before distribution, private plumbing and private well systems require homeowner testing.`,
+    tapTestingSteps: [
+      `Identify your plumbing age: Homes built before 1986 in ${d.city} may have lead solder or lead service lines.`,
+      `Request your utility's latest Consumer Confidence Report (CCR) for annual municipal baseline data.`,
+      `Use an EPA-certified laboratory or state-certified test kit for precision lead and PFAS detection (standard DIY strips cannot reliably measure trace heavy metals).`,
+      `Collect a "first draw" sample: Test water that has sat motionless in pipes for at least 6 hours to check for plumbing corrosion.`,
+    ],
+    wellTestingSteps: [
+      `Private wells in ${d.state} are not monitored by the EPA or ${agency} — testing is 100% the homeowner's responsibility.`,
+      `Annual Test: Screen for Total Coliform Bacteria, E. coli, Nitrates/Nitrites, and pH every spring.`,
+      `Comprehensive Test (Every 3-5 Years): Test for heavy metals (Lead, Arsenic, Uranium), Volatile Organic Compounds (VOCs), and Hardness.`,
+      `Post-Disruption Testing: Immediately test well water following heavy floods, local construction, agricultural runoff, or sudden taste/odor changes.`,
+    ],
+    keyParameters: [
+      { name: 'Lead (Pb)', why: 'Plumbing corrosion; dangerous neurotoxin for children', limit: '15 ppb (Action Level) / 0 ppb Goal' },
+      { name: 'Total Coliform & E. Coli', why: 'Bacterial contamination from sewage or surface runoff', limit: '0 mg/L (Zero Tolerance)' },
+      { name: 'Nitrates / Nitrites', why: 'Fertilizer and septic tank seepage; causes blue baby syndrome', limit: '10 mg/L (MCL)' },
+      { name: 'Water Hardness (Ca & Mg)', why: 'Affects appliance lifespan, scale buildup, and skin hydration', limit: isGround ? 'Hard (>120 mg/L)' : 'Moderate (~100 mg/L)' },
+      { name: 'PFAS ("Forever Chemicals")', why: 'Industrial non-stick chemicals linked to metabolic and immune issues', limit: '4.0 ppt (EPA 2024 Rule)' },
+    ],
+    agencyName: agency,
+  }
+}
+
+export function getZipTestingGuide(d: ZipData): TestingGuide {
+  const stateCode = (d.state || '').toUpperCase()
+  const agency = STATE_AGENCIES[stateCode] || 'State Drinking Water Authority'
+  const city = d.city || 'your local area'
+
+  return {
+    title: `Water Quality Testing in ZIP Code ${d.zip} (${city}, ${d.state})`,
+    summary: `Residents in ZIP code ${d.zip} served by ${d.system_name || 'local utilities'} can test tap water or private well systems to verify water purity. Testing detects hidden contaminants before they impact family health.`,
+    tapTestingSteps: [
+      `Conduct a certified lead check if your home was constructed before 1986.`,
+      `Use certified lab testing kits rather than uncalibrated test strips for regulated compliance.`,
+      `Sample water from both your kitchen faucet and water heater to compare line purity.`,
+    ],
+    wellTestingSteps: [
+      `Test for Coliform bacteria and Nitrates annually.`,
+      `Test for heavy metals, radon, and PFAS every 3 years.`,
+      `Send samples to a state-certified drinking water laboratory recognized by ${agency}.`,
+    ],
+    keyParameters: [
+      { name: 'Lead', why: 'Pipe and solder corrosion', limit: '15 ppb action level' },
+      { name: 'Nitrate', why: 'Agricultural / septic contamination', limit: '10 mg/L' },
+      { name: 'Coliform Bacteria', why: 'Microbial pathogen indicator', limit: 'Zero presence' },
+      { name: 'PFAS', why: 'Industrial surfactants & micro-pollutants', limit: '4 ppt' },
+    ],
+    agencyName: agency,
+  }
+}
+
 export function getWaterQualityFAQs(d: ZipData): { q: string; a: string }[] {
   const city = d.city || 'this area'
   const state = d.state || ''
   const zip = d.zip
   const ppb = d.lead_mg_l !== null ? (d.lead_mg_l * 1000).toFixed(1) : null
   const hardness = getWaterHardnessAnalysis(d)
+  const agency = STATE_AGENCIES[(d.state || '').toUpperCase()] || 'the state environmental authority'
 
   return [
     {
@@ -300,8 +371,16 @@ export function getWaterQualityFAQs(d: ZipData): { q: string; a: string }[] {
         : `Tap water in ${zip} has a below-average safety grade of ${d.grade} due to compliance issues. We recommend using a certified water filter for drinking and cooking.`
     },
     {
+      q: `How do I get my water tested in ZIP ${zip} (${city}, ${state})?`,
+      a: `To test water quality in ZIP ${zip}, you can order a certified drinking water test kit or send water samples to an EPA/NELAP certified laboratory in ${state}. Certified testing checks for lead, coliform bacteria, nitrates, hardness, and PFAS that standard test strips miss. Contact ${agency} for a list of certified regional labs.`
+    },
+    {
       q: `How hard is the tap water in ${zip}?`,
       a: `Tap water in ${zip} is classified as ${hardness.category} with an estimated mineral hardness of ${hardness.ppm} mg/L (${hardness.gpg} GPG). ${hardness.recommendation}`
+    },
+    {
+      q: `Should I test private well water in ${zip}?`,
+      a: `Yes. Unlike municipal systems, private wells in ${zip} are not regulated by the EPA or local utilities. Private well owners should test their water annually for coliform bacteria and nitrates, and every 3 to 5 years for heavy metals (lead, arsenic) and volatile organic compounds.`
     },
     {
       q: `What is the lead level in ${zip} tap water?`,
@@ -322,18 +401,8 @@ export function getWaterQualityFAQs(d: ZipData): { q: string; a: string }[] {
         : `Water utility information is not available in the database for ${zip}.`
     },
     {
-      q: `What is the water source for ${zip}?`,
-      a: d.water_source
-        ? `ZIP code ${zip} is served primarily by <strong>${d.water_source.toLowerCase()}</strong> sources.`
-        : `Water source data is not available for ${zip} in our database.`
-    },
-    {
       q: `What water filter should I use in ${zip}?`,
       a: `Based on water metrics for ${zip}, we recommend ${getFilterRecommendation(d).recommendationType}. Look for certifications such as ${getFilterRecommendation(d).certifications.join(', ')}.`
-    },
-    {
-      q: `Is ${zip} tap water safe for babies and infants?`,
-      a: `Because infants are sensitive to trace lead and nitrates, if your system has any lead detection or history of violations, we recommend using certified bottled water or water filtered via an NSF/ANSI 53 certified filter for formula preparation.`
     },
   ]
 }
@@ -363,6 +432,10 @@ export function getStateFAQs(d: StateData): { q: string; a: string }[] {
       a: `Yes, for the majority of residents, tap water in ${d.name} is treated and regulated. However, compliance varies by city. State-wide, ${d.grade_dist['A'] || 0} ZIP codes receive an "A" grade, while ${d.grade_dist['F'] || 0} receive an "F". Search your specific ZIP code to see your local utility's record.`
     },
     {
+      q: `How do I test water quality or well water in ${d.name}?`,
+      a: `Residents in ${d.name} can test their tap or well water by contacting laboratories certified by ${agency} or ordering an EPA-standard laboratory water testing kit. Annual testing is recommended for private wells to test for bacteria, nitrates, and heavy metals.`
+    },
+    {
       q: `What are the biggest water quality issues in ${d.name}?`,
       a: `The primary issues include managing ${d.health_violations.toLocaleString()} health-based violations state-wide and resolving infrastructure age. ${d.high_lead_pct}% of ZIP codes in the state have a high probability of lead exposure risk due to pre-1986 piping.`
     },
@@ -380,4 +453,5 @@ export function getStateFAQs(d: StateData): { q: string; a: string }[] {
     },
   ]
 }
+
 
