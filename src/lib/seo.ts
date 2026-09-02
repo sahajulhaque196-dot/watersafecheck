@@ -20,10 +20,10 @@ export function zipPageMeta(data: ZipData) {
 
   // High-CTR, search-intent aligned title (under 60 chars to prevent SERP truncation)
   const title = hasBoil
-    ? `${data.zip} Boil Water Notice & Water Quality Report (${currentYear})`
-    : `${data.zip} Water Quality Testing & Safety Report (${currentYear} EPA)`
+    ? `${data.zip} Boil Water Notice & Water Safety Report (${currentYear})`
+    : `Is ${data.zip} Tap Water Safe to Drink? (${city}, ${state} ${currentYear})`
   
-  const description = `Official ${currentYear} EPA drinking water report & testing guide for ZIP ${data.zip} (${city}, ${state}): Grade ${grade} (${data.score ?? 'N/A'}/100), ${violations} violations, ${ppb} ppb lead & hardness data.`
+  const description = `Is tap water safe in ZIP ${data.zip} (${city}, ${state})? Official ${currentYear} EPA water quality report: Safety Grade ${grade} (${data.score ?? 'N/A'}/100), ${violations} violations, ${ppb} ppb lead & hardness data.`
 
   return {
     title,
@@ -48,8 +48,8 @@ export function zipPageMeta(data: ZipData) {
 export function statePageMeta(data: StateData) {
   const currentYear = new Date().getFullYear()
   // High-CTR 55-60 char title
-  const title = `${data.name} Drinking Water Quality & Testing Guide (${currentYear} EPA Report)`
-  const description = `Statewide ${currentYear} EPA drinking water quality and testing report for ${data.name}. View safety grades, lead testing, PFAS violations & city rankings across ${data.zip_count.toLocaleString()} ZIP codes.`
+  const title = `Is ${data.name} Tap Water Safe? (${currentYear} EPA Quality Report)`
+  const description = `Statewide ${currentYear} EPA drinking water quality report for ${data.name}. View safety grades, lead testing, PFAS violations & city rankings across ${data.zip_count.toLocaleString()} ZIP codes.`
   return {
     title,
     description,
@@ -68,9 +68,9 @@ export function cityPageMeta(data: CityData) {
   const currentYear = new Date().getFullYear()
   const state = data.state || ''
   const grade = data.best_grade || 'B'
-  // High-CTR title targeting both "Water Quality Testing" and "Water Safety"
-  const title = `${data.city}, ${state} Water Quality Testing & Safety Report (${currentYear} EPA)`
-  const description = `Is tap water safe in ${data.city}, ${state}? Official ${currentYear} EPA water quality testing report, safety grade ${grade}, lead & PFAS risk, hardness, and certified testing guide.`
+  // High-CTR title targeting exact conversational questions and local testing intent
+  const title = `Is ${data.city}, ${state} Tap Water Safe to Drink? (${currentYear} EPA)`
+  const description = `Is tap water safe to drink in ${data.city}, ${state}? Official ${currentYear} EPA water quality report: Safety Grade ${grade}, lead & PFAS risk levels, hardness, and testing guide.`
   const slug = `${data.city.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${data.state.toLowerCase()}`
   return {
     title,
