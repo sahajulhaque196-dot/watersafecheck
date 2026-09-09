@@ -138,11 +138,10 @@
     @apply text-brand-700 underline underline-offset-2 hover:text-brand-900;
   }
 
-  /* AdSense containers — proper spacing for AdSense review */
+  /* AdSense containers — clean collapse with zero blank space when unfilled */
   .adsense-container {
     display: block;
     width: 100%;
-    min-height: 90px;
     text-align: center;
     overflow: hidden;
   }

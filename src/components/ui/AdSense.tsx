@@ -25,6 +25,11 @@ interface AdSenseProps {
   style?: React.CSSProperties
 }
 
+function isDummySlot(slot?: string): boolean {
+  if (!slot || slot.length < 8) return true
+  return /^(\d)\1+$/.test(slot)
+}
+
 function AdUnit({ slot, format = 'auto', className = '', style }: AdSenseProps) {
   useEffect(() => {
     if (!IS_ADSENSE_ACTIVE) return
@@ -37,15 +42,12 @@ function AdUnit({ slot, format = 'auto', className = '', style }: AdSenseProps) 
     }
   }, [])
 
-  if (!IS_ADSENSE_ACTIVE) {
+  if (!IS_ADSENSE_ACTIVE || isDummySlot(slot)) {
     return null
   }
 
   return (
     <div className={`adsense-container ${className}`}>
-      <span className="block text-[10px] uppercase font-bold tracking-widest text-gray-400 mb-1 text-center select-none">
-        Advertisement
-      </span>
       <ins
         className="adsbygoogle"
         style={{ display: 'block', ...style }}
@@ -58,39 +60,43 @@ function AdUnit({ slot, format = 'auto', className = '', style }: AdSenseProps) 
   )
 }
 
-// ─── Pre-configured ad positions with CLS-prevention reserved heights ──────
+// ─── Zero-space ad positions: Will render pure null until active and configured ──────
 export function AdTop() {
-  if (!IS_ADSENSE_ACTIVE) return null
+  const slot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOP
+  if (!IS_ADSENSE_ACTIVE || !slot || isDummySlot(slot)) return null
   return (
-    <div className="w-full my-4 min-h-[90px] flex items-center justify-center overflow-hidden bg-gray-50/50 rounded-lg no-print" aria-label="Advertisement">
-      <AdUnit slot="1111111111" format="horizontal" />
+    <div className="w-full my-2 overflow-hidden no-print">
+      <AdUnit slot={slot} format="horizontal" />
     </div>
   )
 }
 
 export function AdSidebar() {
-  if (!IS_ADSENSE_ACTIVE) return null
+  const slot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR
+  if (!IS_ADSENSE_ACTIVE || !slot || isDummySlot(slot)) return null
   return (
-    <div className="sticky top-20 min-h-[250px] flex items-center justify-center overflow-hidden bg-gray-50/50 rounded-lg no-print" aria-label="Advertisement">
-      <AdUnit slot="2222222222" format="vertical" />
+    <div className="sticky top-20 overflow-hidden no-print">
+      <AdUnit slot={slot} format="vertical" />
     </div>
   )
 }
 
 export function AdInContent() {
-  if (!IS_ADSENSE_ACTIVE) return null
+  const slot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_INCONTENT
+  if (!IS_ADSENSE_ACTIVE || !slot || isDummySlot(slot)) return null
   return (
-    <div className="my-6 min-h-[250px] flex items-center justify-center overflow-hidden bg-gray-50/50 rounded-lg no-print" aria-label="Advertisement">
-      <AdUnit slot="3333333333" format="rectangle" />
+    <div className="my-4 overflow-hidden no-print">
+      <AdUnit slot={slot} format="rectangle" />
     </div>
   )
 }
 
 export function AdBottom() {
-  if (!IS_ADSENSE_ACTIVE) return null
+  const slot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_BOTTOM
+  if (!IS_ADSENSE_ACTIVE || !slot || isDummySlot(slot)) return null
   return (
-    <div className="w-full my-6 min-h-[90px] flex items-center justify-center overflow-hidden bg-gray-50/50 rounded-lg no-print" aria-label="Advertisement">
-      <AdUnit slot="4444444444" format="auto" />
+    <div className="w-full my-4 overflow-hidden no-print">
+      <AdUnit slot={slot} format="auto" />
     </div>
   )
 }
