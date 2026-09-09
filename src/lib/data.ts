@@ -2,72 +2,160 @@
 import { supabase } from './supabase'
 import type { ZipData, StateData, CityData } from './types'
 
-// ─── Loaders (server-side only, now querying Supabase asynchronously) ────────
+// ─── Local Dataset Cache (Resilient Fallback to prevent 404/5xx during high crawl traffic) ─
+
+let cachedZips: Record<string, ZipData> | null = null
+function getLocalZips(): Record<string, ZipData> {
+  if (!cachedZips) {
+    try {
+      cachedZips = require('@/data/zip_data.json')
+    } catch {
+      cachedZips = {}
+    }
+  }
+  return cachedZips || {}
+}
+
+let cachedCities: Record<string, CityData> | null = null
+function getLocalCities(): Record<string, CityData> {
+  if (!cachedCities) {
+    try {
+      cachedCities = require('@/data/city_data.json')
+    } catch {
+      cachedCities = {}
+    }
+  }
+  return cachedCities || {}
+}
+
+let cachedStates: Record<string, StateData> | null = null
+function getLocalStates(): Record<string, StateData> {
+  if (!cachedStates) {
+    try {
+      cachedStates = require('@/data/state_data.json')
+    } catch {
+      cachedStates = {}
+    }
+  }
+  return cachedStates || {}
+}
+
+// ─── Loaders (Supabase first with 2.5s race timeout, instant local fallback) ────────
 
 export async function getZipData(zip: string): Promise<ZipData | null> {
+  if (!zip || typeof zip !== 'string') return null
+  const cleanZip = zip.trim()
+
   try {
-    const { data, error } = await supabase
+    const fetchPromise = supabase
       .from('zips')
       .select('*')
-      .eq('zip', zip)
+      .eq('zip', cleanZip)
       .maybeSingle()
-    if (error) {
-      console.error(`Error fetching ZIP ${zip}:`, error)
-      return null
+
+    const timeoutPromise = new Promise<{ data: null; error: Error }>((resolve) =>
+      setTimeout(() => resolve({ data: null, error: new Error('Timeout') }), 2500)
+    )
+
+    const res: any = await Promise.race([fetchPromise, timeoutPromise])
+    if (res && res.data && !res.error) {
+      return res.data as ZipData
     }
-    return data as ZipData | null
   } catch (e) {
-    console.error(`Exception fetching ZIP ${zip}:`, e)
-    return null
+    // Database glitch or timeout — fall through to local fallback
   }
+
+  // Instant resilient fallback from local dataset
+  const local = getLocalZips()
+  if (local[cleanZip]) {
+    return local[cleanZip]
+  }
+
+  return null
 }
 
 export async function getStateData(code: string): Promise<StateData | null> {
-  const upper = code.toUpperCase()
+  if (!code || typeof code !== 'string') return null
+  const upper = code.trim().toUpperCase()
+
   try {
-    const { data, error } = await supabase
+    const fetchPromise = supabase
       .from('states')
       .select('*')
       .eq('code', upper)
       .maybeSingle()
-    if (data && !error) {
-      return data as StateData
+
+    const timeoutPromise = new Promise<{ data: null; error: Error }>((resolve) =>
+      setTimeout(() => resolve({ data: null, error: new Error('Timeout') }), 2500)
+    )
+
+    const res: any = await Promise.race([fetchPromise, timeoutPromise])
+    if (res && res.data && !res.error) {
+      return res.data as StateData
     }
-    // Fallback to local state dataset if database is unreachable
-    const localStates = require('@/data/state_data.json')
-    if (localStates && localStates[upper]) {
-      return localStates[upper] as StateData
-    }
-    return null
   } catch (e) {
-    console.error(`Exception fetching state ${code}:`, e)
-    try {
-      const localStates = require('@/data/state_data.json')
-      if (localStates && localStates[upper]) {
-        return localStates[upper] as StateData
-      }
-    } catch {}
-    return null
+    // Fallback
   }
+
+  const local = getLocalStates()
+  if (local[upper]) {
+    return local[upper]
+  }
+
+  return null
 }
 
 export async function getCityData(slug: string): Promise<CityData | null> {
+  if (!slug || typeof slug !== 'string') return null
+  const cleanSlug = slug.trim().toLowerCase()
+
   try {
-    const { data, error } = await supabase
+    const fetchPromise = supabase
       .from('cities')
       .select('*')
-      .eq('slug', slug.toLowerCase())
+      .eq('slug', cleanSlug)
       .maybeSingle()
-    if (error) {
-      console.error(`Error fetching city slug ${slug}:`, error)
-      return null
+
+    const timeoutPromise = new Promise<{ data: null; error: Error }>((resolve) =>
+      setTimeout(() => resolve({ data: null, error: new Error('Timeout') }), 2500)
+    )
+
+    const res: any = await Promise.race([fetchPromise, timeoutPromise])
+    if (res && res.data && !res.error) {
+      return res.data as CityData
     }
-    return data as CityData | null
   } catch (e) {
-    console.error(`Exception fetching city slug ${slug}:`, e)
-    return null
+    // Fallback
+  }
+
+  const local = getLocalCities()
+  if (local[cleanSlug]) {
+    return local[cleanSlug]
+  }
+
+  return null
+}
+
+export async function getStateZips(stateCode: string): Promise<ZipData[]> {
+  const upper = stateCode.trim().toUpperCase()
+  const local = getLocalZips()
+  const list = Object.values(local).filter(z => z.state === upper)
+  if (list.length > 0) {
+    return list
+  }
+
+  try {
+    const { data } = await supabase
+      .from('zips')
+      .select('zip, city, state, score, grade, contaminants')
+      .eq('state', upper)
+      .limit(3000)
+    return (data || []) as ZipData[]
+  } catch {
+    return []
   }
 }
+
 
 
 // ─── Constants ─────────────────────────────────────────────────────────────
@@ -243,13 +331,24 @@ export async function getNearbyZips(zip: string, city: string, state: string, li
       .order('score', { ascending: false })
       .limit(needed)
 
-    if (!stateErr && stateZips) {
+    if (!stateErr && stateZips && stateZips.length > 0) {
       return [...cityZips, ...(stateZips as ZipData[])]
     }
 
-    return cityZips
+    if (cityZips.length > 0) return cityZips
   } catch (e) {
-    console.error('Exception fetching nearby ZIPs:', e)
+    // Fallthrough to local
+  }
+
+  // Fast local dataset fallback
+  try {
+    const local = getLocalZips()
+    const all = Object.values(local)
+    const sameCity = all.filter(z => z.city === city && z.state === state.toUpperCase() && z.zip !== zip)
+    if (sameCity.length >= limit) return sameCity.slice(0, limit)
+    const sameState = all.filter(z => z.state === state.toUpperCase() && z.zip !== zip)
+    return [...sameCity, ...sameState].slice(0, limit)
+  } catch {
     return []
   }
 }
@@ -264,10 +363,17 @@ export async function getUtilityZips(pwsid: string | null, currentZip: string, l
       .neq('zip', currentZip)
       .limit(limit)
 
-    if (error || !data) return []
-    return data as ZipData[]
+    if (!error && data && data.length > 0) return data as ZipData[]
   } catch (e) {
-    console.error('Exception fetching utility ZIPs:', e)
+    // Fallthrough
+  }
+
+  try {
+    const local = getLocalZips()
+    return Object.values(local)
+      .filter(z => z.pwsid === pwsid.trim() && z.zip !== currentZip)
+      .slice(0, limit)
+  } catch {
     return []
   }
 }
@@ -282,10 +388,27 @@ export async function getNearbyCities(state: string, currentCity: string, limit 
       .order('zip_count', { ascending: false })
       .limit(limit)
 
-    if (error || !data) return []
-    return data as { city: string; state: string; slug: string; zip_count: number; best_grade: string }[]
+    if (!error && data && data.length > 0) {
+      return data as { city: string; state: string; slug: string; zip_count: number; best_grade: string }[]
+    }
   } catch (e) {
-    console.error('Exception fetching nearby cities:', e)
+    // Fallthrough
+  }
+
+  try {
+    const local = getLocalCities()
+    return Object.values(local)
+      .filter(c => c.state === state.toUpperCase() && c.city !== currentCity)
+      .sort((a, b) => b.zip_count - a.zip_count)
+      .slice(0, limit)
+      .map(c => ({
+        city: c.city,
+        state: c.state,
+        slug: c.slug || cityToSlug(c.city, c.state),
+        zip_count: c.zip_count,
+        best_grade: c.best_grade || 'B',
+      }))
+  } catch {
     return []
   }
 }

@@ -56,6 +56,7 @@ export interface CityData {
   city: string
   state: string
   state_name: string
+  slug?: string
   zip_count: number
   zips: string[]
   total_violations: number

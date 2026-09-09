@@ -25,13 +25,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  // Only pre-build top 200 cities - rest handled by ISR on-demand
-  const { data: cities } = await supabase
-    .from('cities')
-    .select('slug')
-    .order('zip_count', { ascending: false })
-    .limit(200)
-  return (cities || []).map(c => ({ slug: c.slug }))
+  try {
+    const { data: cities } = await supabase
+      .from('cities')
+      .select('slug')
+      .order('zip_count', { ascending: false })
+      .limit(200)
+    if (cities && cities.length > 0) return cities.map(c => ({ slug: c.slug }))
+  } catch {}
+  try {
+    const local = require('@/data/city_data.json')
+    return Object.keys(local).slice(0, 200).map(slug => ({ slug }))
+  } catch {
+    return []
+  }
 }
 
 export default async function CityPage({ params }: Props) {
@@ -46,7 +53,14 @@ export default async function CityPage({ params }: Props) {
     getNearbyCities(data.state, data.city, 8),
   ])
 
-  const cityZips = (zipRows || []) as ZipData[]
+  let cityZips = (zipRows || []) as ZipData[]
+  if (cityZips.length === 0 && data.zips && data.zips.length > 0) {
+    try {
+      const local = require('@/data/zip_data.json')
+      cityZips = data.zips.map(z => local[z]).filter(Boolean) as ZipData[]
+    } catch {}
+  }
+
   const stateName = data.state_name || STATE_NAMES[data.state] || data.state
   const testingGuide = getCityTestingGuide(data)
 

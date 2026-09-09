@@ -18,12 +18,12 @@ export function zipPageMeta(data: ZipData) {
   const violations = data.health_violations
   const hasBoil = data.boil_water_advisories > 0
 
-  // High-CTR, search-intent aligned title (under 60 chars to prevent SERP truncation)
+  // High-CTR, search-intent aligned title (Exact match on primary keyword + authority hook)
   const title = hasBoil
-    ? `${data.zip} Boil Water Notice & Water Safety Report (${currentYear})`
-    : `Is ${data.zip} Tap Water Safe to Drink? (${city}, ${state} ${currentYear})`
+    ? `${data.zip} Boil Water Notice & Safety Report (${currentYear} EPA)`
+    : `${data.zip} Water Quality: Is It Safe to Drink? (${city}, ${state} ${currentYear})`
   
-  const description = `Is tap water safe in ZIP ${data.zip} (${city}, ${state})? Official ${currentYear} EPA water quality report: Safety Grade ${grade} (${data.score ?? 'N/A'}/100), ${violations} violations, ${ppb} ppb lead & hardness data.`
+  const description = `Is tap water safe in ${data.zip} (${city}, ${state})? Official ${currentYear} EPA water quality report: Safety Grade ${grade} (${data.score ?? 'N/A'}/100), ${violations} violations, ${ppb} ppb lead & hardness data.`
 
   return {
     title,
@@ -68,10 +68,12 @@ export function cityPageMeta(data: CityData) {
   const currentYear = new Date().getFullYear()
   const state = data.state || ''
   const grade = data.best_grade || 'B'
+  const slug = data.slug || `${data.city.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${data.state.toLowerCase()}`
+
   // High-CTR title targeting exact conversational questions and local testing intent
-  const title = `Is ${data.city}, ${state} Tap Water Safe to Drink? (${currentYear} EPA)`
+  const title = `${data.city}, ${state} Water Quality: Is Tap Water Safe? (${currentYear} EPA)`
   const description = `Is tap water safe to drink in ${data.city}, ${state}? Official ${currentYear} EPA water quality report: Safety Grade ${grade}, lead & PFAS risk levels, hardness, and testing guide.`
-  const slug = `${data.city.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${data.state.toLowerCase()}`
+
   return {
     title,
     description,
