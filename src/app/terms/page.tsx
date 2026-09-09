@@ -92,15 +92,12 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">6. Third-Party Links, Advertising & Affiliate Disclosure</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-3">6. Third-Party Links & Advertising</h2>
           <p className="mb-3">
-            WaterSafeCheck contains links to external third-party websites (such as EPA.gov, state water boards, and educational resources) as well as display advertisements served via Google AdSense and affiliate referral links (such as Amazon Associates) for certified water filtration and testing equipment.
-          </p>
-          <p className="mb-3">
-            We are not responsible for the content, privacy policies, or commercial practices of third-party websites. When you click on third-party links or advertisements, you do so at your own risk.
+            WaterSafeCheck contains links to external third-party websites (such as EPA.gov, state water boards, and educational public health resources) as well as display advertisements served via Google AdSense.
           </p>
           <p>
-            As an Amazon Associate, WaterSafeCheck may earn an affiliate commission from qualifying purchases through product links on our site, at no additional cost to the user.
+            We are not responsible for the content, privacy policies, or commercial practices of third-party websites. When you click on third-party links or advertisements, you do so at your own risk.
           </p>
         </section>
 

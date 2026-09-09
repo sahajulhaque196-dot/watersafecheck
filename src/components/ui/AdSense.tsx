@@ -29,8 +29,8 @@ function AdUnit({ slot, format = 'auto', className = '', style }: AdSenseProps) 
   useEffect(() => {
     if (!IS_ADSENSE_ACTIVE) return
     try {
-      if (typeof window !== 'undefined' && window.adsbygoogle) {
-        window.adsbygoogle.push({})
+      if (typeof window !== 'undefined') {
+        ;(window.adsbygoogle = window.adsbygoogle || []).push({})
       }
     } catch {
       // AdSense not loaded in development — safe to ignore
@@ -43,6 +43,9 @@ function AdUnit({ slot, format = 'auto', className = '', style }: AdSenseProps) 
 
   return (
     <div className={`adsense-container ${className}`}>
+      <span className="block text-[10px] uppercase font-bold tracking-widest text-gray-400 mb-1 text-center select-none">
+        Advertisement
+      </span>
       <ins
         className="adsbygoogle"
         style={{ display: 'block', ...style }}

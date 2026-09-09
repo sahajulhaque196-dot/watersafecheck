@@ -57,6 +57,7 @@ export default function BlogArticlePage({ params }: Props) {
     '@type': 'Article',
     headline: article.title,
     description: article.metaDescription,
+    image: [`${SITE_URL}/images/water-hero.jpg`],
     author: {
       '@type': 'Person',
       name: article.author,
@@ -67,7 +68,7 @@ export default function BlogArticlePage({ params }: Props) {
       '@type': 'Organization',
       name: 'WaterSafeCheck',
       url: SITE_URL,
-      logo: { '@type': 'ImageObject', url: `${SITE_URL}/favicon.svg` },
+      logo: { '@type': 'ImageObject', url: `${SITE_URL}/images/water-hero.jpg` },
     },
     datePublished: article.publishDate,
     dateModified: article.updateDate,
@@ -153,8 +154,8 @@ export default function BlogArticlePage({ params }: Props) {
               W
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-gray-900">WaterSafeCheck Editorial Team</p>
-              <p className="text-xs text-gray-500 leading-snug">Drinking Water Data & Public Health Analysts</p>
+              <p className="text-sm font-bold text-gray-900">{article.author}</p>
+              <p className="text-xs text-gray-500 leading-snug">{article.authorTitle}</p>
             </div>
             <div className="text-right flex-shrink-0 hidden sm:block">
               <p className="text-xs text-gray-400">
@@ -285,9 +286,9 @@ export default function BlogArticlePage({ params }: Props) {
               </div>
               <div>
                 <h3 className="font-bold text-gray-900 mb-0.5">
-                  WaterSafeCheck Editorial Team
+                  {article.author}
                 </h3>
-                <p className="text-sm text-brand-700 font-medium mb-3">Drinking Water Data & Public Health Analysts</p>
+                <p className="text-sm text-brand-700 font-medium mb-3">{article.authorTitle}</p>
                 <p className="text-sm text-gray-600 leading-relaxed">
                   Our team compiles and analyzes public EPA SDWIS, ECHO, and UCMR5 datasets to simplify water safety information for American households. We believe that public health transparency is a baseline right for every family. All recommendations are cross-referenced with NSF and CDC safety limits.
                 </p>

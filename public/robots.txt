@@ -2,20 +2,31 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
+User-agent: bingbot
+Allow: /
+Disallow: /api/
+
 User-agent: GPTBot
 Allow: /
+Disallow: /api/
 
 User-agent: OAI-SearchBot
 Allow: /
+Disallow: /api/
 
 User-agent: ClaudeBot
 Allow: /
+Disallow: /api/
 
 User-agent: PerplexityBot
 Allow: /
+Disallow: /api/
 
 User-agent: Google-Extended
 Allow: /
+Disallow: /api/
 
 Sitemap: https://www.watersafecheck.com/sitemap-index.xml
+Host: https://www.watersafecheck.com
+
 

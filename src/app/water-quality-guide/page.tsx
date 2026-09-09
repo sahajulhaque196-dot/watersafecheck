@@ -59,6 +59,7 @@ const articleSchema = {
   '@type': 'Article',
   headline: 'U.S. Tap Water Safety Guide — What EPA Data Really Means for Your Family',
   description: 'A comprehensive guide to understanding EPA drinking water safety data, lead levels, violations, and water quality grades.',
+  image: ['https://www.watersafecheck.com/images/water-hero.jpg'],
   author: {
     '@type': 'Person',
     name: 'Marcus J. Webb',
@@ -69,7 +70,7 @@ const articleSchema = {
     '@type': 'Organization',
     name: 'WaterSafeCheck',
     url: 'https://www.watersafecheck.com',
-    logo: { '@type': 'ImageObject', url: 'https://www.watersafecheck.com/favicon.svg' },
+    logo: { '@type': 'ImageObject', url: 'https://www.watersafecheck.com/images/water-hero.jpg' },
   },
   datePublished: '2025-01-01',
   dateModified: '2026-08-27',

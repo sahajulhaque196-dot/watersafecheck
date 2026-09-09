@@ -88,12 +88,12 @@ export default function DisclaimerPage() {
         </section>
 
         <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">6. Product Mentions & Affiliate Disclosure</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-3">6. Product Mentions & Water Treatment Standards</h2>
           <p className="mb-3">
-            Mentions of water filter certifications (e.g. NSF/ANSI 42, 53, 58) are provided for educational guidance. When you click on product recommendation links to third-party retailers such as Amazon, WaterSafeCheck may earn an affiliate commission on qualifying purchases as an Amazon Associate, at no extra cost to you.
+            Mentions of water filter certifications (such as NSF/ANSI 42, 53, 58) and treatment technologies are provided strictly for educational purposes. WaterSafeCheck does not sell water filtration products, nor do we operate commercial affiliate relationships with filter manufacturers or retailers.
           </p>
           <p>
-            We only reference filter types that correspond with official NSF/ANSI standards for the specific water contaminants identified in public data. Always independently verify product specifications and certification before purchasing water treatment equipment.
+            We only reference filter certification types that correspond with official ANSI/NSF standards for the specific water contaminants identified in public EPA data. Always independently verify product specifications and certification with third-party testing bodies (NSF, WQA, IAPMO) before purchasing water treatment equipment.
           </p>
         </section>
 

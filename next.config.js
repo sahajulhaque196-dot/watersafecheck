@@ -38,6 +38,12 @@ const nextConfig = {
         destination: '/',
         permanent: true,
       },
+      // 3. Unify sitemap architecture (Redirect root /sitemap.xml to full /sitemap-index.xml >70,000 URLs)
+      {
+        source: '/sitemap.xml',
+        destination: '/sitemap-index.xml',
+        permanent: true,
+      },
     ]
   },
   async headers() {
@@ -49,6 +55,13 @@ const nextConfig = {
           { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
           { key: 'X-XSS-Protection', value: '1; mode=block' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+        ],
+      },
+      {
+        source: '/ads.txt',
+        headers: [
+          { key: 'Content-Type', value: 'text/plain; charset=utf-8' },
+          { key: 'Cache-Control', value: 'public, max-age=86400' },
         ],
       },
       {

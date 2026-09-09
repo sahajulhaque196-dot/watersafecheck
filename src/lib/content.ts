@@ -20,7 +20,7 @@ export function getDirectAnswerSnippet(d: ZipData): string {
     return `Yes, tap water in ZIP code ${d.zip} (${city}, ${stateCode}) is safe to drink under EPA Safe Drinking Water Act standards. Supplied by ${sysName}, the area earns an EPA Safety Grade of ${grade} (${d.score ?? 85}/100) with ${violations} health violations, ${ppb} ppb lead, and ${hardness.category.toLowerCase()} (${hardness.ppm} mg/L / ${hardness.gpg} GPG) water.`
   }
 
-  return `Tap water in ZIP code ${d.zip} (${city}, ${stateCode}) earns an EPA Safety Grade of ${grade} (${d.score ?? 50}/100) due to ${violations} health violation(s) and ${ppb} ppb lead. While treated by ${sysName}, residents are advised to use an NSF/ANSI 53 certified water filter for drinking and cooking.`
+  return `Caution / Filtration Recommended: Tap water in ZIP code ${d.zip} (${city}, ${stateCode}) has compliance concerns, earning an EPA Safety Grade of ${grade} (${d.score ?? 50}/100) due to ${violations} health violation(s) and ${ppb} ppb lead. While treated by ${sysName}, residents are advised to use an NSF/ANSI 53 certified water filter for drinking and cooking.`
 }
 
 // ─── Water Hardness Calculation & Analysis ────────────────────────────────

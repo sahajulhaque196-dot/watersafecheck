@@ -638,14 +638,12 @@ export default async function ZipPage({ params }: Props) {
                           <h4 className="font-bold text-gray-900 text-sm">NSF/ANSI 53 Certified Pitcher Filter</h4>
                           <p className="text-xs text-gray-500 mt-0.5">Best for removing aesthetic chlorine, odors, and low-level heavy metals.</p>
                         </div>
-                        <a
-                          href="https://www.amazon.com/s?k=NSF+53+water+filter+pitcher&tag=watersafecheck-20"
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <Link
+                          href="/blog/best-water-filters-for-home-complete-guide"
                           className="btn-primary py-2 px-4 text-xs font-bold whitespace-nowrap shadow-sm hover:shadow"
                         >
-                          View Certified Filters →
-                        </a>
+                          Filter Selection Guide →
+                        </Link>
                       </div>
                     </div>
                   </>
@@ -670,14 +668,12 @@ export default async function ZipPage({ params }: Props) {
                             <h4 className="font-bold text-gray-900 text-sm">NSF 53 Lead Pitcher Filter</h4>
                             <p className="text-xs text-gray-500 mt-1">Specifically certified to reduce lead and copper at the tap.</p>
                           </div>
-                          <a
-                            href="https://www.amazon.com/s?k=NSF+53+lead+water+filter+pitcher&tag=watersafecheck-20"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <Link
+                            href="/blog/best-water-filters-for-home-complete-guide"
                             className="btn-primary text-center py-2 px-3 text-xs font-bold mt-4 shadow-sm hover:shadow"
                           >
-                            Find Lead Filters →
-                          </a>
+                            Lead Filter Guide →
+                          </Link>
                         </div>
                         <div className="bg-white border border-brand-100 rounded-xl p-4 flex flex-col justify-between shadow-sm hover:shadow transition-shadow">
                           <div>
@@ -685,14 +681,12 @@ export default async function ZipPage({ params }: Props) {
                             <h4 className="font-bold text-gray-900 text-sm">NSF 58 Under-Sink RO System</h4>
                             <p className="text-xs text-gray-500 mt-1">Advanced filtration for PFAS, fluoride, nitrates, and organic chemicals.</p>
                           </div>
-                          <a
-                            href="https://www.amazon.com/s?k=NSF+58+reverse+osmosis+system&tag=watersafecheck-20"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <Link
+                            href="/blog/best-water-filters-for-home-complete-guide"
                             className="btn-primary text-center py-2 px-3 text-xs font-bold mt-4 shadow-sm hover:shadow"
                           >
-                            Find RO Systems →
-                          </a>
+                            RO System Guide →
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -720,14 +714,12 @@ export default async function ZipPage({ params }: Props) {
                             <h4 className="font-bold text-gray-900 text-sm">NSF 53 Lead Pitcher Filter</h4>
                             <p className="text-xs text-gray-500 mt-1">Certified to remove lead. Recommended for immediate protection.</p>
                           </div>
-                          <a
-                            href="https://www.amazon.com/s?k=NSF+53+lead+water+filter+pitcher&tag=watersafecheck-20"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <Link
+                            href="/blog/best-water-filters-for-home-complete-guide"
                             className="btn-primary text-center py-2 px-3 text-xs font-bold mt-4 shadow-sm hover:shadow"
                           >
-                            Find Lead Filters →
-                          </a>
+                            Lead Filter Guide →
+                          </Link>
                         </div>
                         <div className="bg-white border border-brand-200 rounded-xl p-4 flex flex-col justify-between shadow-sm hover:shadow transition-shadow relative ring-2 ring-brand-600 ring-offset-2">
                           <span className="absolute -top-3 left-4 bg-brand-700 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">STRONGLY RECOMMENDED</span>
@@ -736,23 +728,17 @@ export default async function ZipPage({ params }: Props) {
                             <h4 className="font-bold text-gray-900 text-sm">NSF 58 Under-Sink RO System</h4>
                             <p className="text-xs text-gray-500 mt-1">Reverse Osmosis system certified to remove PFAS, heavy metals, and viruses.</p>
                           </div>
-                          <a
-                            href="https://www.amazon.com/s?k=NSF+58+reverse+osmosis+system&tag=watersafecheck-20"
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <Link
+                            href="/blog/best-water-filters-for-home-complete-guide"
                             className="btn-primary text-center py-2 px-3 text-xs font-bold mt-4 shadow-sm hover:shadow"
                           >
-                            Find RO Systems →
-                          </a>
+                            RO System Guide →
+                          </Link>
                         </div>
                       </div>
                     </div>
                   </>
                 )}
-                {/* FTC Disclosure */}
-                <p className="text-[11px] text-gray-400 mt-4 text-center italic">
-                  *Affiliate Disclosure: As an Amazon Associate, WaterSafeCheck may earn an affiliate commission from qualifying purchases through the product links above, at no extra cost to you.
-                </p>
               </div>
             </div>
 

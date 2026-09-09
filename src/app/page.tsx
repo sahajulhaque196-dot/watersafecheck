@@ -66,7 +66,7 @@ const US_STATES_GRID = [
   ['Oregon','or'],['Pennsylvania','pa'],['Rhode Island','ri'],['South Carolina','sc'],
   ['South Dakota','sd'],['Tennessee','tn'],['Texas','tx'],['Utah','ut'],
   ['Vermont','vt'],['Virginia','va'],['Washington','wa'],['West Virginia','wv'],
-  ['Wisconsin','wi'],['Wyoming','wy'],
+  ['Wisconsin','wi'],['Wyoming','wy'],['District of Columbia','dc'],
 ]
 
 export default async function HomePage() {

@@ -209,7 +209,7 @@ export function stateJsonLd(data: StateData, breadcrumbItems?: { name: string; u
         publisher: { '@type': 'Organization', name: 'WaterSafeCheck', url: SITE_URL },
         license: 'https://creativecommons.org/licenses/by/4.0/',
         temporalCoverage: '2020/2026',
-        spatialCoverage: { '@type': 'State', name: data.name, containedIn: { '@type': 'Country', name: 'United States' } },
+        spatialCoverage: { '@type': 'AdministrativeArea', name: data.name, containedInPlace: { '@type': 'Country', name: 'United States' } },
         isBasedOn: [
           'https://www.epa.gov/enviro/sdwis-search',
           'https://echo.epa.gov',
@@ -298,8 +298,8 @@ export function cityJsonLd(data: CityData, breadcrumbItems?: { name: string; url
         spatialCoverage: {
           '@type': 'City',
           name: data.city,
-          containedIn: {
-            '@type': 'State',
+          containedInPlace: {
+            '@type': 'AdministrativeArea',
             name: data.state_name || data.state,
           },
         },
