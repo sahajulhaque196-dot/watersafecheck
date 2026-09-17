@@ -3,9 +3,8 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Script from 'next/script'
-import { getStateData, getStateZips, cityToSlug } from '@/lib/data'
+import { getStateData, getStateZips, cityToSlug, STATE_NAMES } from '@/lib/data'
 import type { ZipData } from '@/lib/types'
-import { supabase } from '@/lib/supabase'
 import { getStateIntro, getStateFAQs } from '@/lib/content'
 import { statePageMeta, stateJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo'
 import { GradeBadge, Breadcrumb, FaqItem, StatCard } from '@/components/ui'
@@ -23,18 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  try {
-    const { data: states } = await supabase.from('states').select('code')
-    if (states && states.length > 0) {
-      return states.map(s => ({ slug: s.code.toLowerCase() }))
-    }
-  } catch {}
-  try {
-    const localStates = require('@/data/state_data.json')
-    return Object.keys(localStates).map(code => ({ slug: code.toLowerCase() }))
-  } catch {
-    return []
-  }
+  return Object.keys(STATE_NAMES).map(code => ({ slug: code.toLowerCase() }))
 }
 
 export default async function StatePage({ params }: Props) {

@@ -1,74 +1,23 @@
 // src/lib/data.ts
-import { supabase } from './supabase'
+import { d1Query } from './d1'
 import type { ZipData, StateData, CityData } from './types'
 
-// ─── Local Dataset Cache (Resilient Fallback to prevent 404/5xx during high crawl traffic) ─
-
-let cachedZips: Record<string, ZipData> | null = null
-function getLocalZips(): Record<string, ZipData> {
-  if (!cachedZips) {
-    try {
-      cachedZips = require('@/data/zip_data.json')
-    } catch {
-      cachedZips = {}
-    }
-  }
-  return cachedZips || {}
-}
-
-let cachedCities: Record<string, CityData> | null = null
-function getLocalCities(): Record<string, CityData> {
-  if (!cachedCities) {
-    try {
-      cachedCities = require('@/data/city_data.json')
-    } catch {
-      cachedCities = {}
-    }
-  }
-  return cachedCities || {}
-}
-
-let cachedStates: Record<string, StateData> | null = null
-function getLocalStates(): Record<string, StateData> {
-  if (!cachedStates) {
-    try {
-      cachedStates = require('@/data/state_data.json')
-    } catch {
-      cachedStates = {}
-    }
-  }
-  return cachedStates || {}
-}
-
-// ─── Loaders (Supabase first with 2.5s race timeout, instant local fallback) ────────
+// ─── Loaders powered by Cloudflare D1 ───────────────────────────────────────
 
 export async function getZipData(zip: string): Promise<ZipData | null> {
   if (!zip || typeof zip !== 'string') return null
   const cleanZip = zip.trim()
 
   try {
-    const fetchPromise = supabase
-      .from('zips')
-      .select('*')
-      .eq('zip', cleanZip)
-      .maybeSingle()
-
-    const timeoutPromise = new Promise<{ data: null; error: Error }>((resolve) =>
-      setTimeout(() => resolve({ data: null, error: new Error('Timeout') }), 2500)
+    const rows = await d1Query<{ data: string }>(
+      'SELECT data FROM zips WHERE zip = ? LIMIT 1',
+      [cleanZip]
     )
-
-    const res: any = await Promise.race([fetchPromise, timeoutPromise])
-    if (res && res.data && !res.error) {
-      return res.data as ZipData
+    if (rows && rows.length > 0 && rows[0].data) {
+      return JSON.parse(rows[0].data) as ZipData
     }
   } catch (e) {
-    // Database glitch or timeout — fall through to local fallback
-  }
-
-  // Instant resilient fallback from local dataset
-  const local = getLocalZips()
-  if (local[cleanZip]) {
-    return local[cleanZip]
+    console.error('Error fetching zip data from D1:', e)
   }
 
   return null
@@ -79,27 +28,15 @@ export async function getStateData(code: string): Promise<StateData | null> {
   const upper = code.trim().toUpperCase()
 
   try {
-    const fetchPromise = supabase
-      .from('states')
-      .select('*')
-      .eq('code', upper)
-      .maybeSingle()
-
-    const timeoutPromise = new Promise<{ data: null; error: Error }>((resolve) =>
-      setTimeout(() => resolve({ data: null, error: new Error('Timeout') }), 2500)
+    const rows = await d1Query<{ data: string }>(
+      'SELECT data FROM states WHERE code = ? LIMIT 1',
+      [upper]
     )
-
-    const res: any = await Promise.race([fetchPromise, timeoutPromise])
-    if (res && res.data && !res.error) {
-      return res.data as StateData
+    if (rows && rows.length > 0 && rows[0].data) {
+      return JSON.parse(rows[0].data) as StateData
     }
   } catch (e) {
-    // Fallback
-  }
-
-  const local = getLocalStates()
-  if (local[upper]) {
-    return local[upper]
+    console.error('Error fetching state data from D1:', e)
   }
 
   return null
@@ -110,27 +47,15 @@ export async function getCityData(slug: string): Promise<CityData | null> {
   const cleanSlug = slug.trim().toLowerCase()
 
   try {
-    const fetchPromise = supabase
-      .from('cities')
-      .select('*')
-      .eq('slug', cleanSlug)
-      .maybeSingle()
-
-    const timeoutPromise = new Promise<{ data: null; error: Error }>((resolve) =>
-      setTimeout(() => resolve({ data: null, error: new Error('Timeout') }), 2500)
+    const rows = await d1Query<{ data: string }>(
+      'SELECT data FROM cities WHERE slug = ? LIMIT 1',
+      [cleanSlug]
     )
-
-    const res: any = await Promise.race([fetchPromise, timeoutPromise])
-    if (res && res.data && !res.error) {
-      return res.data as CityData
+    if (rows && rows.length > 0 && rows[0].data) {
+      return JSON.parse(rows[0].data) as CityData
     }
   } catch (e) {
-    // Fallback
-  }
-
-  const local = getLocalCities()
-  if (local[cleanSlug]) {
-    return local[cleanSlug]
+    console.error('Error fetching city data from D1:', e)
   }
 
   return null
@@ -138,20 +63,29 @@ export async function getCityData(slug: string): Promise<CityData | null> {
 
 export async function getStateZips(stateCode: string): Promise<ZipData[]> {
   const upper = stateCode.trim().toUpperCase()
-  const local = getLocalZips()
-  const list = Object.values(local).filter(z => z.state === upper)
-  if (list.length > 0) {
-    return list
-  }
-
   try {
-    const { data } = await supabase
-      .from('zips')
-      .select('zip, city, state, score, grade, contaminants')
-      .eq('state', upper)
-      .limit(3000)
-    return (data || []) as ZipData[]
-  } catch {
+    const rows = await d1Query<{ data: string }>(
+      'SELECT data FROM zips WHERE state = ? LIMIT 3000',
+      [upper]
+    )
+    return rows.map(r => JSON.parse(r.data) as ZipData)
+  } catch (e) {
+    console.error('Error fetching state zips from D1:', e)
+    return []
+  }
+}
+
+export async function getCityZips(zips: string[]): Promise<ZipData[]> {
+  if (!zips || zips.length === 0) return []
+  try {
+    const placeholders = zips.map(() => '?').join(', ')
+    const rows = await d1Query<{ data: string }>(
+      `SELECT data FROM zips WHERE zip IN (${placeholders})`,
+      zips
+    )
+    return rows.map(r => JSON.parse(r.data) as ZipData)
+  } catch (e) {
+    console.error('Error fetching city zips from D1:', e)
     return []
   }
 }
@@ -306,49 +240,24 @@ export function stateToSlug(state: string): string {
 
 export async function getNearbyZips(zip: string, city: string, state: string, limit = 6): Promise<ZipData[]> {
   try {
-    const { data, error } = await supabase
-      .from('zips')
-      .select('*')
-      .eq('city', city)
-      .eq('state', state.toUpperCase())
-      .neq('zip', zip)
-      .order('score', { ascending: false })
-      .limit(limit)
-
-    const cityZips = (!error && data) ? (data as ZipData[]) : []
+    const rows = await d1Query<{ data: string }>(
+      'SELECT data FROM zips WHERE city = ? AND state = ? AND zip != ? LIMIT ?',
+      [city, state.toUpperCase(), zip, limit]
+    )
+    const cityZips = rows.map(r => JSON.parse(r.data) as ZipData)
     if (cityZips.length >= limit) {
       return cityZips
     }
 
-    // Fallback: fetch state-level zips to guarantee at least 'limit' contextual internal links
     const needed = limit - cityZips.length
-    const excludeZips = [zip, ...cityZips.map(z => z.zip)]
-    const { data: stateZips, error: stateErr } = await supabase
-      .from('zips')
-      .select('*')
-      .eq('state', state.toUpperCase())
-      .not('zip', 'in', `(${excludeZips.join(',')})`)
-      .order('score', { ascending: false })
-      .limit(needed)
-
-    if (!stateErr && stateZips && stateZips.length > 0) {
-      return [...cityZips, ...(stateZips as ZipData[])]
-    }
-
-    if (cityZips.length > 0) return cityZips
+    const stateRows = await d1Query<{ data: string }>(
+      'SELECT data FROM zips WHERE state = ? AND zip != ? LIMIT ?',
+      [state.toUpperCase(), zip, needed]
+    )
+    const stateZips = stateRows.map(r => JSON.parse(r.data) as ZipData)
+    return [...cityZips, ...stateZips].slice(0, limit)
   } catch (e) {
-    // Fallthrough to local
-  }
-
-  // Fast local dataset fallback
-  try {
-    const local = getLocalZips()
-    const all = Object.values(local)
-    const sameCity = all.filter(z => z.city === city && z.state === state.toUpperCase() && z.zip !== zip)
-    if (sameCity.length >= limit) return sameCity.slice(0, limit)
-    const sameState = all.filter(z => z.state === state.toUpperCase() && z.zip !== zip)
-    return [...sameCity, ...sameState].slice(0, limit)
-  } catch {
+    console.error('Error in getNearbyZips:', e)
     return []
   }
 }
@@ -356,59 +265,38 @@ export async function getNearbyZips(zip: string, city: string, state: string, li
 export async function getUtilityZips(pwsid: string | null, currentZip: string, limit = 6): Promise<ZipData[]> {
   if (!pwsid || pwsid.trim() === '') return []
   try {
-    const { data, error } = await supabase
-      .from('zips')
-      .select('zip, city, state, score, grade, health_violations, system_name')
-      .eq('pwsid', pwsid.trim())
-      .neq('zip', currentZip)
-      .limit(limit)
-
-    if (!error && data && data.length > 0) return data as ZipData[]
-  } catch (e) {
-    // Fallthrough
-  }
-
-  try {
-    const local = getLocalZips()
-    return Object.values(local)
-      .filter(z => z.pwsid === pwsid.trim() && z.zip !== currentZip)
+    const rows = await d1Query<{ data: string }>(
+      'SELECT data FROM zips WHERE zip != ? LIMIT 80',
+      [currentZip]
+    )
+    return rows
+      .map(r => JSON.parse(r.data) as ZipData)
+      .filter(z => z.pwsid === pwsid.trim())
       .slice(0, limit)
-  } catch {
+  } catch (e) {
+    console.error('Error in getUtilityZips:', e)
     return []
   }
 }
 
 export async function getNearbyCities(state: string, currentCity: string, limit = 8): Promise<{ city: string; state: string; slug: string; zip_count: number; best_grade: string }[]> {
   try {
-    const { data, error } = await supabase
-      .from('cities')
-      .select('city, state, slug, zip_count, best_grade')
-      .eq('state', state.toUpperCase())
-      .neq('city', currentCity)
-      .order('zip_count', { ascending: false })
-      .limit(limit)
-
-    if (!error && data && data.length > 0) {
-      return data as { city: string; state: string; slug: string; zip_count: number; best_grade: string }[]
-    }
-  } catch (e) {
-    // Fallthrough
-  }
-
-  try {
-    const local = getLocalCities()
-    return Object.values(local)
-      .filter(c => c.state === state.toUpperCase() && c.city !== currentCity)
-      .sort((a, b) => b.zip_count - a.zip_count)
-      .slice(0, limit)
-      .map(c => ({
+    const rows = await d1Query<{ data: string }>(
+      'SELECT data FROM cities WHERE state = ? AND city != ? LIMIT ?',
+      [state.toUpperCase(), currentCity, limit]
+    )
+    return rows.map(r => {
+      const c = JSON.parse(r.data) as CityData
+      return {
         city: c.city,
         state: c.state,
         slug: c.slug || cityToSlug(c.city, c.state),
-        zip_count: c.zip_count,
+        zip_count: c.zip_count || 1,
         best_grade: c.best_grade || 'B',
-      }))
-  } catch {
+      }
+    })
+  } catch (e) {
+    console.error('Error in getNearbyCities:', e)
     return []
   }
 }

@@ -3,10 +3,10 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Script from 'next/script'
-import { getCityData, getNearbyCities, STATE_NAMES, STATE_AGENCIES } from '@/lib/data'
+import { getCityData, getNearbyCities, getCityZips, STATE_NAMES, STATE_AGENCIES } from '@/lib/data'
 import { getCityTestingGuide } from '@/lib/content'
 import type { ZipData } from '@/lib/types'
-import { supabase } from '@/lib/supabase'
+import { d1Query } from '@/lib/d1'
 import { cityPageMeta, cityJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo'
 import { GradeBadge, Breadcrumb, ZipCard, FaqItem, StatCard } from '@/components/ui'
 import { CityZipDirectory } from '@/components/sections/CityZipDirectory'
@@ -16,6 +16,7 @@ import { Sparkles, ShieldCheck, Droplets, Activity, Beaker, CheckCircle2, AlertT
 
 interface Props { params: { slug: string } }
 
+export const runtime = 'edge'
 export const revalidate = 604800
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -26,40 +27,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export async function generateStaticParams() {
   try {
-    const { data: cities } = await supabase
-      .from('cities')
-      .select('slug')
-      .order('zip_count', { ascending: false })
-      .limit(200)
+    const cities = await d1Query<{ slug: string }>(
+      'SELECT slug FROM cities ORDER BY rowid ASC LIMIT 200'
+    )
     if (cities && cities.length > 0) return cities.map(c => ({ slug: c.slug }))
   } catch {}
-  try {
-    const local = require('@/data/city_data.json')
-    return Object.keys(local).slice(0, 200).map(slug => ({ slug }))
-  } catch {
-    return []
-  }
+  return []
 }
 
 export default async function CityPage({ params }: Props) {
   const data = await getCityData(params.slug)
   if (!data) return notFound()
 
-  const [{ data: zipRows }, nearbyCities] = await Promise.all([
-    supabase
-      .from('zips')
-      .select('zip, city, state, score, grade, lead_risk, contaminants, health_violations, system_name, water_source')
-      .in('zip', data.zips || []),
+  const [cityZips, nearbyCities] = await Promise.all([
+    getCityZips(data.zips || []),
     getNearbyCities(data.state, data.city, 8),
   ])
-
-  let cityZips = (zipRows || []) as ZipData[]
-  if (cityZips.length === 0 && data.zips && data.zips.length > 0) {
-    try {
-      const local = require('@/data/zip_data.json')
-      cityZips = data.zips.map(z => local[z]).filter(Boolean) as ZipData[]
-    } catch {}
-  }
 
   const stateName = data.state_name || STATE_NAMES[data.state] || data.state
   const testingGuide = getCityTestingGuide(data)

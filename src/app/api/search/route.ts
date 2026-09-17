@@ -1,6 +1,8 @@
 // src/app/api/search/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { d1Query } from '@/lib/d1'
+
+export const runtime = 'edge'
 
 export async function GET(request: NextRequest) {
   const rawQ = request.nextUrl.searchParams.get('q')?.trim()
@@ -9,7 +11,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ results: [] })
   }
 
-  // Sanitize input strictly to prevent PostgREST syntax injection / AST breaking
+  // Sanitize input strictly to prevent SQL injection / invalid characters
   const sanitized = rawQ.replace(/[^a-zA-Z0-9\s-]/g, '').trim()
   if (!sanitized) {
     return NextResponse.json({ results: [] })
@@ -17,22 +19,32 @@ export async function GET(request: NextRequest) {
 
   try {
     const isNumeric = /^\d+$/.test(sanitized)
-    let query = supabase.from('zips').select('zip, city, state, grade, score')
+    let rows: { data: string }[] = []
 
     if (isNumeric) {
-      query = query.ilike('zip', `${sanitized}%`).limit(8)
+      rows = await d1Query<{ data: string }>(
+        'SELECT data FROM zips WHERE zip LIKE ? LIMIT 8',
+        [`${sanitized}%`]
+      )
     } else {
-      query = query.ilike('city', `${sanitized}%`).limit(8)
+      rows = await d1Query<{ data: string }>(
+        'SELECT data FROM zips WHERE city LIKE ? LIMIT 8',
+        [`${sanitized}%`]
+      )
     }
 
-    const { data, error } = await query
+    const results = rows.map(r => {
+      const d = JSON.parse(r.data)
+      return {
+        zip: d.zip,
+        city: d.city,
+        state: d.state,
+        grade: d.grade,
+        score: d.score,
+      }
+    })
 
-    if (error) {
-      console.error('Error searching zips from Supabase:', error)
-      return NextResponse.json({ results: [] })
-    }
-
-    return NextResponse.json({ results: data || [] }, {
+    return NextResponse.json({ results }, {
       headers: {
         'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
       },

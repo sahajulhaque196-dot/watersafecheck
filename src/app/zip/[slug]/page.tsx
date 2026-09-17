@@ -28,7 +28,7 @@ import { ShieldCheck, Droplets, CheckCircle2, AlertTriangle, ExternalLink, Spark
 
 interface Props { params: { slug: string } }
 
-// ISR — revalidate pages every 7 days
+export const runtime = 'edge'
 export const revalidate = 604800
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

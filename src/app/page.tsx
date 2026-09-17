@@ -1,7 +1,7 @@
 // src/app/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { supabase } from '@/lib/supabase'
+import { d1Query } from '@/lib/d1'
 import type { StateData } from '@/lib/types'
 import { SITE_DESCRIPTION, SITE_NAME } from '@/lib/seo'
 import { HomeSearch } from '@/components/sections/HomeSearch'
@@ -30,6 +30,7 @@ const RippleDistortion = dynamic(
 
 
 // ISR — revalidate homepage daily (86400 seconds)
+export const runtime = 'edge'
 export const revalidate = 86400
 
 export const metadata: Metadata = {
@@ -70,8 +71,9 @@ const US_STATES_GRID = [
 ]
 
 export default async function HomePage() {
-  const { data: statesData } = await supabase.from('states').select('*')
-  const allStates = ((statesData || []) as StateData[]).reduce((acc, curr) => {
+  const rows = await d1Query<{ data: string }>('SELECT data FROM states')
+  const statesData = rows.map(r => JSON.parse(r.data) as StateData)
+  const allStates = statesData.reduce((acc, curr) => {
     acc[curr.code] = curr
     return acc
   }, {} as Record<string, StateData>)
