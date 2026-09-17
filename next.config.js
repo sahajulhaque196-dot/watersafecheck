@@ -10,16 +10,16 @@ const nextConfig = {
   poweredByHeader: false,
   async redirects() {
     return [
-      // 1. Enforce www subdomain sitewide (Permanent 308 redirect) — fixes 9 duplicate canonical errors
+      // 1. Enforce non-www domain sitewide (Permanent 308 redirect)
       {
         source: '/:path*',
         has: [
           {
             type: 'host',
-            value: 'watersafecheck.com',
+            value: 'www.watersafecheck.com',
           },
         ],
-        destination: 'https://www.watersafecheck.com/:path*',
+        destination: 'https://watersafecheck.com/:path*',
         permanent: true,
       },
       // 2. Base directory redirects (fixes orphan 4xx / 404 errors when bots crawl root paths)

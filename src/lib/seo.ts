@@ -1,7 +1,7 @@
 // src/lib/seo.ts
 import type { ZipData, StateData, CityData } from './types'
 
-export const SITE_URL = 'https://www.watersafecheck.com'
+export const SITE_URL = 'https://watersafecheck.com'
 export const SITE_NAME = 'WaterSafeCheck'
 export const SITE_TAGLINE = 'Is Your Tap Water Safe?'
 export const SITE_DESCRIPTION =
