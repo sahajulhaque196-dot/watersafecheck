@@ -9,6 +9,7 @@ import { AdTop, AdInContent, AdBottom } from '@/components/ui/AdSense'
 
 interface Props { params: { slug: string } }
 
+export const runtime = 'edge'
 export const revalidate = 2592000 // 30 days
 
 export async function generateStaticParams() {
