@@ -4,37 +4,44 @@
 
 import type { ZipData, StateData, CityData } from './types'
 
-// ─── Local Dataset Cache (Guarantees 0ms responses & zero 404 drops) ────────
+// ─── Compact Columnar Dataset Cache (Fits within Cloudflare Pages 25MB limit) ───
 
-let _zips: Record<string, ZipData> | null = null
-let _cities: Record<string, CityData> | null = null
-let _states: Record<string, StateData> | null = null
-
-let _zipsByCityState: Map<string, ZipData[]> | null = null
-let _zipsByState: Map<string, ZipData[]> | null = null
-let _zipsByPwsid: Map<string, ZipData[]> | null = null
-let _citiesByState: Map<string, CityData[]> | null = null
-
-function getLocalZips(): Record<string, ZipData> {
-  if (!_zips) {
-    try {
-      _zips = require('@/data/zip_data.json')
-    } catch {
-      _zips = {}
-    }
-  }
-  return _zips || {}
+interface CompactDataset {
+  f: string[]
+  d: Record<string, any[]>
 }
 
-function getLocalCities(): Record<string, CityData> {
-  if (!_cities) {
+let _zipsCompact: CompactDataset | null = null
+let _citiesCompact: CompactDataset | null = null
+let _states: Record<string, StateData> | null = null
+
+let _zipsByCityState: Map<string, string[]> | null = null
+let _zipsByState: Map<string, string[]> | null = null
+let _zipsByPwsid: Map<string, string[]> | null = null
+let _citiesByState: Map<string, string[]> | null = null
+
+function getZipCompact(): CompactDataset {
+  if (!_zipsCompact) {
     try {
-      _cities = require('@/data/city_data.json')
+      const raw = require('@/data/zip_data.json')
+      _zipsCompact = raw.f && raw.d ? raw : { f: [], d: raw }
     } catch {
-      _cities = {}
+      _zipsCompact = { f: [], d: {} }
     }
   }
-  return _cities || {}
+  return _zipsCompact || { f: [], d: {} }
+}
+
+function getCityCompact(): CompactDataset {
+  if (!_citiesCompact) {
+    try {
+      const raw = require('@/data/city_data.json')
+      _citiesCompact = raw.f && raw.d ? raw : { f: [], d: raw }
+    } catch {
+      _citiesCompact = { f: [], d: {} }
+    }
+  }
+  return _citiesCompact || { f: [], d: {} }
 }
 
 function getLocalStates(): Record<string, StateData> {
@@ -48,46 +55,78 @@ function getLocalStates(): Record<string, StateData> {
   return _states || {}
 }
 
+export function hydrateZip(row: any[]): ZipData | null {
+  if (!row) return null
+  const compact = getZipCompact()
+  const f = compact.f
+  const obj: any = {}
+  for (let i = 0; i < f.length; i++) {
+    obj[f[i]] = row[i]
+  }
+  return obj as ZipData
+}
+
+export function hydrateCity(row: any[]): CityData | null {
+  if (!row) return null
+  const compact = getCityCompact()
+  const f = compact.f
+  const obj: any = {}
+  for (let i = 0; i < f.length; i++) {
+    obj[f[i]] = row[i]
+  }
+  return obj as CityData
+}
+
 function ensureIndexes() {
   if (_zipsByCityState) return
 
-  const zips = getLocalZips()
-  const csMap = new Map<string, ZipData[]>()
-  const sMap = new Map<string, ZipData[]>()
-  const pMap = new Map<string, ZipData[]>()
+  const compact = getZipCompact()
+  const csMap = new Map<string, string[]>()
+  const sMap = new Map<string, string[]>()
+  const pMap = new Map<string, string[]>()
 
-  for (const zip in zips) {
-    const d = zips[zip]
-    if (!d) continue
+  const f = compact.f
+  const cityIdx = f.indexOf('city')
+  const stateIdx = f.indexOf('state')
+  const pwsidIdx = f.indexOf('pwsid')
 
-    if (d.city && d.state) {
-      const key = `${d.city.toLowerCase()}|${d.state.toUpperCase()}`
+  const data = compact.d
+  for (const zip in data) {
+    const row = data[zip]
+    if (!row) continue
+
+    const city = row[cityIdx]
+    const state = row[stateIdx]
+    const pwsid = row[pwsidIdx]
+
+    if (city && state) {
+      const key = `${String(city).toLowerCase()}|${String(state).toUpperCase()}`
       let list = csMap.get(key)
       if (!list) {
         list = []
         csMap.set(key, list)
       }
-      list.push(d)
+      list.push(zip)
     }
 
-    if (d.state) {
-      const s = d.state.toUpperCase()
+    if (state) {
+      const s = String(state).toUpperCase()
       let sList = sMap.get(s)
       if (!sList) {
         sList = []
         sMap.set(s, sList)
       }
-      sList.push(d)
+      sList.push(zip)
     }
 
-    if (d.pwsid) {
-      const p = d.pwsid.trim()
+    if (pwsid) {
+      const p = String(pwsid).trim()
       let pList = pMap.get(p)
       if (!pList) {
         pList = []
         pMap.set(p, pList)
       }
-      pList.push(d)
+      pList.push(zip)
     }
   }
 
@@ -95,18 +134,24 @@ function ensureIndexes() {
   _zipsByState = sMap
   _zipsByPwsid = pMap
 
-  const cities = getLocalCities()
-  const cByState = new Map<string, CityData[]>()
-  for (const slug in cities) {
-    const c = cities[slug]
-    if (!c || !c.state) continue
-    const s = c.state.toUpperCase()
-    let list = cByState.get(s)
+  const cityCompact = getCityCompact()
+  const cf = cityCompact.f
+  const cStateIdx = cf.indexOf('state')
+  const cByState = new Map<string, string[]>()
+  const cData = cityCompact.d
+
+  for (const slug in cData) {
+    const cRow = cData[slug]
+    if (!cRow) continue
+    const s = cRow[cStateIdx]
+    if (!s) continue
+    const sUpper = String(s).toUpperCase()
+    let list = cByState.get(sUpper)
     if (!list) {
       list = []
-      cByState.set(s, list)
+      cByState.set(sUpper, list)
     }
-    list.push(c)
+    list.push(slug)
   }
   _citiesByState = cByState
 }
@@ -117,9 +162,9 @@ export async function getZipData(zip: string): Promise<ZipData | null> {
   if (!zip || typeof zip !== 'string') return null
   const cleanZip = zip.trim()
   if (!/^\d{5}$/.test(cleanZip)) return null
-  const local = getLocalZips()
-  if (Object.prototype.hasOwnProperty.call(local, cleanZip) && local[cleanZip]) {
-    return local[cleanZip]
+  const compact = getZipCompact()
+  if (Object.prototype.hasOwnProperty.call(compact.d, cleanZip)) {
+    return hydrateZip(compact.d[cleanZip])
   }
   return null
 }
@@ -143,9 +188,9 @@ export async function getCityData(slug: string): Promise<CityData | null> {
   if (!slug || typeof slug !== 'string') return null
   const cleanSlug = slug.trim().toLowerCase()
   if (!/^[a-z0-9-]+$/.test(cleanSlug)) return null
-  const local = getLocalCities()
-  if (Object.prototype.hasOwnProperty.call(local, cleanSlug) && local[cleanSlug]) {
-    return local[cleanSlug]
+  const compact = getCityCompact()
+  if (Object.prototype.hasOwnProperty.call(compact.d, cleanSlug)) {
+    return hydrateCity(compact.d[cleanSlug])
   }
   return null
 }
@@ -153,13 +198,15 @@ export async function getCityData(slug: string): Promise<CityData | null> {
 export async function getStateZips(stateCode: string): Promise<ZipData[]> {
   ensureIndexes()
   const s = stateCode.trim().toUpperCase()
-  return _zipsByState?.get(s) || []
+  const zipCodes = _zipsByState?.get(s) || []
+  const compact = getZipCompact()
+  return zipCodes.map(z => hydrateZip(compact.d[z])).filter(Boolean) as ZipData[]
 }
 
 export async function getCityZips(zips: string[]): Promise<ZipData[]> {
   if (!zips || zips.length === 0) return []
-  const local = getLocalZips()
-  return zips.map(z => local[z]).filter(Boolean)
+  const compact = getZipCompact()
+  return zips.map(z => hydrateZip(compact.d[z])).filter(Boolean) as ZipData[]
 }
 
 export function searchZips(query: string, limit = 8): { zip: string; city: string; state: string; grade: string; score: number | null }[] {
@@ -167,23 +214,44 @@ export function searchZips(query: string, limit = 8): { zip: string; city: strin
   const q = query.trim().toLowerCase()
   if (!q || q.length < 2 || q.length > 50) return []
 
-  const zips = getLocalZips()
+  const compact = getZipCompact()
   const isNumeric = /^\d+$/.test(q)
   const results: { zip: string; city: string; state: string; grade: string; score: number | null }[] = []
 
+  const f = compact.f
+  const zipIdx = f.indexOf('zip')
+  const cityIdx = f.indexOf('city')
+  const stateIdx = f.indexOf('state')
+  const gradeIdx = f.indexOf('grade')
+  const scoreIdx = f.indexOf('score')
+
+  const data = compact.d
   if (isNumeric) {
-    for (const zip in zips) {
+    for (const zip in data) {
       if (zip.startsWith(q)) {
-        const d = zips[zip]
-        results.push({ zip: d.zip, city: d.city, state: d.state, grade: d.grade, score: d.score })
+        const row = data[zip]
+        results.push({
+          zip: row[zipIdx],
+          city: row[cityIdx],
+          state: row[stateIdx],
+          grade: row[gradeIdx],
+          score: row[scoreIdx],
+        })
         if (results.length >= limit) break
       }
     }
   } else {
-    for (const zip in zips) {
-      const d = zips[zip]
-      if (d.city && d.city.toLowerCase().startsWith(q)) {
-        results.push({ zip: d.zip, city: d.city, state: d.state, grade: d.grade, score: d.score })
+    for (const zip in data) {
+      const row = data[zip]
+      const city = row[cityIdx]
+      if (city && String(city).toLowerCase().startsWith(q)) {
+        results.push({
+          zip: row[zipIdx],
+          city: city,
+          state: row[stateIdx],
+          grade: row[gradeIdx],
+          score: row[scoreIdx],
+        })
         if (results.length >= limit) break
       }
     }
@@ -341,34 +409,54 @@ export function stateToSlug(state: string): string {
 export async function getNearbyZips(zip: string, city: string, state: string, limit = 6): Promise<ZipData[]> {
   ensureIndexes()
   const key = `${city.toLowerCase()}|${state.toUpperCase()}`
-  const sameCity = (_zipsByCityState?.get(key) || []).filter(z => z.zip !== zip)
-  if (sameCity.length >= limit) {
-    return sameCity.slice(0, limit)
+  const sameCityZips = (_zipsByCityState?.get(key) || []).filter(z => z !== zip)
+  const compact = getZipCompact()
+  
+  if (sameCityZips.length >= limit) {
+    return sameCityZips.slice(0, limit).map(z => hydrateZip(compact.d[z])).filter(Boolean) as ZipData[]
   }
 
   const s = state.toUpperCase()
-  const sameState = (_zipsByState?.get(s) || []).filter(z => z.zip !== zip && z.city !== city)
-  return [...sameCity, ...sameState].slice(0, limit)
+  const sameStateZips = (_zipsByState?.get(s) || []).filter(z => z !== zip && !sameCityZips.includes(z))
+  const combined = [...sameCityZips, ...sameStateZips].slice(0, limit)
+  return combined.map(z => hydrateZip(compact.d[z])).filter(Boolean) as ZipData[]
 }
 
 export async function getUtilityZips(pwsid: string | null, currentZip: string, limit = 6): Promise<ZipData[]> {
   if (!pwsid || pwsid.trim() === '') return []
   ensureIndexes()
   const list = _zipsByPwsid?.get(pwsid.trim()) || []
-  return list.filter(z => z.zip !== currentZip).slice(0, limit)
+  const compact = getZipCompact()
+  return list.filter(z => z !== currentZip).slice(0, limit).map(z => hydrateZip(compact.d[z])).filter(Boolean) as ZipData[]
 }
 
 export async function getNearbyCities(state: string, currentCity: string, limit = 8): Promise<{ city: string; state: string; slug: string; zip_count: number; best_grade: string }[]> {
   ensureIndexes()
   const s = state.toUpperCase()
-  const list = (_citiesByState?.get(s) || []).filter(c => c.city.toLowerCase() !== currentCity.toLowerCase())
-  return list
-    .slice(0, limit)
-    .map(c => ({
-      city: c.city,
-      state: c.state,
-      slug: c.slug || cityToSlug(c.city, c.state),
-      zip_count: c.zip_count || 1,
-      best_grade: c.best_grade || 'B',
-    }))
+  const slugs = _citiesByState?.get(s) || []
+  const cityCompact = getCityCompact()
+  const cf = cityCompact.f
+  const cityIdx = cf.indexOf('city')
+  const stateIdx = cf.indexOf('state')
+  const slugIdx = cf.indexOf('slug')
+  const zipCountIdx = cf.indexOf('zip_count')
+  const bestGradeIdx = cf.indexOf('best_grade')
+
+  const results: { city: string; state: string; slug: string; zip_count: number; best_grade: string }[] = []
+  for (const slug of slugs) {
+    const row = cityCompact.d[slug]
+    if (!row) continue
+    const cName = row[cityIdx]
+    if (cName && String(cName).toLowerCase() === currentCity.toLowerCase()) continue
+
+    results.push({
+      city: cName,
+      state: row[stateIdx],
+      slug: row[slugIdx] || slug,
+      zip_count: row[zipCountIdx] || 1,
+      best_grade: row[bestGradeIdx] || 'B',
+    })
+    if (results.length >= limit) break
+  }
+  return results
 }

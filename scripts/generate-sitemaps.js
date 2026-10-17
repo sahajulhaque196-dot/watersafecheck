@@ -19,11 +19,11 @@ function run() {
 
     console.log('Loading cities...');
     const citiesData = JSON.parse(fs.readFileSync(citiesPath, 'utf8'));
-    const citySlugs = Object.keys(citiesData);
+    const citySlugs = citiesData.d ? Object.keys(citiesData.d) : Object.keys(citiesData);
 
     console.log('Loading ZIP codes...');
     const zipsData = JSON.parse(fs.readFileSync(zipsPath, 'utf8'));
-    const zipKeys = Object.keys(zipsData);
+    const zipKeys = zipsData.d ? Object.keys(zipsData.d) : Object.keys(zipsData);
 
     console.log(`Loaded: ${stateCodes.length} States, ${citySlugs.length} Cities, ${zipKeys.length} ZIPs.`);
 
