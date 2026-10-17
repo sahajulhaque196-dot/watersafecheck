@@ -26,7 +26,7 @@ User-agent: Google-Extended
 Allow: /
 Disallow: /api/
 
-Sitemap: https://www.watersafecheck.com/sitemap-index.xml
-Host: https://www.watersafecheck.com
+Sitemap: https://watersafecheck.com/sitemap-index.xml
+Host: https://watersafecheck.com
 
 

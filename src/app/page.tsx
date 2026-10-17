@@ -1,9 +1,9 @@
 // src/app/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { d1Query } from '@/lib/d1'
+import { getAllStates } from '@/lib/data'
 import type { StateData } from '@/lib/types'
-import { SITE_DESCRIPTION, SITE_NAME } from '@/lib/seo'
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/seo'
 import { HomeSearch } from '@/components/sections/HomeSearch'
 import { blogArticles } from '@/data/blog-articles'
 import { AdTop, AdInContent } from '@/components/ui/AdSense'
@@ -30,13 +30,12 @@ const RippleDistortion = dynamic(
 
 
 // ISR — revalidate homepage daily (86400 seconds)
-export const runtime = 'edge'
 export const revalidate = 86400
 
 export const metadata: Metadata = {
   title: `${SITE_NAME} — Check Tap Water Safety by ZIP Code`,
   description: SITE_DESCRIPTION,
-  alternates: { canonical: 'https://www.watersafecheck.com' },
+  alternates: { canonical: SITE_URL },
 }
 
 const POPULAR_CITIES = [
@@ -71,12 +70,7 @@ const US_STATES_GRID = [
 ]
 
 export default async function HomePage() {
-  const rows = await d1Query<{ data: string }>('SELECT data FROM states')
-  const statesData = rows.map(r => JSON.parse(r.data) as StateData)
-  const allStates = statesData.reduce((acc, curr) => {
-    acc[curr.code] = curr
-    return acc
-  }, {} as Record<string, StateData>)
+  const allStates = await getAllStates()
 
   // National stats
   const totalZips = 41344 // pre-computed from master dataset

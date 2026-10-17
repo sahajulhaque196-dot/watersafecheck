@@ -18,7 +18,7 @@ import {
   getWaterHardnessAnalysis, getEpaVerificationUrl,
   getFilterRecommendation, getZipTestingGuide,
 } from '@/lib/content'
-import { zipPageMeta, zipJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo'
+import { SITE_URL, zipPageMeta, zipJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo'
 import {
   GradeBadge, ScoreRing, DataRow, AlertBox,
   Breadcrumb, StatCard, FaqItem,
@@ -28,7 +28,6 @@ import { ShieldCheck, Droplets, CheckCircle2, AlertTriangle, ExternalLink, Spark
 
 interface Props { params: { slug: string } }
 
-export const runtime = 'edge'
 export const revalidate = 604800
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -105,10 +104,10 @@ export default async function ZipPage({ params }: Props) {
   ]
 
   const breadcrumbItems = [
-    { name: 'Home', url: 'https://www.watersafecheck.com' },
-    { name: stateName, url: `https://www.watersafecheck.com/state/${data.state.toLowerCase()}` },
-    ...(data.city && citySlug ? [{ name: data.city, url: `https://www.watersafecheck.com/city/${citySlug}` }] : []),
-    { name: `ZIP ${data.zip}`, url: `https://www.watersafecheck.com/zip/${data.zip}` },
+    { name: 'Home', url: SITE_URL },
+    { name: stateName, url: `${SITE_URL}/state/${data.state.toLowerCase()}` },
+    ...(data.city && citySlug ? [{ name: data.city, url: `${SITE_URL}/city/${citySlug}` }] : []),
+    { name: `ZIP ${data.zip}`, url: `${SITE_URL}/zip/${data.zip}` },
   ]
 
   return (

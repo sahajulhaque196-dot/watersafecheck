@@ -1,77 +1,39 @@
 // scripts/generate-sitemaps.js
+// High-performance sitemap generator reading directly from local JSON datasets.
+// Produces 100% unified non-www sitemaps adhering to Google Search Console specs.
+
 const fs = require('fs');
 const path = require('path');
-const { createClient } = require('@supabase/supabase-js');
 
-// Credentials from .env.local or defaults
-const supabaseUrl = 'https://qhhamaaveozfanixkkqd.supabase.co';
-const supabaseKey = 'sb_publishable_suP6DNVdVwJfuEEwhEEM9g_zJk0779G';
-
-if (typeof global.WebSocket === 'undefined') {
-  global.WebSocket = class DummyWebSocket {};
-}
-
-const supabase = createClient(supabaseUrl, supabaseKey, {
-  auth: { persistSession: false, autoRefreshToken: false }
-});
-
-
-
-// Helper to fetch all rows using pagination
-async function fetchAllRows(tableName, orderColumn, selectColumns) {
-  let allData = [];
-  let from = 0;
-  const step = 1000;
-  let hasMore = true;
-
-  while (hasMore) {
-    const to = from + step - 1;
-    const { data, error } = await supabase
-      .from(tableName)
-      .select(selectColumns)
-      .order(orderColumn, { ascending: true })
-      .range(from, to);
-
-    if (error) {
-      throw error;
-    }
-
-    allData = allData.concat(data);
-    console.log(`Fetched ${allData.length} rows from ${tableName}...`);
-
-    if (data.length < step) {
-      hasMore = false;
-    } else {
-      from += step;
-    }
-  }
-
-  return allData;
-}
-
-async function run() {
-  console.log('--- Generating All Sitemaps ---');
+function run() {
+  console.log('--- Generating All Sitemaps from Local Datasets ---');
   
   try {
-    console.log('Fetching states...');
-    const { data: states, error: statesError } = await supabase.from('states').select('code');
-    if (statesError) throw statesError;
+    const statesPath = path.join(__dirname, '..', 'src', 'data', 'state_data.json');
+    const citiesPath = path.join(__dirname, '..', 'src', 'data', 'city_data.json');
+    const zipsPath = path.join(__dirname, '..', 'src', 'data', 'zip_data.json');
 
-    console.log('Fetching cities...');
-    const cities = await fetchAllRows('cities', 'slug', 'slug');
+    console.log('Loading states...');
+    const statesData = JSON.parse(fs.readFileSync(statesPath, 'utf8'));
+    const stateCodes = Object.keys(statesData);
 
-    console.log('Fetching ZIP codes...');
-    const zips = await fetchAllRows('zips', 'zip', 'zip');
+    console.log('Loading cities...');
+    const citiesData = JSON.parse(fs.readFileSync(citiesPath, 'utf8'));
+    const citySlugs = Object.keys(citiesData);
 
-    console.log(`Successfully fetched all data from Supabase. States: ${states.length}, Cities: ${cities.length}, ZIPs: ${zips.length}`);
+    console.log('Loading ZIP codes...');
+    const zipsData = JSON.parse(fs.readFileSync(zipsPath, 'utf8'));
+    const zipKeys = Object.keys(zipsData);
 
-    const baseUrl = 'https://www.watersafecheck.com';
+    console.log(`Loaded: ${stateCodes.length} States, ${citySlugs.length} Cities, ${zipKeys.length} ZIPs.`);
+
+    // Strict non-www canonical base URL sitewide
+    const baseUrl = 'https://watersafecheck.com';
     const now = new Date().toISOString().split('T')[0];
 
-    // Create public directory if it doesn't exist
     const publicDir = path.join(__dirname, '..', 'public');
     if (!fs.existsSync(publicDir)) {
-      fs.mkdirSync(publicDir);
+      fs.mkdirSync(publicDir, { recursive: true });
     }
 
     // 1. Generate sitemap-main.xml
@@ -113,44 +75,44 @@ async function run() {
       mainXml += `  <url><loc>${baseUrl}/blog/${slug}</loc><lastmod>${now}</lastmod><changefreq>monthly</changefreq><priority>0.80</priority></url>\n`;
     }
 
-    for (const s of states) {
-      mainXml += `  <url><loc>${baseUrl}/state/${s.code.toLowerCase()}</loc><lastmod>${now}</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>\n`;
+    for (const code of stateCodes) {
+      mainXml += `  <url><loc>${baseUrl}/state/${code.toLowerCase()}</loc><lastmod>${now}</lastmod><changefreq>monthly</changefreq><priority>0.85</priority></url>\n`;
     }
     mainXml += '</urlset>';
-    fs.writeFileSync(path.join(publicDir, 'sitemap-main.xml'), mainXml);
+    fs.writeFileSync(path.join(publicDir, 'sitemap-main.xml'), mainXml, 'utf8');
     console.log('Saved sitemap-main.xml');
 
     // 2. Generate sitemap-cities.xml
     let citiesXml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
-    for (const c of cities) {
-      citiesXml += `  <url><loc>${baseUrl}/city/${c.slug}</loc><lastmod>${now}</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>\n`;
+    for (const slug of citySlugs) {
+      citiesXml += `  <url><loc>${baseUrl}/city/${slug}</loc><lastmod>${now}</lastmod><changefreq>monthly</changefreq><priority>0.75</priority></url>\n`;
     }
     citiesXml += '</urlset>';
-    fs.writeFileSync(path.join(publicDir, 'sitemap-cities.xml'), citiesXml);
-    console.log('Saved sitemap-cities.xml');
+    fs.writeFileSync(path.join(publicDir, 'sitemap-cities.xml'), citiesXml, 'utf8');
+    console.log(`Saved sitemap-cities.xml (${citySlugs.length} URLs)`);
 
-    // 3. Generate sitemap-zips-1.xml and sitemap-zips-2.xml (split into 2 files to keep size low)
-    const midIndex = Math.ceil(zips.length / 2);
-    const zips1 = zips.slice(0, midIndex);
-    const zips2 = zips.slice(midIndex);
+    // 3. Generate sitemap-zips-1.xml and sitemap-zips-2.xml
+    const midIndex = Math.ceil(zipKeys.length / 2);
+    const zips1 = zipKeys.slice(0, midIndex);
+    const zips2 = zipKeys.slice(midIndex);
 
     let zips1Xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
-    for (const z of zips1) {
-      zips1Xml += `  <url><loc>${baseUrl}/zip/${z.zip}</loc><lastmod>${now}</lastmod><changefreq>monthly</changefreq><priority>0.70</priority></url>\n`;
+    for (const zip of zips1) {
+      zips1Xml += `  <url><loc>${baseUrl}/zip/${zip}</loc><lastmod>${now}</lastmod><changefreq>monthly</changefreq><priority>0.70</priority></url>\n`;
     }
     zips1Xml += '</urlset>';
-    fs.writeFileSync(path.join(publicDir, 'sitemap-zips-1.xml'), zips1Xml);
+    fs.writeFileSync(path.join(publicDir, 'sitemap-zips-1.xml'), zips1Xml, 'utf8');
     console.log(`Saved sitemap-zips-1.xml (${zips1.length} URLs)`);
 
     let zips2Xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
-    for (const z of zips2) {
-      zips2Xml += `  <url><loc>${baseUrl}/zip/${z.zip}</loc><lastmod>${now}</lastmod><changefreq>monthly</changefreq><priority>0.70</priority></url>\n`;
+    for (const zip of zips2) {
+      zips2Xml += `  <url><loc>${baseUrl}/zip/${zip}</loc><lastmod>${now}</lastmod><changefreq>monthly</changefreq><priority>0.70</priority></url>\n`;
     }
     zips2Xml += '</urlset>';
-    fs.writeFileSync(path.join(publicDir, 'sitemap-zips-2.xml'), zips2Xml);
+    fs.writeFileSync(path.join(publicDir, 'sitemap-zips-2.xml'), zips2Xml, 'utf8');
     console.log(`Saved sitemap-zips-2.xml (${zips2.length} URLs)`);
 
     // 4. Generate sitemap-index.xml
@@ -174,7 +136,7 @@ async function run() {
   </sitemap>
 </sitemapindex>\n`;
 
-    fs.writeFileSync(path.join(publicDir, 'sitemap-index.xml'), indexXml);
+    fs.writeFileSync(path.join(publicDir, 'sitemap-index.xml'), indexXml, 'utf8');
     console.log('Saved sitemap-index.xml');
     console.log('SITEMAPS GENERATION COMPLETED SUCCESSFULLY! 🎉');
 

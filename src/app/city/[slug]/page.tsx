@@ -6,7 +6,6 @@ import Script from 'next/script'
 import { getCityData, getNearbyCities, getCityZips, STATE_NAMES, STATE_AGENCIES } from '@/lib/data'
 import { getCityTestingGuide } from '@/lib/content'
 import type { ZipData } from '@/lib/types'
-import { d1Query } from '@/lib/d1'
 import { cityPageMeta, cityJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo'
 import { GradeBadge, Breadcrumb, ZipCard, FaqItem, StatCard } from '@/components/ui'
 import { CityZipDirectory } from '@/components/sections/CityZipDirectory'
@@ -16,7 +15,6 @@ import { Sparkles, ShieldCheck, Droplets, Activity, Beaker, CheckCircle2, AlertT
 
 interface Props { params: { slug: string } }
 
-export const runtime = 'edge'
 export const revalidate = 604800
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -25,14 +23,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return cityPageMeta(data)
 }
 
+const POPULAR_CITY_SLUGS = [
+  'new-york-ny', 'los-angeles-ca', 'chicago-il', 'houston-tx', 'phoenix-az',
+  'philadelphia-pa', 'san-antonio-tx', 'san-diego-ca', 'dallas-tx', 'austin-tx',
+  'jacksonville-fl', 'san-jose-ca', 'columbus-oh', 'charlotte-nc', 'indianapolis-in',
+  'san-francisco-ca', 'seattle-wa', 'denver-co', 'washington-dc', 'boston-ma',
+  'el-paso-tx', 'nashville-tn', 'detroit-mi', 'oklahoma-city-ok', 'portland-or',
+  'las-vegas-nv', 'memphis-tn', 'louisville-ky', 'baltimore-md', 'milwaukee-wi',
+  'albuquerque-nm', 'tucson-az', 'fresno-ca', 'sacramento-ca', 'mesa-az',
+  'kansas-city-mo', 'atlanta-ga', 'omaha-ne', 'colorado-springs-co', 'raleigh-nc',
+  'virginia-beach-va', 'long-beach-ca', 'miami-fl', 'oakland-ca', 'minneapolis-mn',
+  'tulsa-ok', 'tampa-fl', 'arlington-tx', 'new-orleans-la', 'wichita-ks',
+  'maize-ks', 'franklinton-nc', 'rockledge-fl', 'chesterton-in', 'summerville-sc',
+  'williams-az', 'cantonment-fl', 'wilson-wy', 'ogunquit-me', 'north-bergen-nj'
+]
+
 export async function generateStaticParams() {
-  try {
-    const cities = await d1Query<{ slug: string }>(
-      'SELECT slug FROM cities ORDER BY rowid ASC LIMIT 200'
-    )
-    if (cities && cities.length > 0) return cities.map(c => ({ slug: c.slug }))
-  } catch {}
-  return []
+  return POPULAR_CITY_SLUGS.map(slug => ({ slug }))
 }
 
 export default async function CityPage({ params }: Props) {
