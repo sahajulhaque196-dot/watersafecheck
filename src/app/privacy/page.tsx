@@ -1,16 +1,17 @@
 // src/app/privacy/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { SITE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | WaterSafeCheck',
+  title: 'Privacy Policy',
   description: 'Privacy policy for WaterSafeCheck.com — how we collect, use, and protect your information. We collect minimal data and never sell your personal information.',
-  alternates: { canonical: 'https://www.watersafecheck.com/privacy' },
+  alternates: { canonical: `${SITE_URL}/privacy` },
   robots: { index: true, follow: true },
   openGraph: {
     title: 'Privacy Policy | WaterSafeCheck',
     description: 'Privacy policy for WaterSafeCheck.com — how we collect, use, and protect your information.',
-    url: 'https://www.watersafecheck.com/privacy',
+    url: `${SITE_URL}/privacy`,
     type: 'website',
     siteName: 'WaterSafeCheck',
   },

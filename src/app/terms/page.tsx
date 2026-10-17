@@ -1,16 +1,17 @@
 // src/app/terms/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { SITE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
-  title: 'Terms of Service | WaterSafeCheck',
+  title: 'Terms of Service',
   description: 'Terms of service and user agreement for WaterSafeCheck.com. Learn about our terms of use, content guidelines, disclaimers, and user responsibilities.',
-  alternates: { canonical: 'https://www.watersafecheck.com/terms' },
+  alternates: { canonical: `${SITE_URL}/terms` },
   robots: { index: true, follow: true },
   openGraph: {
     title: 'Terms of Service | WaterSafeCheck',
     description: 'Terms of service and user agreement for WaterSafeCheck.com.',
-    url: 'https://www.watersafecheck.com/terms',
+    url: `${SITE_URL}/terms`,
     type: 'website',
     siteName: 'WaterSafeCheck',
   },

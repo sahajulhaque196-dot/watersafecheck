@@ -1,7 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
@@ -15,8 +14,6 @@ module.exports = {
     'bg-yellow-50','text-yellow-700','hover:bg-yellow-100',
     'bg-orange-50','text-orange-700','hover:bg-orange-100',
     'bg-red-50',   'text-red-700',   'hover:bg-red-100',
-    // Score ring colors
-    '#16a34a', '#2563eb', '#d97706', '#ea580c', '#dc2626', '#9ca3af',
     // Alert sections
     'bg-green-50',  'border-green-100',  'text-green-800',
     'bg-yellow-50', 'border-yellow-100', 'text-yellow-800',

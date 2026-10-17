@@ -7,6 +7,11 @@ export const SITE_TAGLINE = 'Is Your Tap Water Safe?'
 export const SITE_DESCRIPTION =
   'Check the safety of your tap water by ZIP code. Free EPA-verified data on lead levels, water hardness, violations, contaminants, and safety grades for 41,000+ U.S. ZIP codes.'
 
+// ─── XSS-Safe JSON-LD Serializer ───────────────────────────────────────────
+export function safeJsonLd(obj: unknown): string {
+  return JSON.stringify(obj).replace(/</g, '\\u003c')
+}
+
 // ─── Page-level metadata generators ───────────────────────────────────────
 
 export function zipPageMeta(data: ZipData) {
@@ -18,10 +23,10 @@ export function zipPageMeta(data: ZipData) {
   const violations = data.health_violations
   const hasBoil = data.boil_water_advisories > 0
 
-  // High-CTR, search-intent aligned title (Exact match on primary keyword + authority hook)
+  // High-CTR title kept concise so it never truncates in Google SERP with brand suffix
   const title = hasBoil
-    ? `${data.zip} Boil Water Notice & Safety Report (${currentYear} EPA)`
-    : `${data.zip} Water Quality: Is It Safe to Drink? (${city}, ${state} ${currentYear})`
+    ? `${data.zip} Boil Water Notice (${city}, ${state})`
+    : `${data.zip} Water Quality: Is It Safe? (${city}, ${state})`
   
   const description = `Is tap water safe in ${data.zip} (${city}, ${state})? Official ${currentYear} EPA water quality report: Safety Grade ${grade} (${data.score ?? 'N/A'}/100), ${violations} violations, ${ppb} ppb lead & hardness data.`
 
@@ -47,8 +52,7 @@ export function zipPageMeta(data: ZipData) {
 
 export function statePageMeta(data: StateData) {
   const currentYear = new Date().getFullYear()
-  // High-CTR 55-60 char title
-  const title = `Is ${data.name} Tap Water Safe? (${currentYear} EPA Quality Report)`
+  const title = `Is ${data.name} Tap Water Safe? (${currentYear} Report)`
   const description = `Statewide ${currentYear} EPA drinking water quality report for ${data.name}. View safety grades, lead testing, PFAS violations & city rankings across ${data.zip_count.toLocaleString()} ZIP codes.`
   return {
     title,
@@ -70,8 +74,7 @@ export function cityPageMeta(data: CityData) {
   const grade = data.best_grade || 'B'
   const slug = data.slug || `${data.city.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${data.state.toLowerCase()}`
 
-  // High-CTR title targeting exact conversational questions and local testing intent
-  const title = `${data.city}, ${state} Water Quality: Is Tap Water Safe? (${currentYear} EPA)`
+  const title = `${data.city}, ${state} Water Quality: Is It Safe?`
   const description = `Is tap water safe to drink in ${data.city}, ${state}? Official ${currentYear} EPA water quality report: Safety Grade ${grade}, lead & PFAS risk levels, hardness, and testing guide.`
 
   return {
@@ -87,7 +90,6 @@ export function cityPageMeta(data: CityData) {
     alternates: { canonical: `${SITE_URL}/city/${slug}` },
   }
 }
-
 
 // ─── JSON-LD structured data ───────────────────────────────────────────────
 
@@ -114,7 +116,6 @@ export function zipJsonLd(data: ZipData, breadcrumbItems?: { name: string; url: 
   const stateCode = (data.state || '').toLowerCase()
   const citySlug = data.city ? `${data.city.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${stateCode}` : null
 
-  // Ensure default full breadcrumb chain if not passed
   const items = breadcrumbItems && breadcrumbItems.length > 0 ? breadcrumbItems : [
     { name: 'Home', url: SITE_URL },
     { name: data.state || 'State', url: `${SITE_URL}/state/${stateCode}` },
@@ -128,6 +129,7 @@ export function zipJsonLd(data: ZipData, breadcrumbItems?: { name: string; url: 
       {
         '@type': 'Dataset',
         '@id': `${pageUrl}#dataset`,
+        mainEntityOfPage: { '@id': `${pageUrl}#webpage` },
         name: `EPA Drinking Water Quality Data for ZIP Code ${data.zip}`,
         description: `Official Safe Drinking Water Act (SDWA) compliance and water quality metrics for ZIP code ${data.zip} (${data.city}, ${data.state}), supplied by ${data.system_name || 'local utility'}.`,
         url: pageUrl,
@@ -148,6 +150,13 @@ export function zipJsonLd(data: ZipData, breadcrumbItems?: { name: string; url: 
           `https://enviro.epa.gov/enviro/sdw_report_v2.first_table?pwsid=${data.pwsid || ''}`
         ],
         temporalCoverage: '2020/2026',
+        distribution: [
+          {
+            '@type': 'DataDownload',
+            encodingFormat: 'text/html',
+            contentUrl: pageUrl,
+          }
+        ],
         spatialCoverage: {
           '@type': 'Place',
           name: `${data.city}, ${data.state} ${data.zip}`,
@@ -174,6 +183,7 @@ export function zipJsonLd(data: ZipData, breadcrumbItems?: { name: string; url: 
         name: `${data.zip} Water Quality & Safety Report`,
         isPartOf: { '@id': `${SITE_URL}/#website` },
         breadcrumb: { '@id': `${pageUrl}#breadcrumb` },
+        mainEntity: { '@id': `${pageUrl}#dataset` },
       },
       {
         '@type': 'BreadcrumbList',
@@ -202,6 +212,7 @@ export function stateJsonLd(data: StateData, breadcrumbItems?: { name: string; u
       {
         '@type': 'Dataset',
         '@id': `${pageUrl}#dataset`,
+        mainEntityOfPage: { '@id': `${pageUrl}#webpage` },
         name: `Drinking Water Quality in ${data.name}`,
         description: `Comprehensive EPA drinking water quality data for ${data.zip_count.toLocaleString()} ZIP codes in ${data.name}, including safety grades, violations, lead levels, and contaminant reports.`,
         url: pageUrl,
@@ -209,6 +220,13 @@ export function stateJsonLd(data: StateData, breadcrumbItems?: { name: string; u
         publisher: { '@type': 'Organization', name: 'WaterSafeCheck', url: SITE_URL },
         license: 'https://creativecommons.org/licenses/by/4.0/',
         temporalCoverage: '2020/2026',
+        distribution: [
+          {
+            '@type': 'DataDownload',
+            encodingFormat: 'text/html',
+            contentUrl: pageUrl,
+          }
+        ],
         spatialCoverage: { '@type': 'AdministrativeArea', name: data.name, containedInPlace: { '@type': 'Country', name: 'United States' } },
         isBasedOn: [
           'https://www.epa.gov/enviro/sdwis-search',
@@ -229,6 +247,7 @@ export function stateJsonLd(data: StateData, breadcrumbItems?: { name: string; u
         name: `${data.name} Drinking Water Quality & Safety Report`,
         isPartOf: { '@id': `${SITE_URL}/#website` },
         breadcrumb: { '@id': `${pageUrl}#breadcrumb` },
+        mainEntity: { '@id': `${pageUrl}#dataset` },
       },
       {
         '@type': 'BreadcrumbList',
@@ -275,6 +294,7 @@ export function cityJsonLd(data: CityData, breadcrumbItems?: { name: string; url
       {
         '@type': 'Dataset',
         '@id': `${pageUrl}#dataset`,
+        mainEntityOfPage: { '@id': `${pageUrl}#webpage` },
         name: `${data.city}, ${data.state} Drinking Water Quality & Safety Data`,
         description: `Official EPA Safe Drinking Water Act (SDWA) water quality metrics, lead levels, water hardness, and compliance reports for ${data.city}, ${data.state} across ${data.zip_count} ZIP codes.`,
         url: pageUrl,
@@ -290,6 +310,13 @@ export function cityJsonLd(data: CityData, breadcrumbItems?: { name: string; url
         },
         license: 'https://creativecommons.org/licenses/by/4.0/',
         temporalCoverage: '2020/2026',
+        distribution: [
+          {
+            '@type': 'DataDownload',
+            encodingFormat: 'text/html',
+            contentUrl: pageUrl,
+          }
+        ],
         isBasedOn: [
           'https://www.epa.gov/enviro/sdwis-search',
           'https://echo.epa.gov',
@@ -316,6 +343,7 @@ export function cityJsonLd(data: CityData, breadcrumbItems?: { name: string; url
         name: `${data.city}, ${data.state} Water Quality & Testing Report`,
         isPartOf: { '@id': `${SITE_URL}/#website` },
         breadcrumb: { '@id': `${pageUrl}#breadcrumb` },
+        mainEntity: { '@id': `${pageUrl}#dataset` },
       },
       {
         '@type': 'BreadcrumbList',
@@ -340,9 +368,8 @@ export function faqJsonLd(faqs: { q: string; a: string }[]) {
       name: faq.q,
       acceptedAnswer: { 
         '@type': 'Answer', 
-        text: faq.a.replace(/<[^>]*>?/gm, '') // Strip HTML for rich snippets compliance
+        text: faq.a.replace(/<[^>]*>?/gm, '')
       },
     })),
   }
 }
-

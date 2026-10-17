@@ -5,13 +5,13 @@ import { searchZips } from '@/lib/data'
 export async function GET(request: NextRequest) {
   const rawQ = request.nextUrl.searchParams.get('q')?.trim()
 
-  if (!rawQ || rawQ.length < 2) {
+  if (!rawQ || rawQ.length < 2 || rawQ.length > 50) {
     return NextResponse.json({ results: [] })
   }
 
   // Sanitize input strictly
   const sanitized = rawQ.replace(/[^a-zA-Z0-9\s-]/g, '').trim()
-  if (!sanitized) {
+  if (!sanitized || sanitized.length > 50) {
     return NextResponse.json({ results: [] })
   }
 

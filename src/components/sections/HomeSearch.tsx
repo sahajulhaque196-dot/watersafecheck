@@ -31,20 +31,28 @@ export function HomeSearch() {
       return
     }
 
+    const controller = new AbortController()
     const timer = setTimeout(async () => {
       try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(trimmed)}`)
+        const res = await fetch(`/api/search?q=${encodeURIComponent(trimmed)}`, {
+          signal: controller.signal,
+        })
         if (res.ok) {
           const data = await res.json()
           setResults(data.results || [])
           setIsDropdownOpen((data.results || []).length > 0)
         }
-      } catch (err) {
-        console.error('Search fetch error:', err)
+      } catch (err: unknown) {
+        if (err instanceof Error && err.name !== 'AbortError') {
+          console.error('Search fetch error:', err)
+        }
       }
     }, 200)
 
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(timer)
+      controller.abort()
+    }
   }, [query])
 
   // Close dropdown on outside click

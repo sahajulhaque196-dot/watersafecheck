@@ -1,15 +1,16 @@
 // src/app/disclaimer/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { SITE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
-  title: 'Disclaimer | WaterSafeCheck',
+  title: 'Disclaimer',
   description: 'Important disclaimer about WaterSafeCheck data — what we can and cannot tell you about your drinking water safety. Read before making health decisions.',
-  alternates: { canonical: 'https://www.watersafecheck.com/disclaimer' },
+  alternates: { canonical: `${SITE_URL}/disclaimer` },
   openGraph: {
     title: 'Disclaimer | WaterSafeCheck',
     description: 'Important disclaimer about WaterSafeCheck drinking water data and educational guidance.',
-    url: 'https://www.watersafecheck.com/disclaimer',
+    url: `${SITE_URL}/disclaimer`,
     type: 'website',
     siteName: 'WaterSafeCheck',
   },

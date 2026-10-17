@@ -47,7 +47,10 @@ function AdUnit({ slot, format = 'auto', className = '', style }: AdSenseProps) 
   }
 
   return (
-    <div className={`adsense-container ${className}`}>
+    <div className={`adsense-container text-center ${className}`}>
+      <span className="block text-[10px] uppercase tracking-wider text-slate-400 font-medium mb-1 select-none">
+        Advertisement
+      </span>
       <ins
         className="adsbygoogle"
         style={{ display: 'block', ...style }}
@@ -65,7 +68,7 @@ export function AdTop() {
   const slot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOP
   if (!IS_ADSENSE_ACTIVE || !slot || isDummySlot(slot)) return null
   return (
-    <div className="w-full my-2 overflow-hidden no-print">
+    <div className="w-full my-3 min-h-[90px] overflow-hidden no-print">
       <AdUnit slot={slot} format="horizontal" />
     </div>
   )
@@ -75,7 +78,7 @@ export function AdSidebar() {
   const slot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR
   if (!IS_ADSENSE_ACTIVE || !slot || isDummySlot(slot)) return null
   return (
-    <div className="sticky top-20 overflow-hidden no-print">
+    <div className="w-full my-4 min-h-[250px] overflow-hidden no-print">
       <AdUnit slot={slot} format="vertical" />
     </div>
   )
@@ -85,7 +88,7 @@ export function AdInContent() {
   const slot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_INCONTENT
   if (!IS_ADSENSE_ACTIVE || !slot || isDummySlot(slot)) return null
   return (
-    <div className="my-4 overflow-hidden no-print">
+    <div className="w-full my-6 min-h-[250px] overflow-hidden no-print">
       <AdUnit slot={slot} format="rectangle" />
     </div>
   )
@@ -95,7 +98,7 @@ export function AdBottom() {
   const slot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_BOTTOM
   if (!IS_ADSENSE_ACTIVE || !slot || isDummySlot(slot)) return null
   return (
-    <div className="w-full my-4 overflow-hidden no-print">
+    <div className="w-full my-6 min-h-[100px] overflow-hidden no-print">
       <AdUnit slot={slot} format="auto" />
     </div>
   )

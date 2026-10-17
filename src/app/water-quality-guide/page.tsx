@@ -3,11 +3,12 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Script from 'next/script'
 import { AdTop, AdInContent, AdBottom } from '@/components/ui/AdSense'
+import { SITE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: 'U.S. Tap Water Safety Guide — What EPA Data Really Means for Your Family',
   description: 'A plain-English guide to U.S. drinking water safety. Learn what EPA violations mean, how to read lead levels, what water grades tell you, filter recommendations, and when to worry about your tap water.',
-  alternates: { canonical: 'https://www.watersafecheck.com/water-quality-guide' },
+  alternates: { canonical: `${SITE_URL}/water-quality-guide` },
   openGraph: {
     title: 'U.S. Tap Water Safety Guide — What EPA Data Really Means for Your Family',
     description: 'A plain-English guide to U.S. drinking water safety written by an EPA compliance analyst with 10 years of experience.',

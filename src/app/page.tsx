@@ -104,21 +104,21 @@ export default async function HomePage() {
 
 
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-28 pb-32 sm:pb-36 text-center pointer-events-auto">
-          <FadeIn direction="up">
+          <FadeIn direction="up" priority>
             <div className="inline-flex items-center gap-2 bg-black/50 backdrop-blur-md border border-white/20 rounded-full px-5 py-2 text-sm font-medium mb-8 shadow-2xl">
               <span className="w-2.5 h-2.5 bg-cyan-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
               Free EPA Data — Updated {new Date().getFullYear()}
             </div>
           </FadeIn>
 
-          <FadeIn direction="up" delay={0.1}>
+          <FadeIn direction="up" priority>
             <h1 className="text-white text-4xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tight drop-shadow-xl">
               Is Your Tap Water<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-200 to-blue-400 drop-shadow-md">Safe to Drink?</span>
             </h1>
           </FadeIn>
 
-          <FadeIn direction="up" delay={0.2}>
+          <FadeIn direction="up" priority>
             <p className="text-lg sm:text-xl text-gray-100 mb-10 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
               Search 41,000+ U.S. ZIP codes for lead levels, water quality grades,
               violations, and contaminant data — powered by official EPA records.

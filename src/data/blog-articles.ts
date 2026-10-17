@@ -30,7 +30,7 @@ export const blogArticles: BlogArticle[] = [
   {
     slug: 'lead-in-tap-water-what-parents-need-to-know',
     title: 'Lead in Tap Water: What Every Parent Needs to Know (And Do)',
-    metaTitle: 'Lead in Tap Water: What Parents Need to Know | WaterSafeCheck',
+    metaTitle: 'Lead in Tap Water: What Parents Need to Know',
     metaDescription: 'Lead in tap water is a real risk for families in millions of U.S. homes. Learn how lead gets into your water, what the levels mean, and exactly what steps to take to protect your children.',
     category: 'Water Safety',
     publishDate: '2025-01-15',
@@ -133,7 +133,7 @@ Search your ZIP code on WaterSafeCheck to see EPA lead data for your water syste
   {
     slug: 'how-to-read-your-water-quality-report',
     title: 'How to Read Your Water Quality Report (Consumer Confidence Report Explained)',
-    metaTitle: 'How to Read Your Water Quality Report — CCR Explained | WaterSafeCheck',
+    metaTitle: 'How to Read Your Water Quality Report — CCR Explained',
     metaDescription: 'Every U.S. water utility sends an annual Consumer Confidence Report. Most people throw it away. Here\'s exactly what to look for and what the numbers actually mean for your family.',
     category: 'Water Quality',
     publishDate: '2025-01-22',
@@ -258,7 +258,7 @@ The water coming out of your tap has traveled through a complex treatment and di
   {
     slug: 'pfas-forever-chemicals-in-drinking-water',
     title: 'PFAS "Forever Chemicals" in Your Tap Water: A Complete Guide for 2025',
-    metaTitle: 'PFAS Forever Chemicals in Tap Water — 2025 Guide | WaterSafeCheck',
+    metaTitle: 'PFAS Forever Chemicals in Tap Water — 2025 Guide',
     metaDescription: 'PFAS chemicals have been found in water supplies serving tens of millions of Americans. Here\'s what they are, where they come from, the 2024 EPA rule changes, and what you can do to protect your family.',
     category: 'Contaminants',
     publishDate: '2025-02-03',
@@ -375,7 +375,7 @@ Search your ZIP code on WaterSafeCheck to see whether PFAS data is available for
   {
     slug: 'best-water-filters-for-home-complete-guide',
     title: 'Best Water Filters for Your Home: A No-Nonsense Guide to What Actually Works',
-    metaTitle: 'Best Home Water Filters — What Actually Works | WaterSafeCheck',
+    metaTitle: 'Best Home Water Filters — What Actually Works',
     metaDescription: 'Not all water filters remove the same contaminants. This guide explains NSF certification standards, which filter type removes lead, PFAS, nitrates, and more — without the marketing hype.',
     category: 'Water Filters',
     publishDate: '2025-02-10',
@@ -512,7 +512,7 @@ That\'s the process. It takes 20 minutes and will save you from buying something
   {
     slug: 'private-well-water-safety-testing-guide',
     title: 'Private Well Water Safety: What 43 Million Americans Need to Test For',
-    metaTitle: 'Private Well Water Safety & Testing Guide | WaterSafeCheck',
+    metaTitle: 'Private Well Water Safety & Testing Guide',
     metaDescription: 'If you have a private well, you\'re responsible for your own water safety. This guide covers what to test for, how often, what results mean, and what to do if you find a problem.',
     category: 'Well Water',
     publishDate: '2025-02-17',
@@ -655,7 +655,7 @@ And if you have both a private well and a public water connection — for exampl
   {
     slug: 'hard-water-vs-soft-water-complete-guide',
     title: 'Hard Water vs. Soft Water: What\'s Actually in Your Tap and Does It Matter?',
-    metaTitle: 'Hard Water vs Soft Water — What It Means for Your Health & Home | WaterSafeCheck',
+    metaTitle: 'Hard Water vs Soft Water — What It Means for Your Health & Home',
     metaDescription: 'Hard water leaves scale on your faucets and makes soap lather poorly. But is it safe to drink? Does softened water have health risks? Here\'s what the science actually says.',
     category: 'Water Quality',
     publishDate: '2025-03-03',
@@ -778,7 +778,7 @@ Check your ZIP code on WaterSafeCheck to see what water quality data is availabl
   {
     slug: 'nitrates-in-drinking-water-health-risks-and-solutions',
     title: 'Nitrates in Drinking Water: The Invisible Risk That\'s More Common Than You Think',
-    metaTitle: 'Nitrates in Drinking Water — Risks, Sources & Solutions | WaterSafeCheck',
+    metaTitle: 'Nitrates in Drinking Water — Risks, Sources & Solutions',
     metaDescription: 'Nitrates in tap water are a serious health concern for infants and pregnant women. Learn where they come from, what the EPA limits mean, and how to protect your family — especially in agricultural areas.',
     category: 'Contaminants',
     publishDate: '2025-03-10',
@@ -905,7 +905,7 @@ Check your ZIP code on WaterSafeCheck to see what nitrate data is available for 
   {
     slug: 'arsenic-in-drinking-water-what-you-need-to-know',
     title: 'Arsenic in Drinking Water: Natural Occurrence, Cancer Risk, and What to Do',
-    metaTitle: 'Arsenic in Drinking Water — Cancer Risk & Solutions | WaterSafeCheck',
+    metaTitle: 'Arsenic in Drinking Water — Cancer Risk & Solutions',
     metaDescription: 'Arsenic occurs naturally in groundwater across large parts of the U.S. Long-term exposure increases cancer risk even at levels below the EPA limit. Here\'s where it\'s found and how to protect yourself.',
     category: 'Contaminants',
     publishDate: '2025-03-17',
@@ -1032,7 +1032,7 @@ If you're in one of the high-arsenic regions of the country — the West, New En
   {
     slug: 'chlorine-in-tap-water-disinfection-byproducts-guide',
     title: 'Chlorine in Tap Water: The Necessary Protection That Creates New Risks',
-    metaTitle: 'Chlorine in Tap Water & Disinfection Byproducts Explained | WaterSafeCheck',
+    metaTitle: 'Chlorine in Tap Water & Disinfection Byproducts Explained',
     metaDescription: 'Chlorine keeps your tap water free from deadly bacteria. But it also creates disinfection byproducts linked to cancer. Here\'s how to understand this trade-off and what you can do about it.',
     category: 'Water Quality',
     publishDate: '2025-03-24',
@@ -1161,7 +1161,7 @@ Check your Consumer Confidence Report for TTHM and HAA5 levels in your water. If
   {
     slug: 'new-home-water-quality-checklist',
     title: 'Moving to a New Home? Here\'s the Complete Water Quality Checklist to Run First',
-    metaTitle: 'New Home Water Quality Checklist — What to Check Before You Move In | WaterSafeCheck',
+    metaTitle: 'New Home Water Quality Checklist — What to Check Before You Move In',
     metaDescription: 'Before you drink the tap water in a new home, check these water quality factors. This complete checklist covers lead, PFAS, arsenic, hardness, and everything else you should know about your new home\'s water.',
     category: 'Water Safety',
     publishDate: '2025-04-01',
@@ -1306,7 +1306,7 @@ Use WaterSafeCheck to look up your new ZIP code's water quality data as a starti
   {
     slug: 'fluoride-in-drinking-water-facts-vs-fears',
     title: 'Fluoride in Drinking Water: Separating the Science from the Controversy',
-    metaTitle: 'Fluoride in Drinking Water — Facts, Safety & Health Effects | WaterSafeCheck',
+    metaTitle: 'Fluoride in Drinking Water — Facts, Safety & Health Effects',
     metaDescription: 'Is fluoride in tap water safe? We break down the actual science on fluoridation benefits, health concerns, optimal levels, and what to do if you want to reduce your exposure.',
     category: 'Water Quality',
     publishDate: '2025-04-07',
@@ -1425,7 +1425,7 @@ Search your ZIP code on WaterSafeCheck to see fluoride data for your water syste
   {
     slug: 'drinking-water-safety-during-pregnancy',
     title: 'Drinking Water Safety During Pregnancy: What Every Expectant Mother Should Know',
-    metaTitle: 'Drinking Water Safety During Pregnancy — Complete Guide | WaterSafeCheck',
+    metaTitle: 'Drinking Water Safety During Pregnancy — Complete Guide',
     metaDescription: 'Pregnancy changes your relationship with water quality. Learn which contaminants pose the greatest risks during pregnancy, what to test for, and practical steps to protect yourself and your baby.',
     category: 'Water Safety',
     publishDate: '2025-04-14',
@@ -1558,7 +1558,7 @@ The steps that protect your water during pregnancy are largely the same steps th
   {
     slug: 'renters-guide-to-tap-water-quality-and-rights',
     title: 'Renters\' Guide to Tap Water Quality: Your Rights and What You Can Actually Do',
-    metaTitle: 'Renters\' Guide to Tap Water Safety — Rights & What You Can Do | WaterSafeCheck',
+    metaTitle: 'Renters\' Guide to Tap Water Safety — Rights & What You Can Do',
     metaDescription: 'Renting a home doesn\'t mean you have to accept poor water quality. Learn what your rights are, how to find out what\'s in your tap water without your landlord\'s help, and what low-cost fixes work in rentals.',
     category: 'Water Safety',
     publishDate: '2025-04-21',
@@ -1691,7 +1691,7 @@ You have more control over your water quality than the rental situation might su
   {
     slug: 'microplastics-in-drinking-water-what-we-know',
     title: 'Microplastics in Drinking Water: What the Science Actually Says in 2025',
-    metaTitle: 'Microplastics in Drinking Water — What We Know in 2025 | WaterSafeCheck',
+    metaTitle: 'Microplastics in Drinking Water — What We Know in 2025',
     metaDescription: 'Microplastics have been found in tap water, bottled water, and virtually every water source tested. Here\'s what the research says about health effects, how to reduce exposure, and what filters actually help.',
     category: 'Contaminants',
     publishDate: '2025-04-28',
@@ -1822,7 +1822,7 @@ The RO filter that addresses your lead, PFAS, and nitrate concerns will also giv
   {
     slug: 'boil-water-advisory-complete-guide-what-to-do',
     title: 'Boil Water Advisory: Exactly What to Do, What Not to Do, and When It\'s Safe Again',
-    metaTitle: 'Boil Water Advisory — Complete Guide on What to Do | WaterSafeCheck',
+    metaTitle: 'Boil Water Advisory — Complete Guide on What to Do',
     metaDescription: 'Received a boil water advisory? Here\'s exactly what you should and shouldn\'t do, which activities require boiled water, how long to boil, and how you\'ll know when the advisory is lifted.',
     category: 'Water Safety',
     publishDate: '2025-05-05',
@@ -1967,7 +1967,7 @@ Keep this guide bookmarked. You hope you never need it urgently — but the even
   {
     slug: 'how-to-test-your-home-water-quality-complete-guide',
     title: 'How to Test Your Home Water Quality: A Step-by-Step Guide for Every Situation',
-    metaTitle: 'How to Test Home Water Quality — Complete Step-by-Step Guide | WaterSafeCheck',
+    metaTitle: 'How to Test Home Water Quality — Complete Step-by-Step Guide',
     metaDescription: 'Wondering what\'s actually in your tap water? This complete guide covers every water testing option — from free government tests to DIY kits to certified labs — and exactly when to use each one.',
     category: 'Water Quality',
     publishDate: '2025-05-12',
@@ -2120,7 +2120,7 @@ Search your ZIP code on WaterSafeCheck to see what EPA data already exists for y
   {
     slug: 'legionella-in-water-systems-what-you-need-to-know',
     title: 'Legionella in Water Systems: Why This Waterborne Bacteria Deserves Your Attention',
-    metaTitle: 'Legionella in Water Systems — Prevention & Risk Guide | WaterSafeCheck',
+    metaTitle: 'Legionella in Water Systems — Prevention & Risk Guide',
     metaDescription: 'Legionella bacteria cause Legionnaires\' disease — a severe pneumonia with a 10% fatality rate. Learn where it grows in water systems, who is at risk, and how buildings and homeowners can prevent it.',
     category: 'Contaminants',
     publishDate: '2025-05-19',
@@ -2271,7 +2271,7 @@ Legionella is manageable with the right knowledge and straightforward maintenanc
   {
     slug: 'tap-water-vs-filtered-vs-bottled-water-comparison',
     title: 'Tap Water vs. Filtered Water vs. Bottled Water: An Honest Comparison',
-    metaTitle: 'Tap Water vs Filtered vs Bottled Water — Which Is Safest? | WaterSafeCheck',
+    metaTitle: 'Tap Water vs Filtered vs Bottled Water — Which Is Safest?',
     metaDescription: 'Is tap water safe? Is bottled water better? What does a filter actually do? This complete comparison covers safety, cost, environmental impact, and taste — based on real data, not marketing.',
     category: 'Water Safety',
     publishDate: '2025-05-26',
@@ -2408,7 +2408,7 @@ Know what's in your water. Get the right filter for your specific situation. Sto
   {
     slug: 'water-quality-and-childrens-health-parents-guide',
     title: 'Water Quality and Children\'s Health: What Every Parent Needs to Understand',
-    metaTitle: 'Water Quality & Children\'s Health — Complete Parent\'s Guide | WaterSafeCheck',
+    metaTitle: 'Water Quality & Children\'s Health — Complete Parent\'s Guide',
     metaDescription: 'Children are far more vulnerable to water contaminants than adults. This parent\'s guide covers lead, nitrates, PFAS, bacteria, and exactly what steps to take to protect kids at every age.',
     category: 'Water Safety',
     publishDate: '2025-06-02',
@@ -2547,7 +2547,7 @@ The conversation with your pediatrician about blood lead testing and local water
   {
     slug: 'water-quality-in-rural-america-unique-challenges',
     title: 'Water Quality in Rural America: The Challenges No One Talks About Enough',
-    metaTitle: 'Rural Water Quality in America — Unique Challenges & Solutions | WaterSafeCheck',
+    metaTitle: 'Rural Water Quality in America — Unique Challenges & Solutions',
     metaDescription: 'Rural Americans face distinct water quality challenges — from unregulated private wells to understaffed small water systems to agricultural contamination. Here\'s what rural residents need to know.',
     category: 'Water Quality',
     publishDate: '2025-06-09',

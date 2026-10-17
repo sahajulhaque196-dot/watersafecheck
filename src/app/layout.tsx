@@ -7,7 +7,7 @@ import { Footer } from '@/components/layout/Footer'
 import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from '@/lib/seo'
 import Script from 'next/script'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
 
 // Configuration — reads from env with fallback
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-WN6QCSJNY3'
@@ -180,7 +180,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             async
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_PUBLISHER_ID}`}
             crossOrigin="anonymous"
-            strategy="afterInteractive"
+            strategy="lazyOnload"
           />
         )}
       </body>

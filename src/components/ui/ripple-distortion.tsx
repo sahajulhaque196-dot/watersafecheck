@@ -95,12 +95,19 @@ const RippleDistortion: React.FC<RippleDistortionProps> = ({
     if (!containerRef.current || typeof window === 'undefined') return;
     const container = containerRef.current;
 
+    // Fast-path bypass for mobile (<768px) and users requesting reduced motion (preserves INP & battery)
+    const isMobile = window.innerWidth < 768;
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isMobile || prefersReducedMotion) {
+      return;
+    }
+
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
     let renderer: THREE.WebGLRenderer;
     try {
-      renderer = new THREE.WebGLRenderer({ antialias, alpha: true });
+      renderer = new THREE.WebGLRenderer({ antialias, alpha: true, powerPreference: 'high-performance' });
     } catch (e) {
       console.warn("WebGL not supported for 3D Water:", e);
       return;
@@ -108,8 +115,7 @@ const RippleDistortion: React.FC<RippleDistortionProps> = ({
 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
-    container.innerHTML = "";
-    container.appendChild(renderer.domElement);
+    container.replaceChildren(renderer.domElement);
     rendererRef.current = renderer;
 
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
@@ -247,14 +253,17 @@ const RippleDistortion: React.FC<RippleDistortionProps> = ({
       particleGeo.dispose();
       particleMat.dispose();
       if (uniforms.uTexture.value) uniforms.uTexture.value.dispose();
-      if (container) container.innerHTML = "";
+      if (container && renderer && container.contains(renderer.domElement)) {
+        container.removeChild(renderer.domElement);
+      }
     };
   }, [imageSrc, antialias]);
 
   return (
     <div
       ref={containerRef}
-      className={`relative overflow-hidden w-full h-full ${className}`}
+      className={`relative overflow-hidden w-full h-full bg-cover bg-center ${className}`}
+      style={{ backgroundImage: `url(${imageSrc})` }}
     />
   );
 };

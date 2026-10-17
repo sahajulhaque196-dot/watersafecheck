@@ -6,7 +6,7 @@ import Script from 'next/script'
 import { getCityData, getNearbyCities, getCityZips, STATE_NAMES, STATE_AGENCIES } from '@/lib/data'
 import { getCityTestingGuide } from '@/lib/content'
 import type { ZipData } from '@/lib/types'
-import { cityPageMeta, cityJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo'
+import { SITE_URL, safeJsonLd, cityPageMeta, cityJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo'
 import { GradeBadge, Breadcrumb, ZipCard, FaqItem, StatCard } from '@/components/ui'
 import { CityZipDirectory } from '@/components/sections/CityZipDirectory'
 import { AdTop, AdInContent, AdBottom } from '@/components/ui/AdSense'
@@ -149,9 +149,9 @@ export default async function CityPage({ params }: Props) {
 
   const slug = `${data.city.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${data.state.toLowerCase()}`
   const breadcrumbItems = [
-    { name: 'Home', url: 'https://www.watersafecheck.com' },
-    { name: stateName, url: `https://www.watersafecheck.com/state/${data.state.toLowerCase()}` },
-    { name: `${data.city} Water Quality & Testing`, url: `https://www.watersafecheck.com/city/${slug}` }
+    { name: 'Home', url: SITE_URL },
+    { name: stateName, url: `${SITE_URL}/state/${data.state.toLowerCase()}` },
+    { name: `${data.city} Water Quality & Testing`, url: `${SITE_URL}/city/${slug}` }
   ]
 
   return (
@@ -159,11 +159,11 @@ export default async function CityPage({ params }: Props) {
       {/* Structured Data — Unified @graph containing Dataset, ItemPage, and BreadcrumbList */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(cityJsonLd(data, breadcrumbItems)) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(cityJsonLd(data, breadcrumbItems)) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(cityFaqs)) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(faqJsonLd(cityFaqs)) }}
       />
 
 

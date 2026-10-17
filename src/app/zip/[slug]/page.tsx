@@ -18,7 +18,7 @@ import {
   getWaterHardnessAnalysis, getEpaVerificationUrl,
   getFilterRecommendation, getZipTestingGuide,
 } from '@/lib/content'
-import { SITE_URL, zipPageMeta, zipJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo'
+import { SITE_URL, safeJsonLd, zipPageMeta, zipJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo'
 import {
   GradeBadge, ScoreRing, DataRow, AlertBox,
   Breadcrumb, StatCard, FaqItem,
@@ -115,11 +115,11 @@ export default async function ZipPage({ params }: Props) {
       {/* Structured Data — Unified @graph containing Dataset, ItemPage, and BreadcrumbList */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(zipJsonLd(data, breadcrumbItems)) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(zipJsonLd(data, breadcrumbItems)) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(faqs)) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(faqJsonLd(faqs)) }}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -138,7 +138,7 @@ export default async function ZipPage({ params }: Props) {
             </span>
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
               <Activity className="w-3.5 h-3.5 text-emerald-600" />
-              Status: {data.boil_water_advisories > 0 ? 'Active Advisories Noted' : 'Normal Operations'}
+              Historical Record: {data.boil_water_advisories > 0 ? `${data.boil_water_advisories} Past Advisory Event(s)` : 'No Recorded SDWIS Violations'}
             </span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mb-1">
@@ -148,6 +148,11 @@ export default async function ZipPage({ params }: Props) {
             {data.city}{data.city && data.state ? ', ' : ''}{data.state}
             {data.county ? ` · ${data.county} County` : ''} · Updated for {new Date().getFullYear()}
           </p>
+
+          {/* ── YMYL Public Health & Medical Notice ── */}
+          <div className="bg-amber-50/80 border border-amber-200 rounded-xl p-3.5 text-xs text-amber-900 leading-relaxed mt-3">
+            <strong>Public Health & Medical Notice:</strong> Drinking water quality data on this page reflects historical compliance records submitted under the Safe Drinking Water Act. This information does not constitute medical advice or a real-time safety guarantee. If you are pregnant, nursing, preparing infant formula, or immunocompromised, consult a healthcare provider. Boiling water kills biological pathogens, but does NOT remove chemical contaminants like lead, arsenic, or PFAS.
+          </div>
         </div>
 
         {/* ── Featured Snippet / Quick Answer Card (Position 0 Target) ── */}

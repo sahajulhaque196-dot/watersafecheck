@@ -116,8 +116,9 @@ function ensureIndexes() {
 export async function getZipData(zip: string): Promise<ZipData | null> {
   if (!zip || typeof zip !== 'string') return null
   const cleanZip = zip.trim()
+  if (!/^\d{5}$/.test(cleanZip)) return null
   const local = getLocalZips()
-  if (local[cleanZip]) {
+  if (Object.prototype.hasOwnProperty.call(local, cleanZip) && local[cleanZip]) {
     return local[cleanZip]
   }
   return null
@@ -126,8 +127,9 @@ export async function getZipData(zip: string): Promise<ZipData | null> {
 export async function getStateData(code: string): Promise<StateData | null> {
   if (!code || typeof code !== 'string') return null
   const upper = code.trim().toUpperCase()
+  if (!/^[A-Z]{2}$/.test(upper)) return null
   const local = getLocalStates()
-  if (local[upper]) {
+  if (Object.prototype.hasOwnProperty.call(local, upper) && local[upper]) {
     return local[upper]
   }
   return null
@@ -140,8 +142,9 @@ export async function getAllStates(): Promise<Record<string, StateData>> {
 export async function getCityData(slug: string): Promise<CityData | null> {
   if (!slug || typeof slug !== 'string') return null
   const cleanSlug = slug.trim().toLowerCase()
+  if (!/^[a-z0-9-]+$/.test(cleanSlug)) return null
   const local = getLocalCities()
-  if (local[cleanSlug]) {
+  if (Object.prototype.hasOwnProperty.call(local, cleanSlug) && local[cleanSlug]) {
     return local[cleanSlug]
   }
   return null
@@ -160,8 +163,9 @@ export async function getCityZips(zips: string[]): Promise<ZipData[]> {
 }
 
 export function searchZips(query: string, limit = 8): { zip: string; city: string; state: string; grade: string; score: number | null }[] {
+  if (!query || typeof query !== 'string') return []
   const q = query.trim().toLowerCase()
-  if (!q || q.length < 2) return []
+  if (!q || q.length < 2 || q.length > 50) return []
 
   const zips = getLocalZips()
   const isNumeric = /^\d+$/.test(q)

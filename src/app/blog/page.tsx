@@ -4,10 +4,12 @@ import Link from 'next/link'
 import { blogArticles } from '@/data/blog-articles'
 import { AdTop, AdBottom } from '@/components/ui/AdSense'
 
+import { SITE_URL } from '@/lib/seo'
+
 export const metadata: Metadata = {
-  title: 'Drinking Water Safety Blog — Tips, Guides & Research | WaterSafeCheck',
+  title: 'Drinking Water Safety Blog — Tips, Guides & Research',
   description: 'Expert articles on tap water safety, lead contamination, PFAS chemicals, water filters, well water testing, and understanding your EPA water quality data. Written by an environmental data analyst with 10 years of experience.',
-  alternates: { canonical: 'https://www.watersafecheck.com/blog' },
+  alternates: { canonical: `${SITE_URL}/blog` },
   openGraph: {
     title: 'Drinking Water Safety Blog | WaterSafeCheck',
     description: 'Expert articles on tap water safety, lead, PFAS, water filters, and EPA water quality data.',

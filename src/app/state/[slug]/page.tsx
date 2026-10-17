@@ -6,7 +6,7 @@ import Script from 'next/script'
 import { getStateData, getStateZips, cityToSlug, STATE_NAMES } from '@/lib/data'
 import type { ZipData } from '@/lib/types'
 import { getStateIntro, getStateFAQs } from '@/lib/content'
-import { statePageMeta, stateJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo'
+import { SITE_URL, safeJsonLd, statePageMeta, stateJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo'
 import { GradeBadge, Breadcrumb, FaqItem, StatCard } from '@/components/ui'
 import { AdTop, AdInContent, AdBottom } from '@/components/ui/AdSense'
 import { Sparkles, ShieldCheck, Droplets, MapPin, Activity } from 'lucide-react'
@@ -109,8 +109,8 @@ export default async function StatePage({ params }: Props) {
   ]
 
   const breadcrumbItems = [
-    { name: 'Home', url: 'https://www.watersafecheck.com' },
-    { name: `${data.name} Water Quality`, url: `https://www.watersafecheck.com/state/${data.code.toLowerCase()}` }
+    { name: 'Home', url: SITE_URL },
+    { name: `${data.name} Water Quality`, url: `${SITE_URL}/state/${data.code.toLowerCase()}` }
   ]
 
   return (
@@ -118,11 +118,11 @@ export default async function StatePage({ params }: Props) {
       {/* Structured Data — Unified @graph containing Dataset, ItemPage, and BreadcrumbList */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(stateJsonLd(data, breadcrumbItems)) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(stateJsonLd(data, breadcrumbItems)) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd(faqs)) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(faqJsonLd(faqs)) }}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

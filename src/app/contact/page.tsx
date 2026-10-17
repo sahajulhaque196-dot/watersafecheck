@@ -2,15 +2,16 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ContactForm } from '@/components/sections/ContactForm'
+import { SITE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: 'Contact WaterSafeCheck — Data Questions, Corrections & Inquiries',
   description: 'Contact WaterSafeCheck for data questions, corrections, media inquiries, or general help understanding your tap water quality report. We respond within 1–2 business days.',
-  alternates: { canonical: 'https://www.watersafecheck.com/contact' },
+  alternates: { canonical: `${SITE_URL}/contact` },
   openGraph: {
     title: 'Contact WaterSafeCheck — Inquiries & Data Questions',
     description: 'Get in touch with the WaterSafeCheck editorial and environmental data analysis team.',
-    url: 'https://www.watersafecheck.com/contact',
+    url: `${SITE_URL}/contact`,
     type: 'website',
     siteName: 'WaterSafeCheck',
   },

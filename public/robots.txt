@@ -27,6 +27,6 @@ Allow: /
 Disallow: /api/
 
 Sitemap: https://watersafecheck.com/sitemap-index.xml
-Host: https://watersafecheck.com
+Host: watersafecheck.com
 
 
