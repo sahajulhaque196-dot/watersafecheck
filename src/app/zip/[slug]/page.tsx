@@ -149,6 +149,16 @@ export default async function ZipPage({ params }: Props) {
             {data.city}{data.city && data.state ? ', ' : ''}{data.state}
             {data.county ? ` · ${data.county} County` : ''} · Updated for {new Date().getFullYear()}
           </p>
+          <div className="flex flex-wrap items-center gap-2 mt-2 text-xs text-gray-500">
+            <img
+              src="/images/sahajul-haque.jpg"
+              alt="Sahajul Haque"
+              className="w-5 h-5 rounded-full object-cover border border-gray-200 shadow-xs"
+            />
+            <span>
+              Compiled & verified by <Link href="/about" className="font-semibold text-brand-700 hover:underline">Sahajul Haque</Link> from official EPA SDWIS records
+            </span>
+          </div>
 
           {/* ── YMYL Public Health & Medical Notice ── */}
           <div className="bg-amber-50/80 border border-amber-200 rounded-xl p-3.5 text-xs text-amber-900 leading-relaxed mt-3">

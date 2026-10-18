@@ -31,11 +31,26 @@ const orgSchema = {
   description: 'An independent data transparency project that simplifies public U.S. EPA drinking water compliance records for local communities.',
   founder: {
     '@type': 'Person',
-    name: 'Marcus J. Webb',
-    jobTitle: 'Lead Environmental Data Analyst',
+    name: 'Sahajul Haque',
+    jobTitle: 'Founder & Lead Platform Architect',
     url: `${SITE_URL}/about`,
-    sameAs: [],
-    knowsAbout: ['EPA SDWIS Compliance', 'Safe Drinking Water Act', 'Water Contaminant Analysis', 'Lead and Copper Rule']
+    image: `${SITE_URL}/images/sahajul-haque.jpg`,
+    sameAs: [
+      'https://x.com/saddamh58509953',
+      'https://github.com/sahajulhaque196-dot'
+    ],
+    address: {
+      '@type': 'PostalAddress',
+      addressRegion: 'Assam',
+      addressCountry: 'India'
+    },
+    knowsAbout: [
+      'EPA SDWIS Compliance Data',
+      'Safe Drinking Water Act Standards',
+      'Environmental Data Engineering',
+      'Full-Stack Web Development',
+      'Public Health Data Transparency'
+    ]
   },
   knowsAbout: [
     'Drinking Water Quality',
@@ -216,33 +231,51 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ── Editorial Leadership & Authors (E-E-A-T) ── */}
+        {/* ── Founder & Platform Architect (E-E-A-T) ── */}
         <section className="mb-12" aria-labelledby="team-heading">
-          <h2 id="team-heading" className="text-2xl font-bold text-gray-900 mb-4">Editorial Leadership & Research</h2>
+          <h2 id="team-heading" className="text-2xl font-bold text-gray-900 mb-4">Founder & Lead Platform Architect</h2>
           <p className="text-gray-700 leading-relaxed mb-6">
-            All data ingestion pipelines, scoring models, and educational articles are reviewed by our dedicated environmental data research team to maintain high technical accuracy and strict alignment with Safe Drinking Water Act (SDWA) standards.
+            WaterSafeCheck was founded and engineered by Sahajul Haque, an independent data systems engineer based in Assam, India. The platform was created to transform millions of complex, fragmented U.S. EPA compliance records into free, instant, and accessible water safety reports for American communities.
           </p>
           <div className="card bg-gradient-to-br from-brand-50 via-white to-sky-50 border-brand-100 p-6 rounded-2xl shadow-sm">
             <div className="flex flex-col sm:flex-row gap-5 items-start">
-              <div className="w-16 h-16 rounded-2xl bg-brand-700 text-white flex items-center justify-center font-black text-2xl flex-shrink-0 shadow-md">
-                MW
-              </div>
+              <img
+                src="/images/sahajul-haque.jpg"
+                alt="Sahajul Haque — Founder & Lead Platform Architect"
+                className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover border-2 border-white shadow-md flex-shrink-0"
+              />
               <div className="flex-1">
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
-                  <h3 className="font-bold text-gray-900 text-lg">Marcus J. Webb</h3>
+                  <h3 className="font-bold text-gray-900 text-xl">Sahajul Haque</h3>
                   <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-brand-100 text-brand-800 border border-brand-200">
-                    Lead Environmental Data Analyst
+                    Founder & Lead Platform Architect
                   </span>
                 </div>
-                <p className="text-xs text-gray-500 mb-3 font-medium">10+ Years EPA Compliance Research & Public Utility Data Ingestion</p>
-                <p className="text-sm text-gray-600 leading-relaxed mb-4">
-                  Marcus specializes in environmental informatics, geospatial database modeling, and federal Safe Drinking Water Act compliance reporting. He has spent over a decade parsing municipal water utility filings, Consumer Confidence Reports, and EPA SDWIS/ECHO enforcement logs to translate dense federal regulatory documentation into accessible, data-driven consumer guidance.
+                <p className="text-xs text-brand-700 mb-3 font-medium">
+                  📍 Assam, India · Creator of WaterSafeCheck · Environmental Informatics & Data Engineering
                 </p>
-                <div className="flex flex-wrap gap-2 text-xs">
-                  <span className="bg-white border border-gray-200 px-2.5 py-1 rounded-md text-gray-700 font-medium">SDWA Compliance</span>
-                  <span className="bg-white border border-gray-200 px-2.5 py-1 rounded-md text-gray-700 font-medium">EPA ECHO Analysis</span>
-                  <span className="bg-white border border-gray-200 px-2.5 py-1 rounded-md text-gray-700 font-medium">Lead & Copper Rule</span>
-                  <span className="bg-white border border-gray-200 px-2.5 py-1 rounded-md text-gray-700 font-medium">UCMR5 PFAS Data</span>
+                <p className="text-sm text-gray-600 leading-relaxed mb-4">
+                  Sahajul architected the high-throughput data processing pipeline that normalizes over 41,000 U.S. ZIP codes from federal EPA SDWIS, ECHO enforcement histories, and UCMR5 contaminant monitoring databases. Driven by a commitment to global public data transparency, he designed WaterSafeCheck to operate as a completely free public service without paywalls, trackers, or corporate influence.
+                </p>
+                <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-gray-100">
+                  <a
+                    href="https://x.com/saddamh58509953"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-700 hover:text-brand-700 bg-white border border-gray-200 px-3 py-1.5 rounded-lg shadow-sm transition-colors"
+                  >
+                    <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 24.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    Follow on X (@saddamh58509953)
+                  </a>
+                  <a
+                    href="https://github.com/sahajulhaque196-dot"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-700 hover:text-brand-700 bg-white border border-gray-200 px-3 py-1.5 rounded-lg shadow-sm transition-colors"
+                  >
+                    <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                    GitHub (@sahajulhaque196-dot)
+                  </a>
                 </div>
               </div>
             </div>

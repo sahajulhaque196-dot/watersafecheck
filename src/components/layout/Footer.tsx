@@ -34,15 +34,29 @@ export function Footer() {
               </svg>
               <span className="font-black text-white text-base tracking-tight">WaterSafeCheck</span>
             </div>
-            <p className="text-sm text-gray-400 leading-relaxed mb-4">
+            <p className="text-sm text-gray-400 leading-relaxed mb-3">
               Free EPA-verified drinking water quality data for 41,000+ U.S. ZIP codes. Know what's in your tap water before you drink it.
             </p>
-            <a
-              href="mailto:contact@watersafecheck.com"
-              className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
-            >
-              contact@watersafecheck.com
-            </a>
+            <p className="text-xs text-gray-400 mb-3">
+              Founded & engineered by <Link href="/about" className="text-gray-200 hover:text-white font-medium underline">Sahajul Haque</Link> (Assam, India).
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <a
+                href="mailto:contact@watersafecheck.com"
+                className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                contact@watersafecheck.com
+              </a>
+              <span className="text-gray-600">·</span>
+              <a
+                href="https://x.com/saddamh58509953"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                X: @saddamh58509953 ↗
+              </a>
+            </div>
           </div>
 
           {/* Browse by State */}

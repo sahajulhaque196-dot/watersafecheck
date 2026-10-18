@@ -185,9 +185,19 @@ export default async function CityPage({ params }: Props) {
         <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mb-1">
           {data.city}, {data.state} Water Quality Testing & Safety Report
         </h1>
-        <p className="text-lg text-gray-500 mb-6">
+        <p className="text-lg text-gray-500 mb-2">
           EPA compliance records, water testing guidelines, and hardness metrics for all {data.zip_count} ZIP code{data.zip_count > 1 ? 's' : ''} in {data.city}, {stateName}
         </p>
+        <div className="flex flex-wrap items-center gap-2 mb-6 text-xs text-gray-500">
+          <img
+            src="/images/sahajul-haque.jpg"
+            alt="Sahajul Haque"
+            className="w-5 h-5 rounded-full object-cover border border-gray-200 shadow-xs"
+          />
+          <span>
+            Data aggregated & verified by <Link href="/about" className="font-semibold text-brand-700 hover:underline">Sahajul Haque</Link> from federal SDWIS & ECHO filings
+          </span>
+        </div>
 
         {/* ── Quick Answer Box (Position 0 Target) ── */}
         <section

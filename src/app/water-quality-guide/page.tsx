@@ -63,9 +63,11 @@ const articleSchema = {
   image: [`${SITE_URL}/images/water-hero.jpg`],
   author: {
     '@type': 'Person',
-    name: 'Marcus J. Webb',
-    jobTitle: 'Lead Environmental Data Analyst',
+    name: 'Sahajul Haque',
+    jobTitle: 'Founder & Lead Platform Architect',
     url: `${SITE_URL}/about`,
+    image: `${SITE_URL}/images/sahajul-haque.jpg`,
+    sameAs: ['https://x.com/saddamh58509953', 'https://github.com/sahajulhaque196-dot'],
   },
   publisher: {
     '@type': 'Organization',
@@ -124,14 +126,18 @@ export default function WaterQualityGuidePage() {
           </p>
           {/* Author byline — EEAT */}
           <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl border border-gray-100">
-            <div className="w-10 h-10 rounded-full bg-brand-700 flex items-center justify-center text-white font-black text-base flex-shrink-0">M</div>
+            <img
+              src="/images/sahajul-haque.jpg"
+              alt="Sahajul Haque"
+              className="w-11 h-11 rounded-full object-cover border border-gray-200 flex-shrink-0 shadow-sm"
+            />
             <div>
               <p className="text-sm font-semibold text-gray-900">
-                Written by Marcus J. Webb
+                Researched & Written by Sahajul Haque
               </p>
               <p className="text-xs text-gray-500">
-                Environmental Data Analyst · 10 years EPA compliance research ·
-                <Link href="/about" className="text-brand-600 hover:underline ml-1">About the author →</Link>
+                Founder & Lead Platform Architect · Assam, India ·
+                <Link href="/about" className="text-brand-600 hover:underline ml-1">About the founder →</Link>
               </p>
             </div>
             <div className="ml-auto text-xs text-gray-400 hidden sm:block">

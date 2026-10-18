@@ -36,8 +36,8 @@ export const blogArticles: BlogArticle[] = [
     publishDate: '2025-01-15',
     updateDate: '2025-01-15',
     readTime: '9 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `A few years ago, I was reviewing lead testing data for water systems across the Midwest when I noticed something that stuck with me. In a mid-sized Ohio city, the 90th percentile lead level in tap water had quietly climbed from 4 parts per billion to 18 parts per billion over three years — crossing the EPA action level — and almost nobody in the community knew about it. The utility had sent the legally required violation notice, but it was buried in a water bill insert that most people threw away without reading.
 
 That's the problem with lead in drinking water. It's invisible, it has no taste, and the information about it is technically public but practically impossible for most families to find and understand. This article is my attempt to fix that — at least for the families reading it right now.`,
@@ -139,8 +139,8 @@ Search your ZIP code on WaterSafeCheck to see EPA lead data for your water syste
     publishDate: '2025-01-22',
     updateDate: '2025-01-22',
     readTime: '8 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `Every year, sometime before July 1, your water utility is legally required to send you a document called the Consumer Confidence Report — also called the CCR or Annual Water Quality Report. Most people either throw it away without reading it or skim the first paragraph and set it down.
 
 I get it. These reports are dense. They're full of acronyms, regulatory terms, and numbers that mean nothing without context. I've read hundreds of them over the course of my career, and even I find some of them confusing the first time through.
@@ -264,8 +264,8 @@ The water coming out of your tap has traveled through a complex treatment and di
     publishDate: '2025-02-03',
     updateDate: '2025-02-03',
     readTime: '9 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `When the EPA finalized its first-ever federal drinking water standards for PFAS chemicals in April 2024, it was genuinely historic. For decades, these synthetic compounds had been accumulating in water supplies, in wildlife, and in human bloodstreams — and federal drinking water law had nothing specific to say about them. The 2024 rule changed that.
 
 But most people still don\'t know much about PFAS. They\'ve heard the term "forever chemicals," maybe seen a news story about a contaminated community somewhere. What they usually don\'t know is whether their own tap water contains PFAS, what the health risks actually are, and what — if anything — they can do about it. That\'s what this guide covers.`,
@@ -381,8 +381,8 @@ Search your ZIP code on WaterSafeCheck to see whether PFAS data is available for
     publishDate: '2025-02-10',
     updateDate: '2025-02-10',
     readTime: '8 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `Walk through the water filter aisle at any home improvement store and you\'ll find dozens of products making bold claims. "Removes 99% of contaminants." "Hospital grade filtration." "Complete water purification." The packaging is designed to be reassuring, and most of it is misleading.
 
 After spending a decade analyzing water quality data for systems across the United States, I can tell you that the most common mistake people make when buying a water filter is choosing based on marketing claims rather than verified performance. The difference between a filter that looks good and a filter that actually removes the contaminant you\'re worried about can be significant.
@@ -518,8 +518,8 @@ That\'s the process. It takes 20 minutes and will save you from buying something
     publishDate: '2025-02-17',
     updateDate: '2025-02-17',
     readTime: '9 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `About 43 million Americans — roughly 15% of the U.S. population — get their drinking water from a private well. That\'s a significant number, and what many of those people don\'t fully realize is that their water receives essentially no regulatory oversight.
 
 When you\'re on a public water system, a utility is required to test your water constantly, report results to the EPA, fix problems on a legally mandated timeline, and notify you when something goes wrong. There are real consequences for failing to meet federal standards.
@@ -661,8 +661,8 @@ And if you have both a private well and a public water connection — for exampl
     publishDate: '2025-03-03',
     updateDate: '2025-03-03',
     readTime: '8 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `If you've ever lived in Phoenix, Las Vegas, or most of Texas, you know hard water. The white crusty buildup around your faucet handles. The soap that just won't lather right. The water heater that loses efficiency every year as scale coats the heating element. Hard water is one of those facts of life in large parts of the United States, and most people who live with it develop strong opinions about it.
 
 What most people are less sure about is whether hard water is actually a health concern, whether water softeners help or create new problems, and what "hardness" even means in terms of what's physically in the water. I've had these conversations with homeowners dozens of times over the years, and there's a lot of misinformation floating around on both sides. Let me give you the straight version.`,
@@ -784,8 +784,8 @@ Check your ZIP code on WaterSafeCheck to see what water quality data is availabl
     publishDate: '2025-03-10',
     updateDate: '2025-03-10',
     readTime: '8 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `Nitrate contamination is one of the most widespread drinking water quality problems in the United States, and it's one of the least discussed. While lead and PFAS get most of the headlines, nitrates affect more water systems and more private wells than almost any other contaminant. In agricultural regions — the Midwest corn belt, California's Central Valley, the Carolinas, and many other farming communities — nitrate levels in groundwater have been rising steadily for decades.
 
 Most adults are largely unaffected by nitrates at levels near the regulatory limit. But for infants under six months old, nitrates at levels that healthy adults would tolerate without any noticeable effect can cause a dangerous and potentially fatal condition. That asymmetry — essentially safe for most adults, potentially life-threatening for infants — is what makes nitrate contamination so important to understand even if you currently have no health concerns about your water.`,
@@ -911,8 +911,8 @@ Check your ZIP code on WaterSafeCheck to see what nitrate data is available for 
     publishDate: '2025-03-17',
     updateDate: '2025-03-17',
     readTime: '9 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `When most people think about arsenic, they think about old detective novels and Victorian-era poisonings. They don't think about their morning cup of coffee.
 
 But arsenic in drinking water is a genuine public health concern in significant parts of the United States — not from intentional poisoning, but from the natural geology of the land. Arsenic is a naturally occurring element found in rock, soil, and groundwater across the entire country, with particularly high concentrations in the western states, New England, the upper Midwest, and parts of the South.
@@ -1038,8 +1038,8 @@ If you're in one of the high-arsenic regions of the country — the West, New En
     publishDate: '2025-03-24',
     updateDate: '2025-03-24',
     readTime: '8 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `Chlorination of public drinking water is one of the most successful public health interventions in human history. Before cities began chlorinating their water supplies in the early 20th century, waterborne diseases — typhoid fever, cholera, dysentery — killed tens of thousands of Americans every year. Chlorination essentially eliminated these diseases from the U.S. water supply. It is not an overstatement to say that water chlorination has saved millions of lives.
 
 But chlorine doesn't just kill bacteria. When chlorine reacts with naturally occurring organic matter in water — the decomposed plant material, algae, and other compounds that come from lakes, rivers, and soil — it forms a family of chemical compounds called disinfection byproducts (DBPs). Some of these compounds, particularly trihalomethanes (THMs) and haloacetic acids (HAAs), have been linked to increased cancer risk with long-term exposure.
@@ -1167,8 +1167,8 @@ Check your Consumer Confidence Report for TTHM and HAA5 levels in your water. If
     publishDate: '2025-04-01',
     updateDate: '2025-04-01',
     readTime: '9 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `Moving into a new home comes with a long checklist of things to figure out — schools, utilities, neighbors, the local coffee shop. Water quality is rarely near the top of that list. But it should be, and here's why: the water quality situation in your new home depends on factors that vary enormously from one property to the next, and some of the most important factors — like whether there's a lead service line connecting the house to the main water supply, or whether the previous owners installed a water softener that's no longer being maintained — you'd never know about without specifically looking.
 
 I've helped dozens of families navigate this kind of assessment over the years, and the good news is that it doesn't have to be complicated or expensive. A few targeted steps in the first days or weeks in a new home can give you a clear picture of your water quality situation. This checklist covers everything I'd check if I were moving in.`,
@@ -1312,8 +1312,8 @@ Use WaterSafeCheck to look up your new ZIP code's water quality data as a starti
     publishDate: '2025-04-07',
     updateDate: '2025-04-07',
     readTime: '9 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `Few topics in drinking water generate as much passionate disagreement as fluoride. On one side, public health organizations — the CDC, the American Dental Association, the World Health Organization — consistently support community water fluoridation as one of the great public health achievements of the 20th century. On the other side, a growing number of parents, alternative health advocates, and some scientists argue that fluoride is an unnecessary medication being added to the water supply without individual consent, with potential risks that outweigh the benefits.
 
 I've been watching this debate from the inside for over a decade, and I want to give you something more useful than a partisan take in either direction. The science on fluoride is genuinely more nuanced than either extreme would have you believe. The benefits of fluoridation at appropriate levels are real and well-documented. Some of the concerns raised by critics — particularly around neurological effects at higher exposure levels — are not as easily dismissed as they were ten years ago. And the ethical question of mass medication without individual consent is a legitimate one that deserves honest engagement, not dismissal.
@@ -1431,8 +1431,8 @@ Search your ZIP code on WaterSafeCheck to see fluoride data for your water syste
     publishDate: '2025-04-14',
     updateDate: '2025-04-14',
     readTime: '9 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `When you're pregnant, you become acutely aware of everything you put into your body. The food, the medications, the cleaning products. But drinking water — which you consume eight or more cups of daily — often gets overlooked in that calculation. It shouldn't.
 
 Pregnancy changes your physiology in ways that affect how your body processes certain contaminants. Blood volume increases by about 50%. Kidney filtration rate increases. Placental blood flow creates a new pathway between your bloodstream and your baby's developing systems. Some contaminants that your pre-pregnancy body could handle with no obvious ill effect can cross the placenta and affect fetal development during critical windows.
@@ -1564,8 +1564,8 @@ The steps that protect your water during pregnancy are largely the same steps th
     publishDate: '2025-04-21',
     updateDate: '2025-04-21',
     readTime: '8 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `Renters face a particular disadvantage when it comes to water quality. In most apartments and rental homes, you have no control over the building's plumbing, can't easily install whole-house treatment systems, and depend on a landlord who may or may not be forthcoming about what they know (or don't know) about the water quality.
 
 And yet renters are disproportionately affected by some of the worst water quality issues in the United States. Older rental housing — which is often where lower-income renters live — is more likely to have lead plumbing and solder. Renters are less likely to have read or even received the Consumer Confidence Report that utilities are legally required to provide. And renters have less leverage to demand improvements from landlords than homeowners have over their own property.
@@ -1697,8 +1697,8 @@ You have more control over your water quality than the rental situation might su
     publishDate: '2025-04-28',
     updateDate: '2025-04-28',
     readTime: '8 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `In the last decade, researchers began looking for microplastics in water — and found them essentially everywhere they looked. Tap water, bottled water, groundwater, rivers, lakes, the polar ice caps, rain falling in the French Pyrenees, the deepest parts of the Pacific Ocean. More recently, studies have found microplastics in human blood, placental tissue, lung tissue, and most strikingly, in human heart tissue.
 
 The microplastics story is one of the most rapidly evolving areas in environmental health science, and it puts water quality professionals like me in an uncomfortable position: the contamination is clearly widespread and pervasive, and yet the health implications are genuinely uncertain. We are accumulating these particles faster than we're understanding what they do to us.
@@ -1828,8 +1828,8 @@ The RO filter that addresses your lead, PFAS, and nitrate concerns will also giv
     publishDate: '2025-05-05',
     updateDate: '2025-05-05',
     readTime: '8 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `A boil water advisory arrives at the worst possible time — usually on a weekday evening, often after heavy rain or a water main break, when you already have a full evening ahead and the last thing you want to do is rethink every activity that involves tap water.
 
 And then comes the uncertainty. Boil water for how long? Does this apply to ice in the freezer? Can I still shower? Can I run the dishwasher? What about my pet? When will it be lifted?
@@ -1973,8 +1973,8 @@ Keep this guide bookmarked. You hope you never need it urgently — but the even
     publishDate: '2025-05-12',
     updateDate: '2025-05-12',
     readTime: '9 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `At some point in my career, I started counting the number of times people asked me "how do I actually test my water?" The question comes up constantly — from new homeowners, from renters in older buildings, from parents of young children, from people who just moved to a different city and want to understand what they're drinking.
 
 The problem is that "water testing" means very different things depending on what you're trying to find out. A quick dip test with a strip from the hardware store is wildly different from a certified laboratory panel. Free testing from your state health department is different from a $400 comprehensive private lab test. And what makes sense if you're worried about lead from old pipes is completely different from what makes sense if you're on a well in an agricultural area and worried about nitrates.
@@ -2126,8 +2126,8 @@ Search your ZIP code on WaterSafeCheck to see what EPA data already exists for y
     publishDate: '2025-05-19',
     updateDate: '2025-05-19',
     readTime: '8 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `Most waterborne disease that makes headlines involves E. coli outbreaks from agricultural runoff, or Cryptosporidium breaches in municipal treatment plants, or lead from aging pipes. Legionella — the bacteria that causes Legionnaires' disease — doesn't get the same attention, even though it's consistently one of the leading causes of waterborne disease outbreaks in the United States, and one of the deadliest.
 
 The CDC estimates that Legionella causes between 8,000 and 18,000 hospitalizations per year in the United States, with a case fatality rate of roughly 10% — meaning roughly 1 in 10 people who develop Legionnaires' disease dies from it. Among immunocompromised patients, that rate climbs significantly.
@@ -2277,8 +2277,8 @@ Legionella is manageable with the right knowledge and straightforward maintenanc
     publishDate: '2025-05-26',
     updateDate: '2025-05-26',
     readTime: '9 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `The question "should I drink tap water or bottled water?" generates more revenue for the bottled water industry than any other single piece of consumer confusion. Bottled water sales in the United States exceeded $24 billion in 2023, much of it driven by the perception that it's safer, cleaner, or healthier than tap water. The reality is more nuanced — and in many cases, exactly backward.
 
 After ten years of working with EPA water quality data, I want to give you a genuinely honest comparison of your three main options: tap water straight from the faucet, tap water that's been filtered, and commercially bottled water. I'll cover safety, cost, environmental impact, taste, and convenience — not to sell you any product, but to give you the information you need to make a decision that's actually right for your specific situation.
@@ -2414,8 +2414,8 @@ Know what's in your water. Get the right filter for your specific situation. Sto
     publishDate: '2025-06-02',
     updateDate: '2025-06-02',
     readTime: '9 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `Children are not small adults when it comes to water quality. Their relationship with water contaminants is categorically different from adults' — they're exposed to more per body weight, their developing systems are more vulnerable to disruption, and the consequences of certain exposures during critical developmental windows can affect them for life.
 
 This is something I think about often when I look at water quality data. A lead level that sits below the EPA's action level doesn't just affect children and adults equally — it affects children dramatically more, because lead at any detectable concentration interferes with neurological development in ways it doesn't in mature adult brains. A nitrate concentration that a healthy adult processes without a second thought can cause a medical emergency in a formula-fed newborn.
@@ -2553,8 +2553,8 @@ The conversation with your pediatrician about blood lead testing and local water
     publishDate: '2025-06-09',
     updateDate: '2025-06-09',
     readTime: '9 min read',
-    author: 'Marcus J. Webb',
-    authorTitle: 'Environmental Data Analyst, 10 Years EPA Compliance Research',
+    author: 'Sahajul Haque',
+    authorTitle: 'Founder & Lead Platform Architect · Assam, India',
     intro: `The conversation about drinking water quality in America tends to center on cities — on Flint and Newark and the infrastructure crises that make national news. But some of the most serious and persistent water quality problems in the United States are in rural communities, and they receive a fraction of the attention, funding, and policy focus.
 
 Rural Americans face a different set of water quality challenges than their urban and suburban counterparts. Private wells — used by roughly 43 million people — are entirely outside the federal regulatory framework. Small community water systems, which disproportionately serve rural areas, have violation rates far higher than large urban systems. Agricultural contamination — nitrates, pesticides, bacteria from livestock operations — disproportionately affects rural groundwater. And rural communities often have fewer resources to address problems when they're found.

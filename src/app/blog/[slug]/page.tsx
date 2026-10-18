@@ -64,6 +64,8 @@ export default function BlogArticlePage({ params }: Props) {
       name: article.author,
       jobTitle: article.authorTitle,
       url: `${SITE_URL}/about`,
+      image: `${SITE_URL}/images/sahajul-haque.jpg`,
+      sameAs: ['https://x.com/saddamh58509953', 'https://github.com/sahajulhaque196-dot'],
     },
     publisher: {
       '@type': 'Organization',
@@ -151,9 +153,11 @@ export default function BlogArticlePage({ params }: Props) {
 
           {/* Author byline — EEAT */}
           <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl border border-gray-100">
-            <div className="w-10 h-10 rounded-full bg-brand-700 flex items-center justify-center text-white font-black text-base flex-shrink-0" aria-hidden="true">
-              W
-            </div>
+            <img
+              src="/images/sahajul-haque.jpg"
+              alt={article.author}
+              className="w-11 h-11 rounded-full object-cover border border-gray-200 flex-shrink-0 shadow-sm"
+            />
             <div className="flex-1 min-w-0">
               <p className="text-sm font-bold text-gray-900">{article.author}</p>
               <p className="text-xs text-gray-500 leading-snug">{article.authorTitle}</p>
@@ -282,20 +286,33 @@ export default function BlogArticlePage({ params }: Props) {
           {/* Author Box — EEAT */}
           <div className="mb-8 p-5 bg-gradient-to-br from-brand-50 to-blue-50 border border-brand-100 rounded-2xl">
             <div className="flex flex-col sm:flex-row gap-4 items-start">
-              <div className="w-14 h-14 rounded-xl bg-brand-700 flex items-center justify-center text-white font-black text-2xl flex-shrink-0" aria-hidden="true">
-                W
-              </div>
+              <img
+                src="/images/sahajul-haque.jpg"
+                alt={article.author}
+                className="w-16 h-16 rounded-2xl object-cover border-2 border-white shadow-md flex-shrink-0"
+              />
               <div>
-                <h3 className="font-bold text-gray-900 mb-0.5">
+                <h3 className="font-bold text-gray-900 mb-0.5 text-base">
                   {article.author}
                 </h3>
-                <p className="text-sm text-brand-700 font-medium mb-3">{article.authorTitle}</p>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Our team compiles and analyzes public EPA SDWIS, ECHO, and UCMR5 datasets to simplify water safety information for American households. We believe that public health transparency is a baseline right for every family. All recommendations are cross-referenced with NSF and CDC safety limits.
+                <p className="text-xs text-brand-700 font-semibold mb-2">{article.authorTitle}</p>
+                <p className="text-sm text-gray-600 leading-relaxed mb-3">
+                  Sahajul is an independent data systems engineer based in Assam, India, and the founder of WaterSafeCheck. He specializes in parsing and organizing large-scale U.S. EPA compliance databases (SDWIS, ECHO, UCMR5) into actionable, plain-English drinking water safety reports.
                 </p>
-                <Link href="/about" className="mt-3 inline-block text-sm text-brand-700 hover:underline font-medium">
-                  Read our full methodology →
-                </Link>
+                <div className="flex flex-wrap items-center gap-3">
+                  <a
+                    href="https://x.com/saddamh58509953"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-brand-700 hover:underline font-semibold inline-flex items-center gap-1"
+                  >
+                    Follow on X (@saddamh58509953) ↗
+                  </a>
+                  <span className="text-gray-300">·</span>
+                  <Link href="/about" className="text-xs text-brand-700 hover:underline font-medium">
+                    Read our full methodology & founder story →
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
