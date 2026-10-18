@@ -141,7 +141,7 @@ export default async function HomePage() {
 
       {/* ── National Stats with Smooth Top & Bottom Blends ── */}
       <section className="relative bg-gradient-to-b from-white via-white to-sky-50/50 border-b border-sky-100/50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
             <div>
               <p className="text-3xl font-black text-brand-700">{totalZips.toLocaleString()}+</p>

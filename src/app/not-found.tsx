@@ -5,7 +5,7 @@ import { HomeSearch } from '@/components/sections/HomeSearch'
 
 export default function NotFound() {
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
       <div className="text-6xl mb-4">🚰</div>
       <h1 className="text-4xl font-black text-gray-900 mb-3">Page Not Found</h1>
       <p className="text-lg text-gray-500 mb-8">
