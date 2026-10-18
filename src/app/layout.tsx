@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     'EPA water violations', 'lead in water', 'water contaminants', 'safe drinking water',
     'water quality report', 'water quality check', 'is my water safe',
   ],
-  authors: [{ name: 'Marcus J. Webb', url: `${SITE_URL}/about` }],
+  authors: [{ name: 'Sahajul Haque', url: `${SITE_URL}/about` }],
   creator: 'WaterSafeCheck',
   publisher: 'WaterSafeCheck',
   robots: {
@@ -102,9 +102,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     email: 'contact@watersafecheck.com',
     founder: {
       '@type': 'Person',
-      name: 'Marcus J. Webb',
-      jobTitle: 'Lead Environmental Data Analyst',
+      name: 'Sahajul Haque',
+      jobTitle: 'Founder & Lead Platform Architect',
       url: `${SITE_URL}/about`,
+      image: `${SITE_URL}/images/sahajul-haque.jpg`,
+      sameAs: [
+        'https://x.com/saddamh58509953',
+        'https://github.com/sahajulhaque196-dot'
+      ],
     },
     contactPoint: {
       '@type': 'ContactPoint',

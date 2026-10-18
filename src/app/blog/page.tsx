@@ -8,7 +8,7 @@ import { SITE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: 'Drinking Water Safety Blog — Tips, Guides & Research',
-  description: 'Expert articles on tap water safety, lead contamination, PFAS chemicals, water filters, well water testing, and understanding your EPA water quality data. Written by an environmental data analyst with 10 years of experience.',
+  description: 'Expert articles on tap water safety, lead contamination, PFAS chemicals, water filters, well water testing, and understanding your EPA water quality data. Researched and compiled by Sahajul Haque, founder of WaterSafeCheck.',
   alternates: { canonical: `${SITE_URL}/blog` },
   openGraph: {
     title: 'Drinking Water Safety Blog | WaterSafeCheck',
@@ -43,7 +43,7 @@ export default function BlogPage() {
           Drinking Water Safety Blog
         </h1>
         <p className="text-lg text-gray-500 leading-relaxed max-w-2xl">
-          Plain-English guides on tap water safety, water quality data, and protecting your family — written by Marcus J. Webb, environmental data analyst with 10 years of EPA compliance research. New articles published regularly.
+          Plain-English guides on tap water safety, water quality data, and protecting your family — researched & written by Sahajul Haque, founder of WaterSafeCheck. New articles published regularly.
         </p>
       </div>
 
