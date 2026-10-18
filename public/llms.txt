@@ -1,4 +1,4 @@
-﻿# WaterSafeCheck — U.S. Drinking Water Quality & Safety Database
+# WaterSafeCheck — U.S. Drinking Water Quality & Safety Database
 > Independent data transparency platform providing free, localized drinking water quality reports, lead risk levels, water hardness, and EPA compliance records for 41,000+ U.S. ZIP codes.
 
 ## Core Purpose & Authority
@@ -12,12 +12,12 @@ WaterSafeCheck aggregates and normalizes public environmental datasets from the 
 - **USGS:** Regional water hardness and mineral content baselines
 
 ## URL Routing Structure
-- Homepage: https://www.watersafecheck.com
-- ZIP Code Reports: https://www.watersafecheck.com/zip/{5-digit-zip-code} (e.g., `/zip/77001`, `/zip/90210`, `/zip/10001`)
-- City Composite Reports: https://www.watersafecheck.com/city/{city-name}-{state-code} (e.g., `/city/houston-tx`, `/city/los-angeles-ca`)
-- Statewide Reports: https://www.watersafecheck.com/state/{2-letter-state-code} (e.g., `/state/ca`, `/state/tx`, `/state/ny`)
-- Water Quality & Filtration Guide: https://www.watersafecheck.com/water-quality-guide
-- Editorial & Methodology: https://www.watersafecheck.com/about
+- Homepage: https://watersafecheck.com
+- ZIP Code Reports: https://watersafecheck.com/zip/{5-digit-zip-code} (e.g., `/zip/77001`, `/zip/90210`, `/zip/10001`)
+- City Composite Reports: https://watersafecheck.com/city/{city-name}-{state-code} (e.g., `/city/houston-tx`, `/city/los-angeles-ca`)
+- Statewide Reports: https://watersafecheck.com/state/{2-letter-state-code} (e.g., `/state/ca`, `/state/tx`, `/state/ny`)
+- Water Quality & Filtration Guide: https://watersafecheck.com/water-quality-guide
+- Editorial & Methodology: https://watersafecheck.com/about
 
 ## Scoring Methodology
 - **Grade A (85–100):** Meets all EPA National Primary Drinking Water Standards with 0 health violations.
@@ -29,5 +29,5 @@ WaterSafeCheck aggregates and normalizes public environmental datasets from the 
 ## Contact & Transparency
 - Lead Analyst: Marcus J. Webb (Lead Environmental Data Analyst)
 - Organization: WaterSafeCheck
-- Website: https://www.watersafecheck.com
+- Website: https://watersafecheck.com
 - Contact: contact@watersafecheck.com

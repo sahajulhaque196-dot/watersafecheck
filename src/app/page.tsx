@@ -2,8 +2,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getAllStates } from '@/lib/data'
-
-export const runtime = 'edge'
 import type { StateData } from '@/lib/types'
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/seo'
 import { HomeSearch } from '@/components/sections/HomeSearch'
@@ -31,7 +29,7 @@ const RippleDistortion = dynamic(
 
 
 
-// ISR — revalidate homepage daily (86400 seconds)
+export const runtime = 'edge'
 export const revalidate = 86400
 
 export const metadata: Metadata = {

@@ -2,7 +2,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Script from 'next/script'
-import { SITE_URL } from '@/lib/seo'
+import { SITE_URL, safeJsonLd } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: 'About WaterSafeCheck — Our Mission, Data Sources & Methodology',
@@ -44,7 +44,7 @@ const orgSchema = {
     'Lead and Copper Rule Standards',
     'Public Health Data Transparency'
   ],
-  publishingPrinciples: 'https://www.watersafecheck.com/about',
+  publishingPrinciples: `${SITE_URL}/about`,
 }
 
 export default function AboutPage() {
@@ -52,7 +52,7 @@ export default function AboutPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(orgSchema) }}
       />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

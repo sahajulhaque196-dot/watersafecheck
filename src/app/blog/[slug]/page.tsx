@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Script from 'next/script'
 import { getBlogArticle, getAllBlogSlugs, blogArticles } from '@/data/blog-articles'
-import { SITE_URL } from '@/lib/seo'
+import { SITE_URL, safeJsonLd } from '@/lib/seo'
 import { AdTop, AdInContent, AdBottom } from '@/components/ui/AdSense'
 
 interface Props { params: { slug: string } }
@@ -108,17 +108,17 @@ export default function BlogArticlePage({ params }: Props) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(articleSchema) }}
       />
       {faqSchema && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(faqSchema) }}
         />
       )}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbSchema) }}
       />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

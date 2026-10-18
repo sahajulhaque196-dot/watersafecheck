@@ -4,7 +4,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
-import { SITE_NAME, SITE_DESCRIPTION, SITE_URL } from '@/lib/seo'
+import { SITE_NAME, SITE_DESCRIPTION, SITE_URL, safeJsonLd } from '@/lib/seo'
 import Script from 'next/script'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' })
@@ -130,11 +130,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* ── SSR Structured Data: WebSite & Organization (Instant Crawler Parsing) ── */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(websiteSchema) }}
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(organizationSchema) }}
         />
       </head>
       <body>

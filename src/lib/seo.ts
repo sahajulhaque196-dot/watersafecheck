@@ -7,6 +7,8 @@ export const SITE_TAGLINE = 'Is Your Tap Water Safe?'
 export const SITE_DESCRIPTION =
   'Check the safety of your tap water by ZIP code. Free EPA-verified data on lead levels, water hardness, violations, contaminants, and safety grades for 41,000+ U.S. ZIP codes.'
 
+export const DATA_LAST_MODIFIED = '2026-10-17T00:00:00.000Z'
+
 // ─── XSS-Safe JSON-LD Serializer ───────────────────────────────────────────
 export function safeJsonLd(obj: unknown): string {
   return JSON.stringify(obj).replace(/</g, '\\u003c')
@@ -39,7 +41,7 @@ export function zipPageMeta(data: ZipData) {
       url: `${SITE_URL}/zip/${data.zip}`,
       siteName: SITE_NAME,
       type: 'article',
-      modifiedTime: new Date().toISOString(),
+      modifiedTime: DATA_LAST_MODIFIED,
     },
     twitter: {
       card: 'summary',

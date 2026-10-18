@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Script from 'next/script'
 import { AdTop, AdInContent, AdBottom } from '@/components/ui/AdSense'
-import { SITE_URL } from '@/lib/seo'
+import { SITE_URL, safeJsonLd } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: 'U.S. Tap Water Safety Guide — What EPA Data Really Means for Your Family',
@@ -60,22 +60,22 @@ const articleSchema = {
   '@type': 'Article',
   headline: 'U.S. Tap Water Safety Guide — What EPA Data Really Means for Your Family',
   description: 'A comprehensive guide to understanding EPA drinking water safety data, lead levels, violations, and water quality grades.',
-  image: ['https://www.watersafecheck.com/images/water-hero.jpg'],
+  image: [`${SITE_URL}/images/water-hero.jpg`],
   author: {
     '@type': 'Person',
     name: 'Marcus J. Webb',
     jobTitle: 'Lead Environmental Data Analyst',
-    url: 'https://www.watersafecheck.com/about',
+    url: `${SITE_URL}/about`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'WaterSafeCheck',
-    url: 'https://www.watersafecheck.com',
-    logo: { '@type': 'ImageObject', url: 'https://www.watersafecheck.com/images/water-hero.jpg' },
+    url: SITE_URL,
+    logo: { '@type': 'ImageObject', url: `${SITE_URL}/images/water-hero.jpg` },
   },
   datePublished: '2025-01-01',
   dateModified: '2026-08-27',
-  mainEntityOfPage: 'https://www.watersafecheck.com/water-quality-guide',
+  mainEntityOfPage: `${SITE_URL}/water-quality-guide`,
 }
 
 const MCL_TABLE = [
@@ -98,11 +98,11 @@ export default function WaterQualityGuidePage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(faqSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(articleSchema) }}
       />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
