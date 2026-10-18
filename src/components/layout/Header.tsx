@@ -1,8 +1,8 @@
 'use client'
 // src/components/layout/Header.tsx
 import Link from 'next/link'
-import { useState, useRef, useEffect } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 
 const Logo = () => (
   <div className="flex items-center gap-2">
@@ -35,29 +35,12 @@ const Logo = () => (
 )
 
 export function Header() {
-  const [zip, setZip] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
-  const [error, setError] = useState('')
-  const router = useRouter()
   const pathname = usePathname()
-  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     setMenuOpen(false)
-    setError('')
   }, [pathname])
-
-  function handleSearch(e: React.FormEvent) {
-    e.preventDefault()
-    const clean = zip.replace(/\D/g, '').slice(0, 5)
-    if (clean.length !== 5) {
-      setError('Enter a valid 5-digit ZIP')
-      return
-    }
-    setError('')
-    setZip('')
-    router.push(`/zip/${clean}`)
-  }
 
   return (
     <header className="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-50">
@@ -67,38 +50,48 @@ export function Header() {
             <Logo />
           </Link>
 
-          {/* Desktop Search */}
-          <form onSubmit={handleSearch} className="hidden md:flex items-center gap-2 flex-1 max-w-xs mx-4" role="search">
-            <div className="relative flex-1">
-              <label htmlFor="header-zip" className="sr-only">Search by ZIP code</label>
-              <input
-                id="header-zip"
-                ref={inputRef}
-                type="text"
-                inputMode="numeric"
-                value={zip}
-                onChange={e => { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)); setError('') }}
-                placeholder="ZIP code..."
-                className="w-full px-4 py-2 text-sm border-2 border-gray-200 rounded-lg focus:outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-100 transition-all"
-                maxLength={5}
-                autoComplete="postal-code"
-              />
-              {error && <p role="alert" className="absolute top-full left-0 mt-1 text-xs text-red-500 whitespace-nowrap">{error}</p>}
-            </div>
-            <button type="submit" className="btn-primary py-2 px-3 text-sm whitespace-nowrap" aria-label="Check water quality">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              Check
-            </button>
-          </form>
-
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-5" aria-label="Main navigation">
-            <Link href="/blog" className="text-sm text-gray-600 hover:text-brand-700 font-medium transition-colors">Blog</Link>
-            <Link href="/water-quality-guide" className="text-sm text-gray-600 hover:text-brand-700 font-medium transition-colors">Safety Guide</Link>
-            <Link href="/about" className="text-sm text-gray-600 hover:text-brand-700 font-medium transition-colors">About</Link>
-            <Link href="/contact" className="text-sm text-gray-600 hover:text-brand-700 font-medium transition-colors">Contact</Link>
+          <nav className="hidden md:flex items-center gap-6" aria-label="Main navigation">
+            <Link
+              href="/"
+              className={`text-sm font-medium transition-colors ${
+                pathname === '/' ? 'text-brand-700 font-semibold' : 'text-gray-600 hover:text-brand-700'
+              }`}
+            >
+              Home
+            </Link>
+            <Link
+              href="/blog"
+              className={`text-sm font-medium transition-colors ${
+                pathname.startsWith('/blog') ? 'text-brand-700 font-semibold' : 'text-gray-600 hover:text-brand-700'
+              }`}
+            >
+              Blog
+            </Link>
+            <Link
+              href="/water-quality-guide"
+              className={`text-sm font-medium transition-colors ${
+                pathname === '/water-quality-guide' ? 'text-brand-700 font-semibold' : 'text-gray-600 hover:text-brand-700'
+              }`}
+            >
+              Safety Guide
+            </Link>
+            <Link
+              href="/about"
+              className={`text-sm font-medium transition-colors ${
+                pathname === '/about' ? 'text-brand-700 font-semibold' : 'text-gray-600 hover:text-brand-700'
+              }`}
+            >
+              About
+            </Link>
+            <Link
+              href="/contact"
+              className={`text-sm font-medium transition-colors ${
+                pathname === '/contact' ? 'text-brand-700 font-semibold' : 'text-gray-600 hover:text-brand-700'
+              }`}
+            >
+              Contact
+            </Link>
           </nav>
 
           {/* Mobile hamburger */}
@@ -120,35 +113,25 @@ export function Header() {
 
         {/* Mobile Menu */}
         {menuOpen && (
-          <div id="mobile-menu" className="md:hidden border-t border-gray-100 py-3 space-y-3">
-            <form onSubmit={handleSearch} className="flex gap-2" role="search">
-              <label htmlFor="mobile-zip" className="sr-only">Search by ZIP code</label>
-              <input
-                id="mobile-zip"
-                type="text"
-                inputMode="numeric"
-                value={zip}
-                onChange={e => { setZip(e.target.value.replace(/\D/g, '').slice(0, 5)); setError('') }}
-                placeholder="Enter ZIP code..."
-                className="flex-1 px-4 py-2.5 text-sm border-2 border-gray-200 rounded-lg focus:outline-none focus:border-brand-600"
-                maxLength={5}
-                autoComplete="postal-code"
-              />
-              <button type="submit" className="btn-primary py-2 px-4 text-sm">Check</button>
-            </form>
-            {error && <p role="alert" className="text-xs text-red-500 px-1">{error}</p>}
+          <div id="mobile-menu" className="md:hidden border-t border-gray-100 py-3 space-y-2">
             <nav className="flex flex-col divide-y divide-gray-50" aria-label="Mobile navigation">
               {[
                 ['/', '🏠 Home'],
                 ['/blog', '📝 Blog'],
                 ['/water-quality-guide', '📖 Water Safety Guide'],
-                ['/about', '👤 About & Our Team'],
+                ['/about', '👤 About & Founder'],
                 ['/contact', '✉ Contact Us'],
                 ['/terms', '⚖ Terms of Service'],
                 ['/disclaimer', '📋 Disclaimer'],
                 ['/privacy', '🔒 Privacy Policy'],
               ].map(([href, label]) => (
-                <Link key={href} href={href} className="py-2.5 px-1 text-sm font-medium text-gray-700 hover:text-brand-700">
+                <Link
+                  key={href}
+                  href={href}
+                  className={`py-2.5 px-2 text-sm font-medium rounded-lg transition-colors ${
+                    pathname === href ? 'text-brand-700 font-semibold bg-brand-50/50' : 'text-gray-700 hover:text-brand-700'
+                  }`}
+                >
                   {label}
                 </Link>
               ))}

@@ -143,9 +143,19 @@ export default async function StatePage({ params }: Props) {
         <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mb-1">
           {data.name} Drinking Water Quality & Testing Directory
         </h1>
-        <p className="text-lg text-gray-500 mb-6">
+        <p className="text-lg text-gray-500 mb-2">
           Comprehensive EPA compliance records, water testing guidelines, and city rankings covering all {data.zip_count.toLocaleString()} ZIP codes across {data.name}
         </p>
+        <div className="flex flex-wrap items-center gap-2 mb-6 text-xs text-gray-500">
+          <img
+            src="/images/sahajul-haque.jpg"
+            alt="Sahajul Haque"
+            className="w-5 h-5 rounded-full object-cover border border-gray-200 shadow-xs"
+          />
+          <span>
+            Statewide data verified by <Link href="/about" className="font-semibold text-brand-700 hover:underline">Sahajul Haque</Link> from EPA SDWIS records
+          </span>
+        </div>
 
         {/* ── Quick Answer Box (Position 0 Target) ── */}
         <div className="mb-8 p-5 bg-gradient-to-r from-brand-50 via-sky-50 to-blue-50 rounded-2xl border border-brand-200 shadow-sm">
