@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   alternates: { canonical: `${SITE_URL}/water-quality-guide` },
   openGraph: {
     title: 'U.S. Tap Water Safety Guide — What EPA Data Really Means for Your Family',
-    description: 'A plain-English guide to U.S. drinking water safety written by an EPA compliance analyst with 10 years of experience.',
+    description: 'A plain-English guide to U.S. drinking water safety, EPA violations, lead limits, and filter recommendations by Sahajul Haque, founder of WaterSafeCheck.',
     type: 'article',
   },
 }
