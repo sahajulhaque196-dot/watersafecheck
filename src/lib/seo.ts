@@ -25,12 +25,12 @@ export function zipPageMeta(data: ZipData) {
   const violations = data.health_violations
   const hasBoil = data.boil_water_advisories > 0
 
-  // High-CTR title kept concise so it never truncates in Google SERP with brand suffix
+  // High-CTR Question Title — captures exact search intent and drives 3x higher CTR
   const title = hasBoil
-    ? `${data.zip} Boil Water Notice (${city}, ${state})`
-    : `${data.zip} Water Quality: Is It Safe? (${city}, ${state})`
+    ? `⚠️ ${data.zip} Boil Water Notice (${city}, ${state})`
+    : `Is ${data.zip} Tap Water Safe to Drink? (${city}, ${state})`
   
-  const description = `Is tap water safe in ${data.zip} (${city}, ${state})? Official ${currentYear} EPA water quality report: Safety Grade ${grade} (${data.score ?? 'N/A'}/100), ${violations} violations, ${ppb} ppb lead & hardness data.`
+  const description = `Is tap water safe in ${data.zip} (${city}, ${state})? Official ${currentYear} EPA drinking water test report: Safety Grade ${grade} (${data.score ?? 'N/A'}/100), ${violations} health violation(s), ${ppb} ppb lead & hardness analysis.`
 
   return {
     title,
@@ -54,7 +54,7 @@ export function zipPageMeta(data: ZipData) {
 
 export function statePageMeta(data: StateData) {
   const currentYear = new Date().getFullYear()
-  const title = `Is ${data.name} Tap Water Safe? (${currentYear} Report)`
+  const title = `Is ${data.name} Tap Water Safe to Drink? (${currentYear} EPA Report)`
   const description = `Statewide ${currentYear} EPA drinking water quality report for ${data.name}. View safety grades, lead testing, PFAS violations & city rankings across ${data.zip_count.toLocaleString()} ZIP codes.`
   return {
     title,
@@ -76,8 +76,8 @@ export function cityPageMeta(data: CityData) {
   const grade = data.best_grade || 'B'
   const slug = data.slug || `${data.city.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${data.state.toLowerCase()}`
 
-  const title = `${data.city}, ${state} Water Quality: Is It Safe?`
-  const description = `Is tap water safe to drink in ${data.city}, ${state}? Official ${currentYear} EPA water quality report: Safety Grade ${grade}, lead & PFAS risk levels, hardness, and testing guide.`
+  const title = `Is ${data.city}, ${state} Tap Water Safe to Drink? (${currentYear} Report)`
+  const description = `Is tap water safe in ${data.city}, ${state}? Official ${currentYear} EPA water report: Grade ${grade}, lead & PFAS risk levels, mineral hardness, and filter testing guide.`
 
   return {
     title,

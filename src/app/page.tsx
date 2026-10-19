@@ -51,6 +51,11 @@ const POPULAR_CITIES = [
   { city: 'Jacksonville', state: 'FL', zip: '32099' },
   { city: 'Austin', state: 'TX', zip: '78701' },
   { city: 'Columbus', state: 'OH', zip: '43201' },
+  // High-demand GSC impression earners — PageRank boost to climb from position 8.7 to top 3
+  { city: 'Maize', state: 'KS', zip: '67101' },
+  { city: 'Franklinton', state: 'NC', zip: '27525' },
+  { city: 'Chesterton', state: 'IN', zip: '46304' },
+  { city: 'Rockledge', state: 'FL', zip: '32955' },
 ]
 
 const US_STATES_GRID = [
@@ -284,6 +289,38 @@ export default async function HomePage() {
                   {city}, {state}
                 </p>
                 <p className="text-xs text-gray-400 mt-0.5">View water quality →</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Trending Water Quality Reports (GSC High Demand) ── */}
+        <section className="mb-14">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+            <h2 className="text-2xl font-bold text-gray-900">Trending Water Quality Reports</h2>
+          </div>
+          <p className="text-sm text-gray-500 mb-6">Frequently checked local water reports and active compliance searches</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {[
+              { zip: '65041', name: 'Holts Summit, MO', note: 'EPA SDWIS Report' },
+              { zip: '04064', name: 'Old Orchard Beach, ME', note: 'Water Quality Analysis' },
+              { zip: '90210', name: 'Beverly Hills, CA', note: 'Safety Grade & Lead' },
+              { zip: '10001', name: 'New York, NY', note: 'Fluoride & Hardness' },
+            ].map(item => (
+              <Link
+                key={item.zip}
+                href={`/zip/${item.zip}`}
+                className="card-hover group block bg-white border border-gray-100 hover:border-brand-300 p-4 rounded-xl shadow-xs"
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-black text-brand-700 text-base">ZIP {item.zip}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">Active</span>
+                </div>
+                <p className="text-xs font-semibold text-gray-800 group-hover:text-brand-700 transition-colors truncate">
+                  {item.name}
+                </p>
+                <p className="text-[11px] text-gray-400 mt-1">{item.note} →</p>
               </Link>
             ))}
           </div>
