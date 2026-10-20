@@ -255,3 +255,5 @@ export function FaqItem({ q, a, open = false }: { q: string; a: string; open?: b
     </details>
   )
 }
+
+export { WaterFilterQuiz } from './WaterFilterQuiz'

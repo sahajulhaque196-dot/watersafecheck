@@ -20,7 +20,7 @@ import {
 } from '@/lib/content'
 import { SITE_URL, safeJsonLd, zipPageMeta, zipJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo'
 import {
-  GradeBadge, ScoreRing, DataRow, AlertBox,
+  GradeBadge, ScoreRing, DataRow, AlertBox, WaterFilterQuiz,
   Breadcrumb, StatCard, FaqItem,
 } from '@/components/ui'
 import { AdTop, AdInContent, AdBottom, AdSidebar } from '@/components/ui/AdSense'
@@ -408,6 +408,16 @@ export default async function ZipPage({ params }: Props) {
                 <DataRow label="Appliance Scaling Risk" value={hardness.category === 'Soft' ? 'Very Low' : hardness.category === 'Moderately Hard' ? 'Low / Moderate' : 'High / Severe'} highlight={hardness.category === 'Soft' ? 'safe' : hardness.category === 'Moderately Hard' ? 'safe' : 'warning'} />
               </div>
             </div>
+
+            {/* ── Interactive Water Filter & Safety Quiz (Dwell Time & Engagement) ── */}
+            <WaterFilterQuiz
+              zip={data.zip}
+              city={data.city || undefined}
+              state={data.state || undefined}
+              leadStatus={leadStatus}
+              hardnessCategory={hardness.category}
+              hasViolations={data.health_violations > 0}
+            />
 
             {/* ── Official EPA SDWIS Verification Banner (E-E-A-T Signal) ── */}
             <div className="p-4 bg-gray-900 text-white rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-md">
