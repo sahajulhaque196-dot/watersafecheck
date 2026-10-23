@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'sw
 
 // Configuration — reads from env with fallback
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-WN6QCSJNY3'
-const ADSENSE_PUBLISHER_ID = process.env.NEXT_PUBLIC_ADSENSE_ID || 'ca-pub-XXXXXXXXXXXXXXXX'
+const ADSENSE_PUBLISHER_ID = process.env.NEXT_PUBLIC_ADSENSE_ID || 'ca-pub-1708825851821862'
 const SEARCH_CONSOLE_TOKEN = '4rwnkoJKqRTw6f1ePOF3zd-m7qzxtOCTh0t80dymWR8'
 
 export const viewport: Viewport = {
@@ -131,6 +131,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Favicon variants */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="shortcut icon" href="/favicon.svg" />
+
+        {/* ── Google AdSense Verification & Auto-Ads Script ── */}
+        <script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_PUBLISHER_ID}`}
+          crossOrigin="anonymous"
+        />
 
         {/* ── SSR Structured Data: WebSite & Organization (Instant Crawler Parsing) ── */}
         <script

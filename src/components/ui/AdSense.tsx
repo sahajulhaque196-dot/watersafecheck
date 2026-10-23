@@ -11,7 +11,7 @@ declare global {
   }
 }
 
-const PUBLISHER_ID = process.env.NEXT_PUBLIC_ADSENSE_ID || 'ca-pub-XXXXXXXXXXXXXXXX'
+const PUBLISHER_ID = process.env.NEXT_PUBLIC_ADSENSE_ID || 'ca-pub-1708825851821862'
 const IS_ADSENSE_ACTIVE = Boolean(
   PUBLISHER_ID &&
   !PUBLISHER_ID.includes('XXXX') &&
