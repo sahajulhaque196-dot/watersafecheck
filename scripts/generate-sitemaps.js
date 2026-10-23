@@ -57,7 +57,8 @@ function run() {
       'legionella-in-water-systems-what-you-need-to-know',
       'tap-water-vs-filtered-vs-bottled-water-comparison',
       'water-quality-and-childrens-health-parents-guide',
-      'water-quality-in-rural-america-unique-challenges'
+      'water-quality-in-rural-america-unique-challenges',
+      'moving-to-a-new-city-water-quality-guide'
     ];
 
     let mainXml = `<?xml version="1.0" encoding="UTF-8"?>
