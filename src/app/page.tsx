@@ -56,6 +56,10 @@ const POPULAR_CITIES = [
   { city: 'Franklinton', state: 'NC', zip: '27525' },
   { city: 'Chesterton', state: 'IN', zip: '46304' },
   { city: 'Rockledge', state: 'FL', zip: '32955' },
+  { city: 'Greenacres', state: 'FL', zip: '33463' },
+  { city: 'Newberry', state: 'MI', zip: '49868' },
+  { city: 'Alexander', state: 'NY', zip: '14005' },
+  { city: 'Windham', state: 'NH', zip: '03087' },
 ]
 
 const US_STATES_GRID = [

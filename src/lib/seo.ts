@@ -25,12 +25,12 @@ export function zipPageMeta(data: ZipData) {
   const violations = data.health_violations
   const hasBoil = data.boil_water_advisories > 0
 
-  // High-CTR Question Title — captures exact search intent and drives 3x higher CTR
+  // High-CTR Dual-Intent Title: Captures "is [zip] tap water safe" + "[zip] water quality testing"
   const title = hasBoil
     ? `⚠️ ${data.zip} Boil Water Notice (${city}, ${state})`
-    : `Is ${data.zip} Tap Water Safe to Drink? (${city}, ${state})`
+    : `Is ${data.zip} Tap Water Safe? Water Quality & Testing (${city}, ${state})`
   
-  const description = `Is tap water safe in ${data.zip} (${city}, ${state})? Official ${currentYear} EPA drinking water test report: Safety Grade ${grade} (${data.score ?? 'N/A'}/100), ${violations} health violation(s), ${ppb} ppb lead & hardness analysis.`
+  const description = `Is tap water safe in ${data.zip} (${city}, ${state})? Official ${currentYear} EPA water quality testing report: Safety Grade ${grade} (${data.score ?? 'N/A'}/100), ${violations} health violation(s), ${ppb} ppb lead, and filter advice.`
 
   return {
     title,
@@ -76,8 +76,9 @@ export function cityPageMeta(data: CityData) {
   const grade = data.best_grade || 'B'
   const slug = data.slug || `${data.city.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${data.state.toLowerCase()}`
 
-  const title = `Is ${data.city}, ${state} Tap Water Safe to Drink? (${currentYear} Report)`
-  const description = `Is tap water safe in ${data.city}, ${state}? Official ${currentYear} EPA water report: Grade ${grade}, lead & PFAS risk levels, mineral hardness, and filter testing guide.`
+  // Targets high-volume queries: "water quality testing [city]", "is [city] tap water safe", "contamination reports"
+  const title = `Is ${data.city}, ${state} Tap Water Safe? Water Quality & Testing (${currentYear})`
+  const description = `Is tap water safe in ${data.city}, ${state}? Official ${currentYear} EPA water quality testing report: Safety Grade ${grade}, contamination reports, lead & PFAS levels, and filtration guide.`
 
   return {
     title,
