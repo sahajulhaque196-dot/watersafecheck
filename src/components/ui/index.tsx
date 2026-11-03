@@ -257,3 +257,4 @@ export function FaqItem({ q, a, open = false }: { q: string; a: string; open?: b
 }
 
 export { WaterFilterQuiz } from './WaterFilterQuiz'
+export { CosmicParallaxBg } from './parallax-cosmic-background'

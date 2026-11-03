@@ -12,18 +12,12 @@ import dynamic from 'next/dynamic'
 
 import { Search, FileText, ShieldAlert, Droplets, Activity, Beaker, AlertTriangle } from 'lucide-react'
 
-// Load WebGL Three.js on client-only with smooth SSR image fallback to prevent any client-side exception
-const RippleDistortion = dynamic(
-  () => import('@/components/ui/ripple-distortion'),
+// Dynamic client load for Cosmic Parallax Background
+const CosmicParallaxBg = dynamic(
+  () => import('@/components/ui/parallax-cosmic-background').then((mod) => mod.CosmicParallaxBg),
   {
     ssr: false,
-    loading: () => (
-      <img
-        src="/images/water-hero.jpg"
-        alt="Clean drinking water ripple background — EPA drinking water quality database"
-        className="w-full h-full object-cover"
-      />
-    ),
+    loading: () => <div className="absolute inset-0 bg-[#030712]" />,
   }
 )
 
@@ -92,18 +86,9 @@ export default async function HomePage() {
   return (
     <>
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden bg-slate-900 text-white min-h-[640px] flex items-center justify-center">
-        {/* Full-Visibility Interactive WebGL Ripple Distortion Background */}
-        <div className="absolute inset-0 z-0">
-          <RippleDistortion
-            imageSrc="/images/water-hero.jpg"
-            frequency={18}
-            amplitude={0.008}
-            speed={2.8}
-            antialias={true}
-            className="w-full h-full object-cover"
-          />
-        </div>
+      <section className="relative overflow-hidden bg-[#030712] text-white min-h-[660px] sm:min-h-[720px] flex items-center justify-center">
+        {/* Cosmic Parallax Starfield & Glowing Earth Horizon */}
+        <CosmicParallaxBg loop={true} className="z-0 pointer-events-none" />
 
         {/* Soft top gradient for header clarity */}
         <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-black/25 to-transparent z-[1] pointer-events-none"></div>

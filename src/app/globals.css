@@ -296,3 +296,238 @@ html {
 .grade-badge {
   flex-shrink: 0;
 }
+
+
+/* ─── Cosmic Parallax Background & Keyframes ────────────────── */
+:root {
+  --animation-iteration: infinite;
+}
+
+@keyframes animStar {
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(-2000px);
+  }
+}
+
+@keyframes animGravity {
+  0% {
+    transform: translateY(-26px);
+    opacity: 0;
+  }
+  30%, 80% {
+    letter-spacing: 40px;
+    padding-left: 40px;
+    transform: translateY(0px);
+    opacity: 1;
+  }
+  92%, 100% {
+    letter-spacing: 35px;
+    padding-left: 35px;
+    transform: translateY(-4px);
+    opacity: 0;
+  }
+}
+
+@keyframes animDont {
+  0%, 15% {
+    transform: translateY(-26px);
+    opacity: 0;
+  }
+  35%, 80% {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+  92%, 100% {
+    transform: translateY(-4px);
+    opacity: 0;
+  }
+}
+
+@keyframes animLet {
+  0%, 25% {
+    transform: translateY(-26px);
+    opacity: 0;
+  }
+  45%, 80% {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+  92%, 100% {
+    transform: translateY(-4px);
+    opacity: 0;
+  }
+}
+
+@keyframes animGo {
+  0%, 35% {
+    transform: translateY(-26px);
+    opacity: 0;
+  }
+  55%, 80% {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+  92%, 100% {
+    transform: translateY(-4px);
+    opacity: 0;
+  }
+}
+
+.cosmic-parallax-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at bottom, #0d1b2e 0%, #030712 100%);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cosmic-stars, #stars {
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  animation: animStar 60s linear var(--animation-iteration);
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.cosmic-stars:after, #stars:after {
+  content: " ";
+  position: absolute;
+  top: 2000px;
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  box-shadow: inherit;
+}
+
+.cosmic-stars-medium, #stars2 {
+  width: 2px;
+  height: 2px;
+  background: transparent;
+  animation: animStar 100s linear var(--animation-iteration);
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.cosmic-stars-medium:after, #stars2:after {
+  content: " ";
+  position: absolute;
+  top: 2000px;
+  width: 2px;
+  height: 2px;
+  background: transparent;
+  box-shadow: inherit;
+}
+
+.cosmic-stars-large, #stars3 {
+  width: 3px;
+  height: 3px;
+  background: transparent;
+  animation: animStar 150s linear var(--animation-iteration);
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.cosmic-stars-large:after, #stars3:after {
+  content: " ";
+  position: absolute;
+  top: 2000px;
+  width: 3px;
+  height: 3px;
+  background: transparent;
+  box-shadow: inherit;
+}
+
+#horizon {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 140px;
+  background-color: transparent;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+#horizon .glow {
+  position: absolute;
+  bottom: -100px;
+  left: -20%;
+  width: 140%;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(34, 211, 238, 0.45) 0%, rgba(14, 165, 233, 0.18) 50%, transparent 75%);
+  filter: blur(28px);
+  pointer-events: none;
+}
+
+#earth {
+  position: absolute;
+  bottom: -460px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(14, 165, 233, 0.28) 0%, rgba(2, 6, 23, 0.95) 70%, #020617 100%);
+  box-shadow: inset 0 0 60px rgba(34, 211, 238, 0.4), 0 -20px 80px rgba(6, 182, 212, 0.35);
+  pointer-events: none;
+}
+
+#title {
+  position: absolute;
+  top: 25%;
+  left: 0;
+  right: 0;
+  color: #FFF;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: clamp(24px, 4.5vw, 44px);
+  letter-spacing: 20px;
+  padding-left: 20px;
+  animation: animGravity 8s cubic-bezier(0.19, 1, 0.22, 1) var(--animation-iteration);
+  pointer-events: none;
+  z-index: 1;
+}
+
+#subtitle {
+  position: absolute;
+  top: 38%;
+  left: 0;
+  right: 0;
+  color: #38bdf8;
+  text-align: center;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: clamp(12px, 2vw, 16px);
+  letter-spacing: 8px;
+  padding-left: 8px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.subtitle-part-1 {
+  animation: animDont 8s cubic-bezier(0.19, 1, 0.22, 1) var(--animation-iteration);
+  display: inline-block;
+}
+
+.subtitle-part-2 {
+  animation: animLet 8s cubic-bezier(0.19, 1, 0.22, 1) var(--animation-iteration);
+  display: inline-block;
+}
+
+.subtitle-part-3 {
+  animation: animGo 8s cubic-bezier(0.19, 1, 0.22, 1) var(--animation-iteration);
+  display: inline-block;
+}
