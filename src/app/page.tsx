@@ -2,7 +2,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getAllStates } from '@/lib/data'
-import type { StateData } from '@/lib/types'
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/seo'
 import { HomeSearch } from '@/components/sections/HomeSearch'
 import { blogArticles } from '@/data/blog-articles'
@@ -10,9 +9,24 @@ import { AdTop, AdInContent } from '@/components/ui/AdSense'
 import { FadeIn } from '@/components/ui/FadeIn'
 import dynamic from 'next/dynamic'
 
-import { Search, FileText, ShieldAlert, Droplets, Activity, Beaker, AlertTriangle } from 'lucide-react'
+import {
+  Search,
+  FileText,
+  ShieldAlert,
+  Droplets,
+  Activity,
+  Beaker,
+  AlertTriangle,
+  Database,
+  MapPin,
+  CheckCircle2,
+  ArrowRight,
+  ShieldCheck,
+  Sparkles,
+  Filter,
+} from 'lucide-react'
 
-// Dynamic client load for Cosmic Parallax Background
+// Dynamic client load for Cosmic Parallax Background (pure starfield & earth horizon)
 const CosmicParallaxBg = dynamic(
   () => import('@/components/ui/parallax-cosmic-background').then((mod) => mod.CosmicParallaxBg),
   {
@@ -20,8 +34,6 @@ const CosmicParallaxBg = dynamic(
     loading: () => <div className="absolute inset-0 bg-[#030712]" />,
   }
 )
-
-
 
 export const runtime = 'edge'
 export const revalidate = 86400
@@ -45,7 +57,7 @@ const POPULAR_CITIES = [
   { city: 'Jacksonville', state: 'FL', zip: '32099' },
   { city: 'Austin', state: 'TX', zip: '78701' },
   { city: 'Columbus', state: 'OH', zip: '43201' },
-  // High-demand GSC impression earners — PageRank boost to climb from position 8.7 to top 3
+  // High-demand GSC impression earners
   { city: 'Maize', state: 'KS', zip: '67101' },
   { city: 'Franklinton', state: 'NC', zip: '27525' },
   { city: 'Chesterton', state: 'IN', zip: '46304' },
@@ -75,8 +87,8 @@ const US_STATES_GRID = [
 export default async function HomePage() {
   const allStates = await getAllStates()
 
-  // National stats
-  const totalZips = 41344 // pre-computed from master dataset
+  // National stats pre-computed from master EPA dataset
+  const totalZips = 41344
   const stateList = Object.values(allStates)
   const totalViolations = stateList.reduce((s: number, st) => s + st.health_violations, 0)
   const highLeadAvg = stateList.length
@@ -85,175 +97,193 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* ── Hero ── */}
+      {/* ── Hero Section (Pure Cosmic Parallax Starfield & Earth Horizon) ── */}
       <section className="relative overflow-hidden bg-[#030712] text-white min-h-[660px] sm:min-h-[720px] flex items-center justify-center">
-        {/* Cosmic Parallax Starfield & Glowing Earth Horizon */}
+        {/* Exact Cosmic Parallax Starfield & Glowing Earth Horizon — No washing gradient */}
         <CosmicParallaxBg loop={true} className="z-0 pointer-events-none" />
 
-        {/* Soft top gradient for header clarity */}
-        <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-black/25 to-transparent z-[1] pointer-events-none"></div>
+        {/* Soft top gradient for header clarity only */}
+        <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-black/40 to-transparent z-[1] pointer-events-none" />
 
-        {/* Ultra-Smooth Seamless Bottom Gradient Fade into White Stats Section */}
-        <div className="absolute bottom-0 inset-x-0 h-28 sm:h-36 bg-gradient-to-t from-white via-white/80 to-transparent z-[2] pointer-events-none"></div>
-
-
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-28 pb-32 sm:pb-36 text-center pointer-events-auto">
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-28 pb-28 sm:pb-36 text-center pointer-events-auto">
           <FadeIn direction="up" priority>
-            <div className="inline-flex items-center gap-2 bg-black/50 backdrop-blur-md border border-white/20 rounded-full px-5 py-2 text-sm font-medium mb-8 shadow-2xl">
-              <span className="w-2.5 h-2.5 bg-cyan-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
-              Free EPA Data — Updated {new Date().getFullYear()}
+            <div className="inline-flex items-center gap-2.5 bg-slate-900/80 backdrop-blur-md border border-cyan-500/30 rounded-full px-5 py-2 text-xs sm:text-sm font-semibold mb-8 shadow-[0_0_24px_rgba(6,182,212,0.25)] text-cyan-200">
+              <span className="w-2.5 h-2.5 bg-cyan-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,211,238,0.9)]" />
+              Official EPA SDWIS Database &bull; Updated {new Date().getFullYear()} Records
             </div>
           </FadeIn>
 
           <FadeIn direction="up" priority>
-            <h1 className="text-white text-4xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tight drop-shadow-xl">
+            <h1 className="text-white text-4xl sm:text-6xl lg:text-7xl font-black mb-6 leading-tight tracking-tight drop-shadow-2xl">
               Is Your Tap Water<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-200 to-blue-400 drop-shadow-md">Safe to Drink?</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-200 to-blue-400 drop-shadow-[0_2px_14px_rgba(34,211,238,0.5)]">
+                Safe to Drink?
+              </span>
             </h1>
           </FadeIn>
 
           <FadeIn direction="up" priority>
-            <p className="text-lg sm:text-xl text-gray-100 mb-10 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
+            <p className="text-base sm:text-xl text-slate-200 mb-10 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
               Search 41,000+ U.S. ZIP codes for lead levels, water quality grades,
-              violations, and contaminant data — powered by official EPA records.
+              EPA violations, and contaminant data — 100% free and independent.
             </p>
           </FadeIn>
 
-          <FadeIn direction="up" delay={0.3}>
+          <FadeIn direction="up" delay={0.2}>
             <div className="relative z-10 max-w-3xl mx-auto">
               <HomeSearch />
             </div>
-            <div className="mt-6 flex justify-center">
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-xs sm:text-sm text-gray-100 font-medium shadow-xl">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                No sign-up required &bull; 100% Free &bull; Data from EPA SDWIS & Consumer Confidence Reports
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-xs sm:text-sm text-slate-300 font-medium">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/70 border border-white/10 backdrop-blur-md">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> Free Forever
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/70 border border-white/10 backdrop-blur-md">
+                <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" /> 41,000+ ZIPs Covered
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900/70 border border-white/10 backdrop-blur-md">
+                <CheckCircle2 className="w-3.5 h-3.5 text-blue-400" /> Official EPA Data
               </span>
             </div>
           </FadeIn>
         </div>
       </section>
 
-      {/* ── National Stats with Smooth Top & Bottom Blends ── */}
-      <section className="relative bg-gradient-to-b from-white via-white to-sky-50/50 border-b border-sky-100/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
-            <div>
-              <p className="text-3xl font-black text-brand-700">{totalZips.toLocaleString()}+</p>
-              <p className="text-sm text-gray-500 mt-1 font-medium">ZIP Codes Covered</p>
+      {/* ── National Stats (Clean Elevated Island) ── */}
+      <section className="relative z-20 -mt-10 sm:-mt-14 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Database Size</span>
+              <div className="w-10 h-10 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <Database className="w-5 h-5" />
+              </div>
             </div>
-            <div>
-              <p className="text-3xl font-black text-brand-700">50</p>
-              <p className="text-sm text-gray-500 mt-1 font-medium">States + DC</p>
+            <p className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">{totalZips.toLocaleString()}+</p>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1 font-medium">U.S. ZIP Codes Covered</p>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Nationwide Reach</span>
+              <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <MapPin className="w-5 h-5" />
+              </div>
             </div>
-            <div>
-              <p className="text-3xl font-black text-orange-600">{(totalViolations / 1000).toFixed(0)}K+</p>
-              <p className="text-sm text-gray-500 mt-1 font-medium">Health Violations Found</p>
+            <p className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">50 States + DC</p>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1 font-medium">All 50 States & Territories</p>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">EPA Compliance</span>
+              <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <AlertTriangle className="w-5 h-5" />
+              </div>
             </div>
-            <div>
-              <p className="text-3xl font-black text-red-600">{highLeadAvg}%</p>
-              <p className="text-sm text-gray-500 mt-1 font-medium">High Lead Risk ZIPs</p>
+            <p className="text-3xl sm:text-4xl font-black text-amber-600 tracking-tight">{(totalViolations / 1000).toFixed(0)}K+</p>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1 font-medium">Health Violations Documented</p>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Water Safety Risk</span>
+              <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <ShieldAlert className="w-5 h-5" />
+              </div>
             </div>
+            <p className="text-3xl sm:text-4xl font-black text-rose-600 tracking-tight">{highLeadAvg}%</p>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1 font-medium">High Lead Risk ZIPs</p>
           </div>
         </div>
       </section>
 
-      <div className="bg-gradient-to-b from-sky-50/50 via-white to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <AdTop />
 
-        {/* ── How It Works ── */}
+        {/* ── How It Works (Fresh Rebuilt 3-Step Process) ── */}
         <section className="mb-20">
           <FadeIn>
-            <h2 className="text-3xl sm:text-4xl font-black text-center text-brand-900 mb-4 tracking-tight">How WaterSafeCheck Works</h2>
-            <p className="text-center text-gray-500 mb-12 max-w-2xl mx-auto text-lg">
-              We aggregate official EPA data into clear, actionable water quality reports for every ZIP code in America.
-            </p>
+            <div className="text-center max-w-2xl mx-auto mb-12">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-cyan-700 bg-cyan-50 border border-cyan-200 mb-3">
+                <Sparkles className="w-3.5 h-3.5 text-cyan-500" /> Transparent & Fast
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-3">
+                How WaterSafeCheck Works
+              </h2>
+              <p className="text-slate-500 text-base sm:text-lg">
+                Official EPA compliance data transformed into instant, plain-English drinking water grades for your household.
+              </p>
+            </div>
           </FadeIn>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {[
               {
-                step: '1',
-                icon: <Search className="w-10 h-10 text-brand-600" />,
-                title: 'Enter Your ZIP Code',
-                desc: 'Type in any U.S. ZIP code to instantly access water quality data for your exact service area.',
+                step: 'Step 01',
+                icon: <Search className="w-7 h-7 text-cyan-600" />,
+                title: 'Enter Any US ZIP Code',
+                desc: 'Type your 5-digit ZIP code or city name to immediately query local municipal utility compliance records.',
+                bg: 'bg-cyan-50',
+                border: 'border-cyan-100',
               },
               {
-                step: '2',
-                icon: <FileText className="w-10 h-10 text-brand-600" />,
-                title: 'View Your Water Report',
-                desc: 'See your water safety grade (A–F), lead levels in ppb, health violations, contaminants detected, and more — all from official EPA sources.',
+                step: 'Step 02',
+                icon: <FileText className="w-7 h-7 text-blue-600" />,
+                title: 'Instant EPA Health Grade',
+                desc: 'See your water safety rating (A through F), lead levels in ppb, recent violations, and detected contaminants.',
+                bg: 'bg-blue-50',
+                border: 'border-blue-100',
               },
               {
-                step: '3',
-                icon: <ShieldAlert className="w-10 h-10 text-brand-600" />,
-                title: 'Take Action if Needed',
-                desc: 'Get tailored recommendations based on your specific water data, including filter suggestions, utility contacts, and health resources.',
+                step: 'Step 03',
+                icon: <ShieldCheck className="w-7 h-7 text-emerald-600" />,
+                title: 'Tailored Filter Guidance',
+                desc: 'Find NSF-53, NSF-58, and carbon filters certified to remove the specific chemical contaminants found in your tap.',
+                bg: 'bg-emerald-50',
+                border: 'border-emerald-100',
               },
             ].map((item, index) => (
               <FadeIn key={item.step} delay={index * 0.15}>
-                <div className="card-hover h-full flex flex-col relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 p-4 opacity-5 font-black text-8xl text-brand-900 pointer-events-none transition-transform group-hover:scale-110 group-hover:-translate-y-2 group-hover:translate-x-2">
-                    {item.step}
+                <div className="h-full bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-8 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col group relative overflow-hidden">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className={`w-14 h-14 rounded-2xl ${item.bg} flex items-center justify-center border ${item.border} group-hover:scale-110 transition-transform duration-300`}>
+                      {item.icon}
+                    </div>
+                    <span className="text-xs font-black uppercase tracking-wider text-slate-400 bg-slate-50 px-3 py-1 rounded-full border border-slate-100">
+                      {item.step}
+                    </span>
                   </div>
-                  <div className="w-16 h-16 rounded-2xl bg-brand-50 flex items-center justify-center mb-6 shadow-sm border border-brand-100 group-hover:scale-110 transition-transform duration-300">
-                    {item.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
-                  <p className="text-gray-500 leading-relaxed">{item.desc}</p>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">{item.title}</h3>
+                  <p className="text-slate-600 leading-relaxed text-sm sm:text-base flex-1">{item.desc}</p>
                 </div>
               </FadeIn>
             ))}
           </div>
         </section>
 
-        {/* ── Why Water Quality Matters ── */}
+        {/* ── Interactive Water Filter Quiz Callout ── */}
         <section className="mb-20">
           <FadeIn>
-            <div className="card bg-gradient-to-br from-brand-50 to-white border-brand-100 overflow-hidden relative">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-water-300/10 blur-3xl rounded-full"></div>
-              <div className="relative z-10 max-w-4xl mx-auto">
-                <h2 className="text-3xl font-black text-gray-900 mb-8 tracking-tight">Why Check Your Tap Water?</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-gray-600">
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0 mt-1">
-                      <Droplets className="w-6 h-6 text-brand-500" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-gray-900 mb-2 text-lg">Lead Contamination</h4>
-                      <p className="leading-relaxed">The EPA estimates that 10–20% of human lead exposure comes from drinking water. Lead has no safe exposure level for children and can cause irreversible neurological damage.</p>
-                    </div>
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white p-8 sm:p-12 shadow-2xl border border-slate-700/60">
+              <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+                <div className="max-w-2xl">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-xs font-semibold uppercase tracking-wider mb-4">
+                    <Filter className="w-3.5 h-3.5" /> Interactive Filter Recommendation Tool
                   </div>
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0 mt-1">
-                      <Beaker className="w-6 h-6 text-brand-500" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-gray-900 mb-2 text-lg">PFAS "Forever Chemicals"</h4>
-                      <p className="leading-relaxed">PFAS chemicals have been detected in water supplies serving millions. The EPA issued its first federal PFAS MCLs in 2024, setting limits at 4 parts per trillion.</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0 mt-1">
-                      <Activity className="w-6 h-6 text-brand-500" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-gray-900 mb-2 text-lg">Disinfection Byproducts</h4>
-                      <p className="leading-relaxed">When chlorine reacts with organic matter, it forms compounds (TTHMs and HAA5s) linked to increased cancer risk with long-term exposure.</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0 mt-1">
-                      <AlertTriangle className="w-6 h-6 text-brand-500" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-gray-900 mb-2 text-lg">Aging Infrastructure</h4>
-                      <p className="leading-relaxed">Over 6 million lead service lines still deliver water to homes. The EPA's Lead and Copper Rule requires utilities to identify and replace these pipes, but it will take years.</p>
-                    </div>
-                  </div>
+                  <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight mb-3">
+                    Not Sure Which Water Filter Actually Removes Your Contaminants?
+                  </h3>
+                  <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+                    Take our 60-second Water Filter Recommendation Quiz. Match your home plumbing, budget, and local EPA contaminants to certified NSF-53 and NSF-58 filters.
+                  </p>
                 </div>
-                <div className="mt-10">
-                  <Link href="/water-quality-guide" className="btn-primary inline-flex">
-                    Read the Complete Water Safety Guide →
+                <div className="flex-shrink-0">
+                  <Link
+                    href="/water-quality-guide"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 font-bold text-base shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 transition-all duration-300 whitespace-nowrap"
+                  >
+                    Explore Water Filter Guide <ArrowRight className="w-5 h-5" />
                   </Link>
                 </div>
               </div>
@@ -261,79 +291,170 @@ export default async function HomePage() {
           </FadeIn>
         </section>
 
+        {/* ── Why Water Quality Matters (Fresh Rebuilt Contaminant Grid) ── */}
+        <section className="mb-20">
+          <FadeIn>
+            <div className="text-center max-w-2xl mx-auto mb-12">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-rose-700 bg-rose-50 border border-rose-200 mb-3">
+                <AlertTriangle className="w-3.5 h-3.5 text-rose-500" /> Health & Protection
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-3">
+                Why Check Your Tap Water?
+              </h2>
+              <p className="text-slate-500 text-base sm:text-lg">
+                Even water that looks clear can carry invisible chemical contaminants that exceed independent health guidelines.
+              </p>
+            </div>
+          </FadeIn>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm hover:shadow-md transition-all flex flex-col">
+              <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
+                <Droplets className="w-6 h-6" />
+              </div>
+              <div className="flex items-center gap-2 mb-2">
+                <h4 className="font-bold text-slate-900 text-lg">Lead Contamination</h4>
+                <span className="text-[10px] font-bold uppercase bg-amber-100 text-amber-800 px-2 py-0.5 rounded">0 ppb Goal</span>
+              </div>
+              <p className="text-slate-600 text-sm leading-relaxed flex-1">
+                The EPA estimates 10–20% of human lead exposure comes from tap water. Lead has no safe exposure level for children and causes irreversible neurological damage.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm hover:shadow-md transition-all flex flex-col">
+              <div className="w-12 h-12 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center mb-4">
+                <Beaker className="w-6 h-6" />
+              </div>
+              <div className="flex items-center gap-2 mb-2">
+                <h4 className="font-bold text-slate-900 text-lg">PFAS Chemicals</h4>
+                <span className="text-[10px] font-bold uppercase bg-cyan-100 text-cyan-800 px-2 py-0.5 rounded">4 ppt Limit</span>
+              </div>
+              <p className="text-slate-600 text-sm leading-relaxed flex-1">
+                "Forever chemicals" bioaccumulate in human blood and tissues. In 2024, the EPA finalized legally enforceable national limits for 5 individual PFAS compounds.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm hover:shadow-md transition-all flex flex-col">
+              <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4">
+                <Activity className="w-6 h-6" />
+              </div>
+              <div className="flex items-center gap-2 mb-2">
+                <h4 className="font-bold text-slate-900 text-lg">Disinfection Byproducts</h4>
+                <span className="text-[10px] font-bold uppercase bg-blue-100 text-blue-800 px-2 py-0.5 rounded">TTHMs / HAA5</span>
+              </div>
+              <p className="text-slate-600 text-sm leading-relaxed flex-1">
+                Formed when chlorine disinfectant reacts with natural organic matter. Chronic exposure to elevated TTHMs is linked to bladder and colorectal health risks.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm hover:shadow-md transition-all flex flex-col">
+              <div className="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center mb-4">
+                <AlertTriangle className="w-6 h-6" />
+              </div>
+              <div className="flex items-center gap-2 mb-2">
+                <h4 className="font-bold text-slate-900 text-lg">Aging Infrastructure</h4>
+                <span className="text-[10px] font-bold uppercase bg-rose-100 text-rose-800 px-2 py-0.5 rounded">9.2M Pipes</span>
+              </div>
+              <p className="text-slate-600 text-sm leading-relaxed flex-1">
+                Over 9 million lead service lines still connect American homes to city mains. Utilities are replacing them, but complete remediation will take decades.
+              </p>
+            </div>
+          </div>
+        </section>
+
         <AdInContent />
 
-        {/* ── Popular Cities ── */}
-        <section className="mb-14">
-          <h2 className="text-2xl font-bold text-gray-900 mb-1">Popular City Water Reports</h2>
-          <p className="text-sm text-gray-500 mb-6">Check water quality for major U.S. cities</p>
+        {/* ── Trending Water Quality Reports (GSC High Demand) ── */}
+        <section className="mb-16">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                <h2 className="text-2xl font-bold text-slate-900">Trending Water Quality Reports</h2>
+              </div>
+              <p className="text-sm text-slate-500">Frequently searched municipal utilities and active compliance checks</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+            {[
+              { zip: '65041', name: 'Holts Summit, MO', note: 'EPA SDWIS Report', grade: 'B' },
+              { zip: '04064', name: 'Old Orchard Beach, ME', note: 'Water Quality Analysis', grade: 'A' },
+              { zip: '90210', name: 'Beverly Hills, CA', note: 'Safety Grade & Lead', grade: 'B' },
+              { zip: '10001', name: 'New York, NY', note: 'Fluoride & Hardness', grade: 'B' },
+            ].map(item => (
+              <Link
+                key={item.zip}
+                href={`/zip/${item.zip}`}
+                className="group block bg-white border border-slate-200/80 hover:border-cyan-400 p-4 rounded-xl shadow-xs hover:shadow-md transition-all"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-black text-slate-900 text-base group-hover:text-cyan-600 transition-colors">
+                    ZIP {item.zip}
+                  </span>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                    Grade {item.grade}
+                  </span>
+                </div>
+                <p className="text-xs font-semibold text-slate-700 truncate">
+                  {item.name}
+                </p>
+                <p className="text-[11px] text-cyan-600 mt-2 font-medium flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                  View report <ArrowRight className="w-3 h-3" />
+                </p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Popular City Water Reports ── */}
+        <section className="mb-16">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900 mb-1">Popular City Water Quality Reports</h2>
+              <p className="text-sm text-slate-500">Explore tap water quality data across major U.S. metropolitan areas</p>
+            </div>
+          </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {POPULAR_CITIES.map(({ city, state, zip }) => (
               <Link
                 key={zip}
                 href={`/city/${city.toLowerCase().replace(/\s+/g, '-')}-${state.toLowerCase()}`}
-                className="card-hover group block"
+                className="group block bg-white border border-slate-200/80 hover:border-blue-400 p-3.5 rounded-xl shadow-xs hover:shadow-md transition-all"
               >
-                <p className="font-semibold text-sm text-gray-800 group-hover:text-brand-700 transition-colors">
+                <p className="font-semibold text-sm text-slate-800 group-hover:text-blue-600 transition-colors">
                   {city}, {state}
                 </p>
-                <p className="text-xs text-gray-400 mt-0.5">View water quality →</p>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        {/* ── Trending Water Quality Reports (GSC High Demand) ── */}
-        <section className="mb-14">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            <h2 className="text-2xl font-bold text-gray-900">Trending Water Quality Reports</h2>
-          </div>
-          <p className="text-sm text-gray-500 mb-6">Frequently checked local water reports and active compliance searches</p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {[
-              { zip: '65041', name: 'Holts Summit, MO', note: 'EPA SDWIS Report' },
-              { zip: '04064', name: 'Old Orchard Beach, ME', note: 'Water Quality Analysis' },
-              { zip: '90210', name: 'Beverly Hills, CA', note: 'Safety Grade & Lead' },
-              { zip: '10001', name: 'New York, NY', note: 'Fluoride & Hardness' },
-            ].map(item => (
-              <Link
-                key={item.zip}
-                href={`/zip/${item.zip}`}
-                className="card-hover group block bg-white border border-gray-100 hover:border-brand-300 p-4 rounded-xl shadow-xs"
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="font-black text-brand-700 text-base">ZIP {item.zip}</span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">Active</span>
-                </div>
-                <p className="text-xs font-semibold text-gray-800 group-hover:text-brand-700 transition-colors truncate">
-                  {item.name}
+                <p className="text-xs text-slate-400 mt-0.5 flex items-center justify-between">
+                  <span>ZIP {zip}</span>
+                  <span className="text-blue-600 font-medium group-hover:translate-x-0.5 transition-transform">View →</span>
                 </p>
-                <p className="text-[11px] text-gray-400 mt-1">{item.note} →</p>
               </Link>
             ))}
           </div>
         </section>
 
-        {/* ── Browse by State ── */}
-        <section className="mb-14">
-          <h2 className="text-2xl font-bold text-gray-900 mb-1">Browse Water Quality by State</h2>
-          <p className="text-sm text-gray-500 mb-6">View all ZIP codes and city reports for any U.S. state</p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+        {/* ── Browse Water Quality by State ── */}
+        <section className="mb-16">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-slate-900 mb-1">Browse Water Quality by State</h2>
+            <p className="text-sm text-slate-500">Statewide compliance data, average water safety scores, and city directories</p>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-2.5">
             {US_STATES_GRID.map(([name, code]) => {
               const st = allStates[code.toUpperCase()]
               return (
                 <Link
                   key={code}
                   href={`/state/${code}`}
-                  className="flex items-center justify-between px-3 py-2.5 rounded-lg border border-gray-100 hover:border-brand-200 hover:bg-brand-50 transition-all group"
+                  className="flex items-center justify-between px-3 py-2.5 rounded-xl border border-slate-200/80 bg-white hover:border-cyan-300 hover:bg-cyan-50/50 transition-all group"
                 >
-                  <span className="text-sm text-gray-700 group-hover:text-brand-700 font-medium">{name}</span>
+                  <span className="text-xs sm:text-sm text-slate-700 group-hover:text-cyan-700 font-medium truncate">{name}</span>
                   {st && (
-                    <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${
-                      st.avg_score && st.avg_score >= 75 ? 'text-green-700 bg-green-50' :
-                      st.avg_score && st.avg_score >= 60 ? 'text-blue-700 bg-blue-50' :
-                      'text-orange-700 bg-orange-50'
+                    <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ml-1.5 flex-shrink-0 ${
+                      st.avg_score && st.avg_score >= 75 ? 'text-emerald-700 bg-emerald-50 border border-emerald-200' :
+                      st.avg_score && st.avg_score >= 60 ? 'text-blue-700 bg-blue-50 border border-blue-200' :
+                      'text-amber-700 bg-amber-50 border border-amber-200'
                     }`}>
                       {st.avg_score ? `${st.avg_score}` : '—'}
                     </span>
@@ -344,69 +465,86 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* ── Blog / Latest Articles ── */}
-        <section className="mb-14">
-          <div className="flex items-center justify-between mb-5">
+        {/* ── Latest Water Safety Articles ── */}
+        <section className="mb-16">
+          <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-1">Water Safety Articles</h2>
-              <p className="text-sm text-gray-500">Plain-English guides on tap water safety, filters, and EPA data</p>
+              <h2 className="text-2xl font-bold text-slate-900 mb-1">Water Safety Editorial & Guides</h2>
+              <p className="text-sm text-slate-500">Expert research on tap contaminants, water filters, and EPA drinking standards</p>
             </div>
-            <Link href="/blog" className="text-sm text-brand-700 hover:underline font-medium hidden sm:block">
-              View all articles →
+            <Link href="/blog" className="text-sm text-cyan-600 hover:text-cyan-700 font-semibold hidden sm:flex items-center gap-1">
+              View all articles <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {blogArticles.slice(0, 3).map(article => (
-              <Link key={article.slug} href={`/blog/${article.slug}`} className="card-hover group block">
-                <p className="text-xs text-brand-600 font-semibold mb-1.5">{article.category}</p>
-                <h3 className="text-sm font-bold text-gray-800 group-hover:text-brand-700 transition-colors leading-snug mb-2 line-clamp-2">
+              <Link key={article.slug} href={`/blog/${article.slug}`} className="group block bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all flex flex-col">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-bold uppercase tracking-wider text-cyan-700 bg-cyan-50 px-2.5 py-1 rounded-full border border-cyan-100">
+                    {article.category}
+                  </span>
+                  <span className="text-xs text-slate-400 font-medium">{article.readTime}</span>
+                </div>
+                <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-cyan-600 transition-colors leading-snug mb-2 line-clamp-2">
                   {article.title}
                 </h3>
-                <p className="text-xs text-gray-500 leading-relaxed line-clamp-2 mb-3">
-                  {article.intro.slice(0, 120)}...
+                <p className="text-xs sm:text-sm text-slate-500 leading-relaxed line-clamp-3 mb-4 flex-1">
+                  {article.intro}
                 </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-400">{article.readTime}</span>
-                  <span className="text-xs text-brand-600 font-semibold">Read →</span>
+                <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-xs font-medium text-slate-500">Sahajul Haque</span>
+                  <span className="text-xs font-bold text-cyan-600 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                    Read article →
+                  </span>
                 </div>
               </Link>
             ))}
           </div>
-          <div className="mt-4 text-center sm:hidden">
-            <Link href="/blog" className="text-sm text-brand-700 hover:underline font-medium">
-              View all articles →
+          <div className="mt-6 text-center sm:hidden">
+            <Link href="/blog" className="inline-flex items-center gap-1 text-sm text-cyan-600 font-semibold">
+              View all articles <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </section>
 
-        {/* ── Data Source Trust ── */}
-        <section className="bg-gray-50 rounded-2xl p-8 mb-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-4 text-center">Trusted Data Sources</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center text-sm">
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-3xl">🏛</span>
-              <p className="font-semibold text-gray-800">EPA SDWIS</p>
-              <p className="text-gray-500">Safe Drinking Water Information System — the EPA's official compliance database for 150,000+ public water systems</p>
+        {/* ── Trusted Data Sources (E-E-A-T Transparency) ── */}
+        <section className="bg-slate-50 rounded-3xl p-8 sm:p-12 mb-8 border border-slate-200/60">
+          <div className="text-center max-w-2xl mx-auto mb-8">
+            <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight mb-2">
+              Authoritative Federal Data Sources
+            </h2>
+            <p className="text-slate-500 text-sm">
+              WaterSafeCheck compiles official U.S. government monitoring databases to give you verifiable water quality data.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-xs">
+              <span className="text-3xl block mb-2">🏛</span>
+              <p className="font-bold text-slate-900 mb-1">EPA SDWIS Database</p>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Safe Drinking Water Information System — the official regulatory tracking database for 150,000+ public water systems nationwide.
+              </p>
             </div>
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-3xl">📋</span>
-              <p className="font-semibold text-gray-800">Consumer Confidence Reports</p>
-              <p className="text-gray-500">Annual water quality reports that utilities are legally required to publish, containing actual contaminant measurements</p>
+            <div className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-xs">
+              <span className="text-3xl block mb-2">📋</span>
+              <p className="font-bold text-slate-900 mb-1">Consumer Confidence Reports</p>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Mandatory annual utility testing data published under 40 CFR § 141.151, detailing precise contaminant measurements.
+              </p>
             </div>
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-3xl">🔬</span>
-              <p className="font-semibold text-gray-800">EPA UCMR5 Monitoring</p>
-              <p className="text-gray-500">The EPA's 5th Unregulated Contaminant Monitoring Rule — the most comprehensive PFAS screening of U.S. water systems ever conducted</p>
+            <div className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-xs">
+              <span className="text-3xl block mb-2">🔬</span>
+              <p className="font-bold text-slate-900 mb-1">EPA UCMR 5 Protocol</p>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                The EPA's 5th Unregulated Contaminant Monitoring Rule — testing 29 PFAS chemicals and lithium across U.S. water supplies.
+              </p>
             </div>
           </div>
-          <p className="text-xs text-gray-400 text-center mt-6">
-            All data is sourced from public U.S. government databases. WaterSafeCheck does not conduct independent water testing.
-            Data reflects monitoring records and may not reflect current real-time conditions.
+          <p className="text-xs text-slate-400 text-center mt-6 max-w-3xl mx-auto leading-relaxed">
+            All data is sourced directly from public U.S. EPA databases and certified municipal water suppliers. WaterSafeCheck operates as an independent public education resource and does not perform laboratory testing.
           </p>
         </section>
       </div>
-    </div>
     </>
   )
 }
-
