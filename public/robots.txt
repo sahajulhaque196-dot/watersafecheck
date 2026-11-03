@@ -1,4 +1,19 @@
+# robots.txt for WaterSafeCheck.com
+# https://watersafecheck.com
+
 User-agent: *
+Allow: /
+Disallow: /api/
+
+# Explicitly allow Google AdSense crawler (MANDATORY for AdSense approval & verification)
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: Google-Display-Ads-Bot
+Allow: /
+
+# Standard Search & AI Crawlers
+User-agent: Googlebot
 Allow: /
 Disallow: /api/
 
@@ -26,7 +41,6 @@ User-agent: Google-Extended
 Allow: /
 Disallow: /api/
 
+# Sitemaps
 Sitemap: https://watersafecheck.com/sitemap-index.xml
 Host: watersafecheck.com
-
-

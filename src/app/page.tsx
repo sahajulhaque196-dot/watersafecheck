@@ -24,6 +24,7 @@ import {
   ShieldCheck,
   Sparkles,
   Filter,
+  HelpCircle,
 } from 'lucide-react'
 
 // Dynamic client load for Cosmic Parallax Background (pure starfield & earth horizon)
@@ -477,7 +478,7 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogArticles.slice(0, 3).map(article => (
+            {blogArticles.slice(0, 6).map(article => (
               <Link key={article.slug} href={`/blog/${article.slug}`} className="group block bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all flex flex-col">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-bold uppercase tracking-wider text-cyan-700 bg-cyan-50 px-2.5 py-1 rounded-full border border-cyan-100">
@@ -507,6 +508,63 @@ export default async function HomePage() {
           </div>
         </section>
 
+        
+        {/* ── Homepage Drinking Water Safety FAQs (E-E-A-T & AdSense Quality) ── */}
+        <section className="mb-16">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 mb-3">
+              <HelpCircle className="w-3.5 h-3.5 text-blue-500" /> Consumer Knowledge
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mb-2">
+              Frequently Asked Questions About U.S. Tap Water
+            </h2>
+            <p className="text-slate-500 text-sm sm:text-base">
+              Clear, science-backed answers to the most common questions regarding municipal drinking water compliance, lead hazards, and filtration.
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto space-y-4">
+            <details className="group bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs transition-all [&_summary::-webkit-details-marker]:hidden" open>
+              <summary className="flex items-center justify-between cursor-pointer font-bold text-slate-900 text-base sm:text-lg">
+                <span>How does WaterSafeCheck calculate drinking water safety grades?</span>
+                <span className="ml-4 flex-shrink-0 text-cyan-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="mt-4 pt-3 border-t border-slate-100 text-slate-600 text-sm sm:text-base leading-relaxed">
+                WaterSafeCheck evaluates public utility records from the EPA Safe Drinking Water Information System (SDWIS) over a rolling 5-year monitoring cycle. Our proprietary composite score (0–100) and letter grades (A through F) weight health-based Maximum Contaminant Level (MCL) violations, Lead and Copper Rule 90th percentile samples, public notification delays, and unregulated contaminant screenings (UCMR 5).
+              </div>
+            </details>
+
+            <details className="group bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs transition-all [&_summary::-webkit-details-marker]:hidden">
+              <summary className="flex items-center justify-between cursor-pointer font-bold text-slate-900 text-base sm:text-lg">
+                <span>Does clear tap water mean it is free from contaminants?</span>
+                <span className="ml-4 flex-shrink-0 text-cyan-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="mt-4 pt-3 border-t border-slate-100 text-slate-600 text-sm sm:text-base leading-relaxed">
+                No. The most dangerous drinking water contaminants — including dissolved lead, arsenic, nitrate, and per- and polyfluoroalkyl substances (PFAS &quot;forever chemicals&quot;) — are completely odorless, colorless, and tasteless. Water that looks crystal clear can still exceed federal action limits. Regular testing and checking municipal compliance records is the only way to verify safety.
+              </div>
+            </details>
+
+            <details className="group bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs transition-all [&_summary::-webkit-details-marker]:hidden">
+              <summary className="flex items-center justify-between cursor-pointer font-bold text-slate-900 text-base sm:text-lg">
+                <span>Do standard pitcher filters remove lead and PFAS?</span>
+                <span className="ml-4 flex-shrink-0 text-cyan-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="mt-4 pt-3 border-t border-slate-100 text-slate-600 text-sm sm:text-base leading-relaxed">
+                Most basic pour-through pitcher filters are only certified under NSF/ANSI 42 for aesthetic chlorine taste and odor reduction. They do <strong>not</strong> reliably eliminate dissolved lead or PFAS unless they hold specific NSF/ANSI 53 (health effects) or NSF/ANSI 58 (reverse osmosis) certifications. Always verify the exact NSF standard on the filter packaging before purchase.
+              </div>
+            </details>
+
+            <details className="group bg-white border border-slate-200/80 rounded-2xl p-5 shadow-xs transition-all [&_summary::-webkit-details-marker]:hidden">
+              <summary className="flex items-center justify-between cursor-pointer font-bold text-slate-900 text-base sm:text-lg">
+                <span>Where does WaterSafeCheck source its water quality data?</span>
+                <span className="ml-4 flex-shrink-0 text-cyan-600 group-open:rotate-180 transition-transform">▼</span>
+              </summary>
+              <div className="mt-4 pt-3 border-t border-slate-100 text-slate-600 text-sm sm:text-base leading-relaxed">
+                All data is aggregated directly from official, publicly accessible U.S. government sources, including the EPA SDWIS database, EPA Enforcement and Compliance History Online (ECHO), mandatory annual Consumer Confidence Reports (CCRs) filed under 40 CFR § 141.151, and federal UCMR 5 PFAS monitoring studies.
+              </div>
+            </details>
+          </div>
+        </section>
         {/* ── Trusted Data Sources (E-E-A-T Transparency) ── */}
         <section className="bg-slate-50 rounded-3xl p-8 sm:p-12 mb-8 border border-slate-200/60">
           <div className="text-center max-w-2xl mx-auto mb-8">

@@ -112,6 +112,7 @@ export default function BlogPage() {
                   <span>·</span>
                   <span>{article.readTime}</span>
                 </div>
+                <span className="text-xs font-medium text-slate-500">By Sahajul Haque</span>
                 <span className="text-xs text-brand-600 font-semibold group-hover:underline">Read →</span>
               </div>
             </article>

@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { CookieConsent } from '@/components/ui/CookieConsent'
 import { SITE_NAME, SITE_DESCRIPTION, SITE_URL, safeJsonLd } from '@/lib/seo'
 import Script from 'next/script'
 
@@ -185,16 +186,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
 
-        {/* ── Google AdSense ── */}
-        {isAdSenseActive && (
-          <Script
-            id="adsense"
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_PUBLISHER_ID}`}
-            crossOrigin="anonymous"
-            strategy="lazyOnload"
-          />
-        )}
+        {/* Cookie & Privacy Consent Banner (Required for Google AdSense EU/US Compliance) */}
+        <CookieConsent />
       </body>
     </html>
   )
