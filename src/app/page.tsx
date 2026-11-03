@@ -544,6 +544,79 @@ export default async function HomePage() {
             All data is sourced directly from public U.S. EPA databases and certified municipal water suppliers. WaterSafeCheck operates as an independent public education resource and does not perform laboratory testing.
           </p>
         </section>
+        {/* ── Author / Founder E-E-A-T Signature Box ── */}
+        <section className="bg-gradient-to-br from-white via-slate-50 to-cyan-50/30 rounded-3xl p-6 sm:p-10 mb-8 border border-slate-200/80 shadow-sm">
+          <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-start">
+            <div className="relative flex-shrink-0 mx-auto md:mx-0">
+              <img
+                src="/images/sahajul-haque.jpg"
+                alt="Sahajul Haque — Founder & Lead Platform Architect"
+                width={112}
+                height={112}
+                className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover border-2 border-white shadow-lg shadow-slate-200"
+              />
+              <span className="absolute -bottom-2 -right-2 bg-emerald-500 text-white p-1 rounded-full shadow-md" title="Verified Creator & Platform Architect">
+                <ShieldCheck className="w-4 h-4" />
+              </span>
+            </div>
+
+            <div className="flex-1 text-center md:text-left">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                <div>
+                  <div className="flex items-center justify-center md:justify-start gap-2">
+                    <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                      Sahajul Haque
+                    </h3>
+                    <span className="inline-flex items-center text-[10px] font-bold uppercase tracking-wider text-cyan-700 bg-cyan-100/70 border border-cyan-200 px-2 py-0.5 rounded-full">
+                      Founder
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm font-semibold text-cyan-600 mt-0.5">
+                    Founder &amp; Lead Platform Architect &bull; Assam, India
+                  </p>
+                </div>
+
+                <Link
+                  href="/about"
+                  className="inline-flex items-center justify-center gap-1.5 text-xs font-bold text-slate-700 hover:text-cyan-600 bg-white border border-slate-200/80 px-3.5 py-2 rounded-xl shadow-2xs hover:shadow-sm transition-all"
+                >
+                  About the Founder <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                Sahajul Haque engineered WaterSafeCheck to solve a fundamental public health challenge: transforming over 41,000 fragmented, complex U.S. EPA compliance records into instant, plain-English drinking water safety reports. Driven by open-data transparency, he independently maintains WaterSafeCheck as a 100% free public service for American families without paywalls or corporate influence.
+              </p>
+
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5 pt-3 border-t border-slate-200/60">
+                <a
+                  href="https://github.com/sahajulhaque196-dot"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-2xs hover:bg-slate-50 transition-colors"
+                >
+                  <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                  GitHub (@sahajulhaque196-dot)
+                </a>
+                <a
+                  href="https://x.com/saddamh58509953"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-2xs hover:bg-slate-50 transition-colors"
+                >
+                  <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                  Twitter / X (@saddamh58509953)
+                </a>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-2xs hover:bg-slate-50 transition-colors"
+                >
+                  Contact Sahajul &rarr;
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </>
   )
