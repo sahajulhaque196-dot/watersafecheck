@@ -3,13 +3,13 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 export function CookieConsent() {
-  const [show, setShow] = useState(false)
+  const [show, setShow] = useState(true)
 
   useEffect(() => {
     try {
       const consent = localStorage.getItem('watersafe_cookie_consent')
-      if (!consent) {
-        setShow(true)
+      if (consent) {
+        setShow(false)
       }
     } catch {
       // localStorage may fail in private mode

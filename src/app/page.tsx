@@ -2,7 +2,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { getAllStates } from '@/lib/data'
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/lib/seo'
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL, safeJsonLd } from '@/lib/seo'
 import { HomeSearch } from '@/components/sections/HomeSearch'
 import { blogArticles } from '@/data/blog-articles'
 import { AdTop, AdInContent } from '@/components/ui/AdSense'
@@ -85,6 +85,46 @@ const US_STATES_GRID = [
   ['Wisconsin','wi'],['Wyoming','wy'],['District of Columbia','dc'],
 ]
 
+
+const homeFaqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'How does WaterSafeCheck calculate drinking water safety grades?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'WaterSafeCheck evaluates public utility records from the EPA Safe Drinking Water Information System (SDWIS) over a rolling 5-year monitoring cycle. Our proprietary composite score (0–100) and letter grades (A through F) weight health-based Maximum Contaminant Level (MCL) violations, Lead and Copper Rule 90th percentile samples, public notification delays, and unregulated contaminant screenings (UCMR 5).',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Does clear tap water mean it is free from contaminants?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No. The most dangerous drinking water contaminants — including dissolved lead, arsenic, nitrate, and per- and polyfluoroalkyl substances (PFAS forever chemicals) — are completely odorless, colorless, and tasteless. Water that looks crystal clear can still exceed federal action limits. Regular testing and checking municipal compliance records is the only way to verify safety.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Do standard pitcher filters remove lead and PFAS?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Most basic pour-through pitcher filters are only certified under NSF/ANSI 42 for aesthetic chlorine taste and odor reduction. They do not reliably eliminate dissolved lead or PFAS unless they hold specific NSF/ANSI 53 (health effects) or NSF/ANSI 58 (reverse osmosis) certifications. Always verify the exact NSF standard on the filter packaging before purchase.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Where does WaterSafeCheck source its water quality data?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'All data is aggregated directly from official, publicly accessible U.S. government sources, including the EPA SDWIS database, EPA Enforcement and Compliance History Online (ECHO), mandatory annual Consumer Confidence Reports (CCRs) filed under 40 CFR § 141.151, and federal UCMR 5 PFAS monitoring studies.',
+      },
+    },
+  ],
+}
+
 export default async function HomePage() {
   const allStates = await getAllStates()
 
@@ -98,6 +138,10 @@ export default async function HomePage() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(homeFaqSchema) }}
+      />
       {/* ── Hero Section (Pure Cosmic Parallax Starfield & Earth Horizon) ── */}
       <section className="relative overflow-hidden bg-[#030712] text-white min-h-[660px] sm:min-h-[720px] flex items-center justify-center">
         {/* Exact Cosmic Parallax Starfield & Glowing Earth Horizon — No washing gradient */}
