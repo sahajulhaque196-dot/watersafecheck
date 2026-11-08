@@ -123,16 +123,33 @@ export function HomeSearch() {
               if (results.length > 0) setIsDropdownOpen(true)
             }}
             placeholder="Enter ZIP code or City (e.g. 90210, Dallas, Miami)"
-            className="w-full px-4 sm:px-5 py-3 sm:py-4 text-gray-900 text-base sm:text-lg rounded-xl border-0 focus:outline-none focus:ring-4 focus:ring-white/30 shadow-lg placeholder-gray-400 font-medium"
+            className="w-full pl-4 pr-10 sm:pl-5 sm:pr-11 py-3 sm:py-4 text-gray-900 text-base sm:text-lg rounded-xl border-0 focus:outline-none focus:ring-4 focus:ring-brand-400/30 shadow-lg placeholder-gray-400 font-medium transition-all"
             autoComplete="off"
             aria-label="ZIP code or City"
             aria-describedby={error ? 'zip-error' : undefined}
           />
+          {query.length > 0 && (
+            <button
+              type="button"
+              onClick={() => {
+                setQuery('')
+                setResults([])
+                setIsDropdownOpen(false)
+                inputRef.current?.focus()
+              }}
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-gray-200/80 hover:bg-gray-300 text-gray-600 flex items-center justify-center transition-colors active:scale-90"
+              aria-label="Clear search"
+            >
+              <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
+          )}
         </div>
         <button
           type="submit"
           disabled={loading}
-          className="px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-brand-500 to-water-500 hover:from-brand-400 hover:to-water-400 disabled:from-brand-800 disabled:to-brand-800 text-white font-bold text-base sm:text-lg rounded-xl shadow-[0_4px_14px_rgba(45,212,191,0.4)] hover:shadow-[0_6px_20px_rgba(45,212,191,0.6)] transition-all duration-200 whitespace-nowrap flex items-center gap-1.5 sm:gap-2 border border-white/20 flex-shrink-0"
+          className="px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-brand-500 to-water-500 hover:from-brand-400 hover:to-water-400 active:scale-[0.97] disabled:from-brand-800 disabled:to-brand-800 text-white font-bold text-base sm:text-lg rounded-xl shadow-[0_4px_14px_rgba(45,212,191,0.4)] hover:shadow-[0_6px_20px_rgba(45,212,191,0.6)] transition-all duration-200 whitespace-nowrap flex items-center gap-1.5 sm:gap-2 border border-white/20 flex-shrink-0"
           aria-label="Check water quality"
         >
           {loading ? (
@@ -151,20 +168,20 @@ export function HomeSearch() {
 
       {/* Autocomplete Dropdown Results */}
       {isDropdownOpen && results.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-50 divide-y divide-gray-100 max-h-80 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-xl rounded-2xl shadow-[0_20px_60px_-15px_rgba(15,23,42,0.25)] border border-slate-200/80 p-1.5 z-50 max-h-80 overflow-y-auto space-y-1">
           {results.map(r => (
             <button
               key={r.zip}
               type="button"
               onClick={() => handleSelectResult(r)}
-              className="w-full px-4 py-3 text-left hover:bg-brand-50 flex items-center justify-between transition-colors group"
+              className="w-full px-4 py-3 text-left hover:bg-slate-100/90 active:scale-[0.99] rounded-xl flex items-center justify-between transition-all group"
             >
               <div>
                 <span className="font-bold text-gray-900 group-hover:text-brand-700">{r.zip}</span>
                 <span className="text-gray-500 ml-2 text-sm">{r.city}, {r.state}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
                   r.grade === 'A' ? 'bg-emerald-100 text-emerald-800' :
                   r.grade === 'B' ? 'bg-blue-100 text-blue-800' :
                   r.grade === 'C' ? 'bg-amber-100 text-amber-800' :

@@ -43,10 +43,10 @@ export function Header() {
   }, [pathname])
 
   return (
-    <header className="bg-white border-b border-gray-100 shadow-sm sticky top-0 z-50">
+    <header className="bg-white/80 backdrop-blur-xl backdrop-saturate-150 border-b border-slate-900/5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] sticky top-0 z-50 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14 sm:h-16 gap-3">
-          <Link href="/" className="flex-shrink-0" aria-label="WaterSafeCheck Home">
+          <Link href="/" className="flex-shrink-0 active:scale-[0.98] transition-transform" aria-label="WaterSafeCheck Home">
             <Logo />
           </Link>
 
@@ -54,7 +54,7 @@ export function Header() {
           <nav className="hidden md:flex items-center gap-6" aria-label="Main navigation">
             <Link
               href="/"
-              className={`text-sm font-medium transition-colors ${
+              className={`text-sm font-medium transition-all active:scale-[0.97] ${
                 pathname === '/' ? 'text-brand-700 font-semibold' : 'text-gray-600 hover:text-brand-700'
               }`}
             >
@@ -62,7 +62,7 @@ export function Header() {
             </Link>
             <Link
               href="/blog"
-              className={`text-sm font-medium transition-colors ${
+              className={`text-sm font-medium transition-all active:scale-[0.97] ${
                 pathname.startsWith('/blog') ? 'text-brand-700 font-semibold' : 'text-gray-600 hover:text-brand-700'
               }`}
             >
@@ -70,7 +70,7 @@ export function Header() {
             </Link>
             <Link
               href="/water-quality-guide"
-              className={`text-sm font-medium transition-colors ${
+              className={`text-sm font-medium transition-all active:scale-[0.97] ${
                 pathname === '/water-quality-guide' ? 'text-brand-700 font-semibold' : 'text-gray-600 hover:text-brand-700'
               }`}
             >
