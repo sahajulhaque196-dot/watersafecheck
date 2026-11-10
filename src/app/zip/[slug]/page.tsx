@@ -60,7 +60,7 @@ export async function generateStaticParams() {
     '85701','85702',         // Tucson
     '28201','28202',         // Charlotte
     '37201','37202',         // Nashville
-    '32099','32099',         // Jacksonville
+    '32099','32202',         // Jacksonville
   ]
   return Array.from(new Set(priority)).map(zip => ({ slug: zip }))
 }
