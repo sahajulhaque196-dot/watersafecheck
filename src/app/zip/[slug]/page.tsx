@@ -32,6 +32,7 @@ import {
 
 interface Props { params: { slug: string } }
 
+export const runtime = 'edge'
 export const revalidate = 604800
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
