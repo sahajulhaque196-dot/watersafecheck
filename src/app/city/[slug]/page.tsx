@@ -14,7 +14,7 @@ import { DisplayAd, InArticleAd, MultiplexAd } from '@/components/ui/AdSense'
 import {
   Sparkles, ShieldCheck, Droplets, Activity, Beaker, CheckCircle2,
   AlertTriangle, ArrowRight, MapPin, ChevronRight, Phone, ExternalLink,
-  Search, Building2, Users
+  Search, Building2, Users, BookOpen
 } from 'lucide-react'
 
 interface Props { params: { slug: string } }
@@ -186,10 +186,10 @@ export default async function CityPage({ params }: Props) {
             </div>
 
             <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-2">
-              {data.city}, {data.state} Water Quality &amp; Safety Report
+              {data.city}, {data.state} Water Quality &amp; Testing Report
             </h1>
             <p className="text-base sm:text-xl text-slate-600 font-normal">
-              EPA compliance records, water testing guidelines, and hardness metrics for all {data.zip_count} ZIP code{data.zip_count > 1 ? 's' : ''} in {data.city}, {stateName}
+              Official EPA compliance audit, laboratory testing guidelines, and water hardness metrics for {data.city}, {stateName}
             </p>
 
             <div className="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-slate-100 text-xs text-slate-500">
@@ -217,7 +217,7 @@ export default async function CityPage({ params }: Props) {
               Quick EPA Verified Summary
             </div>
             <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 mb-2 tracking-tight">
-              Is Tap Water Safe to Drink in {data.city}, {data.state}?
+              Is Tap Water Safe to Drink in {data.city}, {data.state}? (2026 EPA Compliance Summary)
             </h2>
             <p className="text-slate-700 text-base sm:text-lg leading-relaxed font-normal">
               {directAnswer}
@@ -371,8 +371,19 @@ export default async function CityPage({ params }: Props) {
                   </div>
                 </div>
 
-                <div className="p-3.5 bg-sky-50 rounded-2xl border border-sky-100 text-xs text-slate-700">
-                  <strong>State Regulatory Oversight:</strong> Environmental standards and certified water testing laboratory registries in {data.state} are maintained by the <strong>{testingGuide.agencyName}</strong>.
+                <div className="p-4 bg-sky-50/80 rounded-2xl border border-sky-200/80 text-xs text-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                  <div>
+                    <p className="font-bold text-slate-900 mb-0.5">Need Certified Water Testing in {data.city}?</p>
+                    <p className="text-slate-600">
+                      State environmental drinking water standards and certified laboratory registries in {data.state} are maintained by the <strong>{testingGuide.agencyName}</strong>.
+                    </p>
+                  </div>
+                  <Link
+                    href="/blog/private-well-water-safety-testing-guide"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-apple-blue hover:bg-blue-600 text-white font-semibold text-xs shrink-0 transition-colors shadow-xs"
+                  >
+                    <span>Water Testing Guide &rarr;</span>
+                  </Link>
                 </div>
               </section>
 
@@ -504,6 +515,22 @@ export default async function CityPage({ params }: Props) {
 
               {/* Ad 5: Sticky Sidebar Mid Display Ad */}
               <DisplayAd className="my-2" style={{ minHeight: '250px' }} />
+
+              {/* Research & Testing Pillar Guides */}
+              <div className="apple-card p-5 bg-gradient-to-br from-blue-50/70 to-sky-50/40 rounded-3xl border border-blue-200/70 shadow-apple-card">
+                <div className="flex items-center gap-2 mb-2 text-apple-blue font-bold text-xs uppercase tracking-wider">
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span>Essential Guides</span>
+                </div>
+                <div className="space-y-2 text-xs">
+                  <Link href="/water-quality-guide" className="block p-2.5 rounded-2xl bg-white border border-blue-100 hover:border-apple-blue font-semibold text-slate-800 hover:text-apple-blue transition-colors shadow-xs">
+                    📖 EPA Drinking Water Guide &rarr;
+                  </Link>
+                  <Link href="/blog/private-well-water-safety-testing-guide" className="block p-2.5 rounded-2xl bg-white border border-blue-100 hover:border-apple-blue font-semibold text-slate-800 hover:text-apple-blue transition-colors shadow-xs">
+                    🧪 Private Well Water Testing &rarr;
+                  </Link>
+                </div>
+              </div>
 
               {/* State Agency Hotline */}
               <div className="apple-card p-5 bg-gradient-to-br from-amber-500/[0.08] to-amber-500/[0.02] border border-amber-300/40 rounded-3xl">

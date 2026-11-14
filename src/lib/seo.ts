@@ -25,12 +25,12 @@ export function zipPageMeta(data: ZipData) {
   const violations = data.health_violations
   const hasBoil = data.boil_water_advisories > 0
 
-  // High-CTR Dual-Intent Title: Captures "is [zip] tap water safe" + "[zip] water quality testing"
+  // High-CTR Dual-Intent Title: Captures "[zip] water testing" + "is [zip] tap water safe"
   const title = hasBoil
-    ? `⚠️ ${data.zip} Boil Water Notice (${city}, ${state})`
-    : `Is ${data.zip} Tap Water Safe? Water Quality & Testing (${city}, ${state})`
+    ? `⚠️ ${data.zip} Boil Water Notice (${city}, ${state}) — EPA Safety Alert`
+    : `${data.zip} Water Quality & Testing (${city}, ${state}): Is Tap Water Safe? (${currentYear})`
   
-  const description = `Is tap water safe in ${data.zip} (${city}, ${state})? Official ${currentYear} EPA water quality testing report: Safety Grade ${grade} (${data.score ?? 'N/A'}/100), ${violations} health violation(s), ${ppb} ppb lead, and filter advice.`
+  const description = `Official ${currentYear} EPA water quality & lab testing report for ZIP ${data.zip} (${city}, ${state}). Safety Grade ${grade} (${data.score ?? 'N/A'}/100), ${violations} violations, ${ppb} ppb lead, water hardness, and filter advice.`
 
   return {
     title,
@@ -54,8 +54,8 @@ export function zipPageMeta(data: ZipData) {
 
 export function statePageMeta(data: StateData) {
   const currentYear = new Date().getFullYear()
-  const title = `Is ${data.name} Tap Water Safe to Drink? (${currentYear} EPA Report)`
-  const description = `Statewide ${currentYear} EPA drinking water quality report for ${data.name}. View safety grades, lead testing, PFAS violations & city rankings across ${data.zip_count.toLocaleString()} ZIP codes.`
+  const title = `${data.name} Drinking Water Quality & Testing Report (${currentYear} EPA Data)`
+  const description = `Statewide ${currentYear} EPA drinking water quality & lab testing report for ${data.name}. View safety grades, lead testing, PFAS violations & city rankings across ${data.zip_count.toLocaleString()} ZIP codes.`
   return {
     title,
     description,
@@ -76,9 +76,9 @@ export function cityPageMeta(data: CityData) {
   const grade = data.best_grade || 'B'
   const slug = data.slug || `${data.city.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}-${data.state.toLowerCase()}`
 
-  // Targets high-volume queries: "water quality testing [city]", "is [city] tap water safe", "contamination reports"
-  const title = `Is ${data.city}, ${state} Tap Water Safe? Water Quality & Testing (${currentYear})`
-  const description = `Is tap water safe in ${data.city}, ${state}? Official ${currentYear} EPA water quality testing report: Safety Grade ${grade}, contamination reports, lead & PFAS levels, and filtration guide.`
+  // High-CTR Dual-Intent Title: Front-loads city/state + testing + safety question
+  const title = `${data.city}, ${state} Water Quality & Testing Report: Is It Safe? (${currentYear})`
+  const description = `Is tap water in ${data.city}, ${state} safe to drink? Official ${currentYear} EPA water quality & lab testing report: Grade ${grade}, private well & tap testing guide, lead/PFAS levels, and hardness.`
 
   return {
     title,

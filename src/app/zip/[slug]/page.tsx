@@ -27,7 +27,7 @@ import { DisplayAd, InArticleAd, MultiplexAd } from '@/components/ui/AdSense'
 import {
   ShieldCheck, Droplets, CheckCircle2, AlertTriangle, ExternalLink,
   Sparkles, Activity, Beaker, Shield, ChevronRight, MapPin, Building2,
-  Users, HelpCircle, Layers, Check, Phone, ArrowUpRight,
+  Users, HelpCircle, Layers, Check, Phone, ArrowUpRight, BookOpen,
 } from 'lucide-react'
 
 interface Props { params: { slug: string } }
@@ -148,7 +148,7 @@ export default async function ZipPage({ params }: Props) {
             </div>
 
             <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-2">
-              ZIP Code {data.zip} Water Quality Report
+              ZIP Code {data.zip} Water Quality &amp; Testing Report
             </h1>
             <p className="text-base sm:text-xl text-slate-600 font-normal">
               {data.city}{data.city && data.state ? ', ' : ''}{data.state}
@@ -188,7 +188,7 @@ export default async function ZipPage({ params }: Props) {
               Quick EPA Verified Answer
             </div>
             <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 mb-2 tracking-tight">
-              Is Tap Water Safe to Drink in ZIP {data.zip} ({data.city || 'Local Area'}, {data.state})?
+              Is Tap Water Safe to Drink in ZIP {data.zip} ({data.city || 'Local Area'}, {data.state})? ({new Date().getFullYear()} EPA Compliance Summary)
             </h2>
             <p className="text-slate-700 text-base sm:text-lg leading-relaxed font-normal">
               {directAnswer}
@@ -794,6 +794,22 @@ export default async function ZipPage({ params }: Props) {
                     <span>Official EPA ECHO Record</span>
                     <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
                   </a>
+                </div>
+              </div>
+
+              {/* Research & Testing Pillar Guides */}
+              <div className="apple-card p-5 bg-gradient-to-br from-blue-50/70 to-sky-50/40 rounded-3xl border border-blue-200/70 shadow-apple-card">
+                <div className="flex items-center gap-2 mb-2 text-apple-blue font-bold text-xs uppercase tracking-wider">
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span>Essential Guides</span>
+                </div>
+                <div className="space-y-2 text-xs">
+                  <Link href="/water-quality-guide" className="block p-2.5 rounded-2xl bg-white border border-blue-100 hover:border-apple-blue font-semibold text-slate-800 hover:text-apple-blue transition-colors shadow-xs">
+                    📖 EPA Drinking Water Guide &rarr;
+                  </Link>
+                  <Link href="/blog/private-well-water-safety-testing-guide" className="block p-2.5 rounded-2xl bg-white border border-blue-100 hover:border-apple-blue font-semibold text-slate-800 hover:text-apple-blue transition-colors shadow-xs">
+                    🧪 Private Well Water Testing &rarr;
+                  </Link>
                 </div>
               </div>
 
