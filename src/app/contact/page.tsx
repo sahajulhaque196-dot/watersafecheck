@@ -49,9 +49,9 @@ export default function ContactPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
-          {/* Left Column: Direct channels */}
-          <div className="lg:col-span-4 space-y-5">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
+          {/* Left Column: Direct channels (Sticky Sidebar) */}
+          <aside className="lg:col-span-4 sticky top-20 self-start space-y-5">
             {/* Direct Email Card */}
             <div className="apple-card p-6 bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl shadow-apple-card transition-all hover:shadow-apple-card-hover">
               <div className="w-12 h-12 rounded-2xl bg-apple-blue/10 text-apple-blue flex items-center justify-center mb-4">
@@ -115,7 +115,7 @@ export default function ContactPage() {
                 Open EPA ECHO Database <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
-          </div>
+          </aside>
 
           {/* Right Column: Interactive Form */}
           <div className="lg:col-span-8">
