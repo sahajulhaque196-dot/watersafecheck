@@ -2,7 +2,8 @@
 // src/components/sections/HomeSearch.tsx
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { cityToSlug } from '@/lib/data'
+import { Search, X, Loader2, ArrowRight, MapPin, Sparkles } from 'lucide-react'
+import { GradeBadge } from '@/components/ui'
 
 interface SearchResult {
   zip: string
@@ -18,6 +19,7 @@ export function HomeSearch() {
   const [loading, setLoading] = useState(false)
   const [results, setResults] = useState<SearchResult[]>([])
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1)
   const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -28,6 +30,7 @@ export function HomeSearch() {
     if (trimmed.length < 2) {
       setResults([])
       setIsDropdownOpen(false)
+      setSelectedIndex(-1)
       return
     }
 
@@ -39,15 +42,17 @@ export function HomeSearch() {
         })
         if (res.ok) {
           const data = await res.json()
-          setResults(data.results || [])
-          setIsDropdownOpen((data.results || []).length > 0)
+          const list = data.results || []
+          setResults(list)
+          setIsDropdownOpen(list.length > 0)
+          setSelectedIndex(-1)
         }
       } catch (err: unknown) {
         if (err instanceof Error && err.name !== 'AbortError') {
           console.error('Search fetch error:', err)
         }
       }
-    }, 200)
+    }, 180)
 
     return () => {
       clearTimeout(timer)
@@ -70,6 +75,12 @@ export function HomeSearch() {
     e.preventDefault()
     const trimmed = query.trim()
 
+    // 0. If user selected an item via arrow keys
+    if (selectedIndex >= 0 && selectedIndex < results.length) {
+      handleSelectResult(results[selectedIndex])
+      return
+    }
+
     // 1. If 5-digit ZIP entered
     const numericZip = trimmed.replace(/\D/g, '')
     if (numericZip.length === 5) {
@@ -91,12 +102,12 @@ export function HomeSearch() {
     }
 
     if (trimmed.length < 2) {
-      setError('Please enter a 5-digit ZIP code or City name')
+      setError('Please enter a 5-digit ZIP code or city name.')
       inputRef.current?.focus()
       return
     }
 
-    setError('No matching ZIP code or city found. Please check spelling.')
+    setError('No matching ZIP code or city found. Please check your spelling.')
   }
 
   function handleSelectResult(r: SearchResult) {
@@ -105,123 +116,160 @@ export function HomeSearch() {
     router.push(`/zip/${r.zip}`)
   }
 
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (!isDropdownOpen || results.length === 0) return
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      setSelectedIndex(prev => (prev < results.length - 1 ? prev + 1 : 0))
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      setSelectedIndex(prev => (prev > 0 ? prev - 1 : results.length - 1))
+    } else if (e.key === 'Escape') {
+      setIsDropdownOpen(false)
+    }
+  }
+
   return (
-    <div ref={containerRef} className="w-full max-w-xl mx-auto relative">
-      <form onSubmit={handleSubmit} className="flex gap-2" role="search">
-        <div className="relative flex-1">
-          <label htmlFor="zip-search" className="sr-only">Enter ZIP code or City name</label>
-          <input
-            id="zip-search"
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={e => {
-              setQuery(e.target.value)
-              setError('')
-            }}
-            onFocus={() => {
-              if (results.length > 0) setIsDropdownOpen(true)
-            }}
-            placeholder="Enter ZIP code or City (e.g. 90210, Dallas, Miami)"
-            className="w-full pl-4 pr-10 sm:pl-5 sm:pr-11 py-3 sm:py-4 text-gray-900 text-base sm:text-lg rounded-xl border-0 focus:outline-none focus:ring-4 focus:ring-brand-400/30 shadow-lg placeholder-gray-400 font-medium transition-all"
-            autoComplete="off"
-            aria-label="ZIP code or City"
-            aria-describedby={error ? 'zip-error' : undefined}
-          />
-          {query.length > 0 && (
-            <button
-              type="button"
-              onClick={() => {
-                setQuery('')
-                setResults([])
-                setIsDropdownOpen(false)
-                inputRef.current?.focus()
-              }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-gray-200/80 hover:bg-gray-300 text-gray-600 flex items-center justify-center transition-colors active:scale-90"
-              aria-label="Clear search"
-            >
-              <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </button>
-          )}
+    <div ref={containerRef} className="w-full max-w-2xl mx-auto relative select-none">
+      <form
+        onSubmit={handleSubmit}
+        className="relative flex items-center p-1.5 sm:p-2 rounded-full bg-white/95 backdrop-blur-2xl shadow-[0_12px_40px_-4px_rgba(0,0,0,0.35),0_0_0_1px_rgba(255,255,255,0.4)] border border-white/60 focus-within:ring-4 focus-within:ring-apple-blue/30 focus-within:border-apple-blue transition-all duration-300"
+        role="search"
+      >
+        <div className="pl-4 sm:pl-5 text-slate-400 flex items-center pointer-events-none">
+          <Search className="w-5 h-5 sm:w-5 sm:h-5 text-apple-blue" />
         </div>
+
+        <input
+          id="zip-search"
+          ref={inputRef}
+          type="text"
+          value={query}
+          onChange={e => {
+            setQuery(e.target.value)
+            setError('')
+          }}
+          onKeyDown={handleKeyDown}
+          onFocus={() => {
+            if (results.length > 0) setIsDropdownOpen(true)
+          }}
+          placeholder="Enter 5-digit ZIP code or City (e.g. 90210, Austin, Chicago)"
+          className="w-full px-3 sm:px-4 py-3 text-slate-900 text-base sm:text-lg bg-transparent border-0 focus:outline-none placeholder-slate-400 font-medium tracking-tight"
+          autoComplete="off"
+          aria-label="ZIP code or City"
+          aria-describedby={error ? 'zip-error' : undefined}
+        />
+
+        {query.length > 0 && (
+          <button
+            type="button"
+            onClick={() => {
+              setQuery('')
+              setResults([])
+              setIsDropdownOpen(false)
+              inputRef.current?.focus()
+            }}
+            className="p-1.5 mr-1 text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-full transition-all active:scale-90"
+            aria-label="Clear search"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
+
         <button
           type="submit"
           disabled={loading}
-          className="px-4 sm:px-6 py-3 sm:py-4 bg-gradient-to-r from-brand-500 to-water-500 hover:from-brand-400 hover:to-water-400 active:scale-[0.97] disabled:from-brand-800 disabled:to-brand-800 text-white font-bold text-base sm:text-lg rounded-xl shadow-[0_4px_14px_rgba(45,212,191,0.4)] hover:shadow-[0_6px_20px_rgba(45,212,191,0.6)] transition-all duration-200 whitespace-nowrap flex items-center gap-1.5 sm:gap-2 border border-white/20 flex-shrink-0"
+          className="flex-shrink-0 inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 bg-apple-blue hover:bg-apple-blue-hover active:scale-[0.96] disabled:opacity-70 text-white font-semibold text-sm sm:text-base rounded-full shadow-[0_4px_14px_rgba(0,113,227,0.35)] transition-all duration-200 cursor-pointer"
           aria-label="Check water quality"
         >
           {loading ? (
-            <svg className="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-            </svg>
+            <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
           ) : (
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+            <>
+              <span>Check</span>
+              <ArrowRight className="w-4 h-4 hidden sm:inline" />
+            </>
           )}
-          Check
         </button>
       </form>
 
-      {/* Autocomplete Dropdown Results */}
+      {/* Apple Spotlight Results Modal */}
       {isDropdownOpen && results.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white/95 backdrop-blur-xl rounded-2xl shadow-[0_20px_60px_-15px_rgba(15,23,42,0.25)] border border-slate-200/80 p-1.5 z-50 max-h-80 overflow-y-auto space-y-1">
-          {results.map(r => (
-            <button
-              key={r.zip}
-              type="button"
-              onClick={() => handleSelectResult(r)}
-              className="w-full px-4 py-3 text-left hover:bg-slate-100/90 active:scale-[0.99] rounded-xl flex items-center justify-between transition-all group"
-            >
-              <div>
-                <span className="font-bold text-gray-900 group-hover:text-brand-700">{r.zip}</span>
-                <span className="text-gray-500 ml-2 text-sm">{r.city}, {r.state}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
-                  r.grade === 'A' ? 'bg-emerald-100 text-emerald-800' :
-                  r.grade === 'B' ? 'bg-blue-100 text-blue-800' :
-                  r.grade === 'C' ? 'bg-amber-100 text-amber-800' :
-                  'bg-rose-100 text-rose-800'
-                }`}>
-                  Grade {r.grade}
-                </span>
-                <span className="text-xs text-gray-400 font-medium">{r.score ?? '—'}/100</span>
-              </div>
-            </button>
-          ))}
+        <div className="absolute top-full left-0 right-0 mt-2.5 bg-white/95 backdrop-blur-3xl rounded-3xl shadow-[0_24px_60px_-12px_rgba(0,0,0,0.25)] border border-slate-200/90 p-2 z-50 max-h-96 overflow-y-auto space-y-1 animate-in fade-in zoom-in-95 duration-150">
+          <div className="px-3 py-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between">
+            <span>Instant Results</span>
+            <span className="text-[10px] font-medium text-slate-400">Use &uarr;&darr; to navigate</span>
+          </div>
+          {results.map((r, idx) => {
+            const isSelected = idx === selectedIndex
+            return (
+              <button
+                key={r.zip}
+                type="button"
+                onClick={() => handleSelectResult(r)}
+                onMouseEnter={() => setSelectedIndex(idx)}
+                className={`w-full px-4 py-3 text-left rounded-2xl flex items-center justify-between transition-all duration-150 ${
+                  isSelected ? 'bg-apple-blue text-white shadow-md' : 'hover:bg-slate-100 text-slate-900'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'}`}>
+                    <MapPin className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="font-mono font-bold text-base tracking-tight">{r.zip}</span>
+                    <span className={`ml-2 text-sm font-medium ${isSelected ? 'text-white/90' : 'text-slate-500'}`}>
+                      {r.city}, {r.state}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
+                    isSelected ? 'bg-white/25 text-white' :
+                    r.grade === 'A' ? 'bg-emerald-100 text-emerald-800' :
+                    r.grade === 'B' ? 'bg-sky-100 text-sky-800' :
+                    r.grade === 'C' ? 'bg-amber-100 text-amber-800' :
+                    'bg-rose-100 text-rose-800'
+                  }`}>
+                    Grade {r.grade}
+                  </span>
+                  <span className={`text-xs font-semibold ${isSelected ? 'text-white/80' : 'text-slate-400'}`}>
+                    {r.score ?? '—'}/100
+                  </span>
+                </div>
+              </button>
+            )
+          })}
         </div>
       )}
 
       {error && (
-        <p id="zip-error" className="mt-2 text-sm text-red-300 text-center" role="alert">
+        <div id="zip-error" className="mt-3 px-4 py-2 rounded-xl bg-rose-500/10 border border-rose-500/20 text-xs sm:text-sm text-rose-200 text-center font-medium backdrop-blur-md" role="alert">
           {error}
-        </p>
+        </div>
       )}
 
-      {/* Quick links */}
-      <div className="mt-4 flex flex-wrap items-center justify-center gap-2.5 py-1.5 px-4 rounded-full bg-black/60 backdrop-blur-md border border-white/20 shadow-xl max-w-fit mx-auto">
-        <span className="text-xs sm:text-sm font-bold text-cyan-300 uppercase tracking-wider">Try:</span>
+      {/* Suggested Fast ZIP Chips */}
+      <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+        <span className="text-xs font-semibold text-slate-400 tracking-wide">Popular:</span>
         {[
-          { label: 'New York 10001', zip: '10001' },
-          { label: 'Los Angeles 90001', zip: '90001' },
-          { label: 'Chicago 60601', zip: '60601' },
+          { label: 'New York (10001)', zip: '10001' },
+          { label: 'Los Angeles (90001)', zip: '90001' },
+          { label: 'Chicago (60601)', zip: '60601' },
+          { label: 'Austin (78701)', zip: '78701' },
         ].map(({ label, zip: z }) => (
           <button
             key={z}
             type="button"
             onClick={() => router.push(`/zip/${z}`)}
-            className="text-xs sm:text-sm font-semibold text-white hover:text-cyan-300 underline underline-offset-4 decoration-white/40 hover:decoration-cyan-300 transition-all whitespace-nowrap"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-slate-200 hover:text-white text-xs font-medium backdrop-blur-md border border-white/15 transition-all"
           >
-            {label}
+            <Sparkles className="w-3 h-3 text-sky-300" />
+            <span>{label}</span>
           </button>
         ))}
       </div>
     </div>
   )
 }
-
-

@@ -1,10 +1,11 @@
 // src/app/disclaimer/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { AlertTriangle, Phone, ShieldCheck, Info, ExternalLink, HelpCircle } from 'lucide-react'
 import { SITE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
-  title: 'Disclaimer',
+  title: 'Disclaimer — WaterSafeCheck Data & Health Guidance',
   description: 'Important disclaimer about WaterSafeCheck data — what we can and cannot tell you about your drinking water safety. Read before making health decisions.',
   alternates: { canonical: `${SITE_URL}/disclaimer` },
   openGraph: {
@@ -23,145 +24,182 @@ export const metadata: Metadata = {
 
 export default function DisclaimerPage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <nav className="mb-6 text-sm text-gray-500" aria-label="Breadcrumb">
-        <Link href="/" className="hover:text-brand-700">Home</Link>
-        <span className="mx-2">/</span>
-        <span className="text-gray-800 font-medium" aria-current="page">Disclaimer</span>
-      </nav>
+    <div className="min-h-screen bg-[#F5F5F7] text-slate-900 pb-20">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16">
+        {/* Breadcrumb */}
+        <nav className="mb-6 flex items-center space-x-2 text-xs font-semibold text-slate-500 uppercase tracking-wider" aria-label="Breadcrumb">
+          <Link href="/" className="hover:text-apple-blue transition-colors">Home</Link>
+          <span className="text-slate-300">/</span>
+          <span className="text-slate-900 font-bold" aria-current="page">Disclaimer</span>
+        </nav>
 
-      <h1 className="text-3xl font-black text-gray-900 mb-2">Disclaimer</h1>
-      <p className="text-sm text-gray-400 mb-8">Last updated: January 1, 2026</p>
-
-      <div className="space-y-8 text-sm text-gray-700 leading-relaxed">
-
-        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-5">
-          <p className="font-bold text-yellow-900 text-base mb-2">Please Read Before Using This Site</p>
-          <p className="text-yellow-800">
-            WaterSafeCheck provides educational information only. It is not a substitute for professional water testing, medical advice, or direct communication with your water utility. If you have immediate concerns about your water safety, contact the EPA Safe Drinking Water Hotline at <strong>1-800-426-4791</strong> or your local water utility.
+        {/* Header */}
+        <div className="mb-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-700 text-xs font-semibold tracking-wide mb-3">
+            <AlertTriangle className="w-3.5 h-3.5" />
+            Regulatory & Health Notice
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 mb-3">
+            Important Disclaimer
+          </h1>
+          <p className="text-sm font-medium text-slate-500">
+            Last Updated: January 1, 2026 • Please read prior to making clinical or plumbing decisions
           </p>
         </div>
 
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">1. Informational Purpose Only</h2>
-          <p className="mb-3">
-            WaterSafeCheck.com is an independent public information resource. The content on this website — including water quality grades, scores, violation summaries, and lead level data — is provided for general informational and educational purposes only.
-          </p>
-          <p>
-            Nothing on this website constitutes medical advice, legal advice, engineering advice, or a professional assessment of the safety of any specific water supply. Do not make health decisions based solely on information from this site.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">2. Data Is Historical, Not Real-Time</h2>
-          <p className="mb-3">
-            All data on WaterSafeCheck is sourced from the U.S. EPA's Safe Drinking Water Information System (SDWIS), EPA ECHO database, UCMR5 monitoring data, and Consumer Confidence Reports filed by water utilities. This data reflects compliance records over a historical period (typically the past 5 years) and is updated periodically as new EPA data becomes available.
-          </p>
-          <p>
-            Water quality can change rapidly. A water system with an excellent compliance record could have an active contamination event today that is not yet reflected in our data. Always check your water utility's current advisories and contact them directly for the most up-to-date information.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">3. We Do Not Test Water</h2>
-          <p>
-            WaterSafeCheck does not conduct independent water testing of any kind. All data shown on this site was collected and published by federal agencies. We aggregate, interpret, and present this public data in a user-friendly format. If you want to know the actual contaminant levels in the water coming out of your specific tap, you need to have your home's water independently tested by a certified laboratory.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">4. Data Accuracy Limitations</h2>
-          <p className="mb-3">We make every effort to accurately represent EPA source data, but we cannot guarantee the accuracy, completeness, or timeliness of the information presented. Known limitations include:</p>
-          <ul className="space-y-2 list-disc list-inside">
-            <li>Some water systems span multiple ZIP codes, or multiple systems serve the same ZIP code. Data may not perfectly align with your specific address.</li>
-            <li>Private well users are entirely outside the scope of SDWIS and are not represented in our data.</li>
-            <li>Very small water systems (serving fewer than 25 people) may not be required to report to SDWIS.</li>
-            <li>Utilities may underreport violations. Our data reflects what was reported, not necessarily all violations that occurred.</li>
-            <li>Data processing errors may occur despite our best efforts to clean and validate EPA records.</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">5. No Affiliation with EPA or Government</h2>
-          <p>
-            WaterSafeCheck is an independent website and is not affiliated with, endorsed by, or operated by the U.S. Environmental Protection Agency, any state environmental agency, or any government body. We use publicly available government data but are not a government resource.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">6. Product Mentions & Water Treatment Standards</h2>
-          <p className="mb-3">
-            Mentions of water filter certifications (such as NSF/ANSI 42, 53, 58) and treatment technologies are provided strictly for educational purposes. WaterSafeCheck does not sell water filtration products, nor do we operate commercial affiliate relationships with filter manufacturers or retailers.
-          </p>
-          <p>
-            We only reference filter certification types that correspond with official ANSI/NSF standards for the specific water contaminants identified in public EPA data. Always independently verify product specifications and certification with third-party testing bodies (NSF, WQA, IAPMO) before purchasing water treatment equipment.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">7. Limitation of Liability</h2>
-          <p>
-            To the fullest extent permitted by law, WaterSafeCheck and its operators shall not be liable for any direct, indirect, incidental, consequential, or special damages arising from your use of or reliance on information presented on this site. This includes, without limitation, any health outcomes, property decisions, or financial decisions made based on information found on WaterSafeCheck.com.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">8. Contact & Corrections</h2>
-          <p>
-            If you believe any data on this site is inaccurate, please{' '}
-            <Link href="/contact" className="text-brand-700 underline">contact us</Link> or email{' '}
-            <a href="mailto:contact@watersafecheck.com" className="text-brand-700 underline">contact@watersafecheck.com</a>.
-            We take data accuracy seriously and will investigate all reported errors promptly.
-          </p>
-        </section>
-
-        <div className="bg-brand-50 border border-brand-100 rounded-xl p-5">
-          <p className="font-semibold text-brand-900 mb-1">Questions About Your Water?</p>
-          <p className="text-brand-800 text-sm">
-            Call the <strong>EPA Safe Drinking Water Hotline: 1-800-426-4791</strong> (Mon–Fri, 10 AM–4 PM ET) or contact your local water utility directly. You can also{' '}
-            <Link href="/" className="underline">search your ZIP code</Link> for your utility's contact information.
-          </p>
+        {/* Attention Callout Card */}
+        <div className="apple-card p-6 sm:p-8 bg-gradient-to-br from-amber-500/[0.08] via-white to-white backdrop-blur-xl border border-amber-300/60 rounded-3xl shadow-apple-card mb-10">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-600 flex items-center justify-center shrink-0">
+              <AlertTriangle className="w-6 h-6" />
+            </div>
+            <div className="space-y-2 text-sm text-slate-800 leading-relaxed">
+              <h2 className="font-bold text-slate-900 text-base">Educational Guidance Only</h2>
+              <p>
+                WaterSafeCheck provides informational summaries derived from federal EPA databases. It is <strong>not a substitute for professional certified laboratory water testing</strong>, certified plumbing inspections, or medical advice. If you suspect toxic contamination or are under a boil-water order, contact your municipal utility or call the EPA Safe Drinking Water Hotline at <strong className="text-slate-900">1-800-426-4791</strong>.
+              </p>
+            </div>
+          </div>
         </div>
 
-      </div>
+        {/* Main Sections */}
+        <div className="apple-card p-6 sm:p-12 bg-white/90 backdrop-blur-2xl border border-slate-200/80 rounded-3xl shadow-apple-card space-y-10 text-sm sm:text-base text-slate-700 leading-relaxed">
+          <section className="space-y-3">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center">1</span>
+              Informational & Non-Medical Scope
+            </h2>
+            <p>
+              The composite scores, health grades, water hardness metrics, and contaminant analyses published on WaterSafeCheck.com are generated strictly for general public education. Nothing presented on this site constitutes professional medical, health, toxicological, or engineering advice.
+            </p>
+            <p className="text-slate-600 text-sm">
+              Individuals with specialized medical vulnerabilities (infants, pregnant individuals, immunocompromised patients, or dialysis patients) should seek guidance directly from their healthcare provider regarding appropriate water purification methods.
+            </p>
+          </section>
 
-        {/* FAQ */}
-        <section className="mt-8 pt-6 border-t border-gray-100">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
-          <div className="space-y-2">
+          <section className="space-y-3 pt-6 border-t border-slate-100">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center">2</span>
+              Historical Compliance Records vs. Real-Time Status
+            </h2>
+            <p>
+              All metrics on WaterSafeCheck are compiled from historical records released under the EPA’s Safe Drinking Water Information System (SDWIS), ECHO enforcement databases, UCMR5 monitoring, and annual Consumer Confidence Reports (CCR).
+            </p>
+            <p>
+              Water quality can fluctuate rapidly due to main breaks, seasonal agricultural run-off, or treatment plant repairs. A water system with an unblemished historical compliance rating may experience an acute boil-water event today that has not yet populated federal audit files. Always check with your local water provider for immediate emergency advisories.
+            </p>
+          </section>
+
+          <section className="space-y-3 pt-6 border-t border-slate-100">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center">3</span>
+              We Do Not Conduct Physical Water Testing
+            </h2>
+            <p>
+              WaterSafeCheck is an independent analytical publication. We do not operate laboratories, collect field samples, or dispatch technicians. The data reflects what utilities reported to federal and state overseers.
+            </p>
+            <p>
+              Lead and copper leach into drinking water primarily through service line pipes and indoor solder. To know the exact concentration of contaminants reaching your home faucet, you must test a sample with a state-certified environmental testing laboratory.
+            </p>
+          </section>
+
+          <section className="space-y-3 pt-6 border-t border-slate-100">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center">4</span>
+              Data Boundaries & Technical Constraints
+            </h2>
+            <p>While our algorithms adhere to strict statistical cleaning rules, known technical limitations exist:</p>
+            <ul className="list-disc list-inside space-y-2 text-slate-600 pl-2 text-sm sm:text-base">
+              <li>ZIP code boundaries do not always align with municipal water district lines;</li>
+              <li>Homes drawing from private domestic wells are not regulated under SDWA and are excluded from public utility datasets;</li>
+              <li>Micro-systems serving fewer than 25 permanent residents operate under differing disclosure requirements;</li>
+              <li>Lag periods between state enforcement filings and federal database updates can span several months.</li>
+            </ul>
+          </section>
+
+          <section className="space-y-3 pt-6 border-t border-slate-100">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center">5</span>
+              Independent Status — Not a Government Agency
+            </h2>
+            <p>
+              WaterSafeCheck is an independent consumer education resource. We are not owned, operated, funded, or endorsed by the U.S. Environmental Protection Agency (EPA), state health departments, or municipal utility departments.
+            </p>
+          </section>
+
+          <section className="space-y-3 pt-6 border-t border-slate-100">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center">6</span>
+              Water Filter Standards & NSF Certifications
+            </h2>
+            <p>
+              References to filtration technologies (e.g. Activated Carbon, Reverse Osmosis, KDF) and independent test standards (NSF/ANSI 42, 53, 58, 401) are provided solely for consumer guidance. WaterSafeCheck does not sell water filtration hardware or receive kickbacks from water filter companies.
+            </p>
+            <p className="text-slate-600 text-sm">
+              Consumers should always confirm certification claims on the official public directories of NSF International, the Water Quality Association (WQA), or IAPMO before purchasing water filtration equipment.
+            </p>
+          </section>
+        </div>
+
+        {/* EPA Safe Drinking Water Hotline Callout */}
+        <div className="mt-10 apple-card p-6 sm:p-8 bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl shadow-apple-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-apple-blue/10 text-apple-blue flex items-center justify-center shrink-0">
+              <Phone className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="font-bold text-slate-900 text-base">Have Urgent Water Questions?</p>
+              <p className="text-xs text-slate-500">Contact the EPA Safe Drinking Water Hotline (Mon–Fri, 10 AM–4 PM ET)</p>
+            </div>
+          </div>
+          <a
+            href="tel:18004264791"
+            className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-apple-blue hover:bg-blue-600 text-white font-bold text-sm tracking-tight shadow-md shadow-apple-blue/20 text-center transition-all active:scale-[0.98]"
+          >
+            1-800-426-4791
+          </a>
+        </div>
+
+        {/* FAQs */}
+        <div className="mt-10 apple-card p-6 sm:p-8 bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl shadow-apple-card">
+          <h2 className="text-xl font-bold tracking-tight text-slate-900 mb-4 flex items-center gap-2">
+            <HelpCircle className="w-5 h-5 text-slate-500" />
+            Disclaimer FAQs
+          </h2>
+          <div className="divide-y divide-slate-100">
             {[
               {
-                q: 'Is WaterSafeCheck affiliated with the EPA or any government agency?',
-                a: 'No. WaterSafeCheck is an independent website. We use publicly available EPA data but are not affiliated with, endorsed by, or operated by the U.S. Environmental Protection Agency or any state or local government agency.'
+                q: 'Is WaterSafeCheck an official government database?',
+                a: 'No. WaterSafeCheck is an independent educational platform. We process public domain data from the EPA, but we have no governmental affiliation.',
               },
               {
-                q: 'Can I rely on WaterSafeCheck data to make health decisions?',
-                a: 'Our data is for informational and educational purposes only. For health decisions, consult your healthcare provider and contact your water utility directly. For urgent water safety concerns, call the EPA Safe Drinking Water Hotline at 1-800-426-4791.'
+                q: 'Can I make medical treatment decisions based on this website?',
+                a: 'No. Never base clinical decisions on our data alone. Speak directly with a qualified physician or public health toxicologist.',
               },
               {
-                q: 'How current is the data on WaterSafeCheck?',
-                a: "Our data reflects EPA records over a historical monitoring window (typically 5 years) and is updated periodically as EPA releases new data. It may not reflect real-time conditions. Always check your utility's current advisories for the most up-to-date information."
+                q: 'How frequently does WaterSafeCheck sync with EPA SDWIS?',
+                a: 'We sync our databases regularly as new quarterly federal compliance audits and UCMR monitoring cycles are published.',
               },
               {
-                q: 'What should I do if I think my water quality data is wrong?',
-                a: 'Contact us at contact@watersafecheck.com with the ZIP code and the specific data you believe is incorrect. We compare against original EPA source data and correct genuine errors. You can also verify directly at echo.epa.gov.'
+                q: 'How do I report a perceived error in my town’s score?',
+                a: 'Please email contact@watersafecheck.com with the ZIP code and document link. Our team reviews all discrepancy reports within 48 hours.',
               },
-              {
-                q: 'Does WaterSafeCheck test water?',
-                a: 'No. We do not conduct any independent water testing. All data comes from official EPA databases — SDWIS, ECHO, UCMR5, and Consumer Confidence Reports filed by water utilities.'
-              }
-            ].map((item, i) => (
-              <details key={i} className="border border-gray-100 rounded-xl overflow-hidden">
-                <summary className="flex items-center justify-between px-5 py-3 cursor-pointer hover:bg-gray-50 transition-colors list-none select-none text-sm font-semibold text-gray-800">
-                  {item.q}
+            ].map((faq, idx) => (
+              <details key={idx} className="group py-4 select-none">
+                <summary className="flex items-center justify-between cursor-pointer list-none text-sm sm:text-base font-semibold text-slate-900 hover:text-apple-blue transition-colors">
+                  <span>{faq.q}</span>
+                  <span className="ml-4 shrink-0 text-slate-400 group-open:rotate-180 transition-transform">
+                    ↓
+                  </span>
                 </summary>
-                <div className="px-5 pb-4 pt-2 text-sm text-gray-600 leading-relaxed border-t border-gray-50">
-                  {item.a}
+                <div className="mt-3 text-sm text-slate-600 leading-relaxed pl-1 pr-6 font-normal">
+                  {faq.a}
                 </div>
               </details>
             ))}
           </div>
-        </section>
+        </div>
+      </div>
     </div>
   )
 }

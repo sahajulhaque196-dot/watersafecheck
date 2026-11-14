@@ -1,5 +1,6 @@
 // src/components/layout/Footer.tsx
 import Link from 'next/link'
+import { ShieldCheck, ArrowUpRight } from 'lucide-react'
 
 const US_STATES_TOP = [
   ['Alabama','al'],['Arizona','az'],['California','ca'],['Colorado','co'],
@@ -13,149 +14,118 @@ export function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="bg-gray-900 text-gray-300">
-      {/* Main footer grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
-
-          {/* Brand column */}
-          <div className="lg:col-span-1">
-            <div className="flex items-center gap-2 mb-3">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 70 90" width="24" height="30" aria-hidden="true">
-                <defs>
-                  <linearGradient id="fShield" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#60a5fa" />
-                    <stop offset="100%" stopColor="#3b82f6" />
-                  </linearGradient>
-                </defs>
-                <path d="M5 12 L35 2 L65 12 L65 48 Q65 70 35 85 Q5 70 5 48 Z" fill="url(#fShield)"/>
-                <path d="M35 20 Q35 20 46 40 Q52 52 44 58 Q40 62 35 62 Q30 62 26 58 Q18 52 24 40 Q35 20 35 20 Z" fill="#bfdbfe" opacity="0.9"/>
-                <polyline points="28,46 34,53 46,38" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <span className="font-black text-white text-base tracking-tight">WaterSafeCheck</span>
+    <footer className="bg-[#12141a] text-slate-400 border-t border-slate-800/80 antialiased">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-12">
+        {/* Main 4-column Apple Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
+          {/* Brand & Purpose Column */}
+          <div className="lg:col-span-2 space-y-4">
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-sky-400 flex items-center justify-center shadow-md">
+                <svg viewBox="0 0 24 24" className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="white" fillOpacity="0.2" />
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                </svg>
+              </div>
+              <span className="font-bold text-white text-base tracking-tight">WaterSafeCheck</span>
             </div>
-            <p className="text-sm text-gray-400 leading-relaxed mb-3">
-              Free EPA-verified drinking water quality data for 41,000+ U.S. ZIP codes. Know what's in your tap water before you drink it.
+
+            <p className="text-[13px] text-slate-400 leading-relaxed max-w-sm">
+              Free, independent EPA SDWIS drinking water compliance records for 41,000+ U.S. ZIP codes. Built to give every household crystal-clear insight into their tap water before they drink.
             </p>
-            <p className="text-xs text-gray-400 mb-3">
-              Founded & engineered by <Link href="/about" className="text-gray-200 hover:text-white font-medium underline">Sahajul Haque</Link> (Assam, India).
-            </p>
-            <div className="flex flex-wrap items-center gap-3">
-              <a
-                href="mailto:contact@watersafecheck.com"
-                className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
-              >
-                contact@watersafecheck.com
-              </a>
-              <span className="text-gray-600">·</span>
-              <a
-                href="https://x.com/saddamh58509953"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
-              >
-                X: @saddamh58509953 ↗
-              </a>
+
+            <div className="pt-2 text-xs text-slate-400 space-y-1">
+              <div>
+                Platform engineered by{' '}
+                <Link href="/about" className="text-white hover:text-sky-300 font-medium underline underline-offset-4 transition-colors">
+                  Sahajul Haque
+                </Link>{' '}
+                (Assam, India).
+              </div>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 pt-1">
+                <a
+                  href="mailto:contact@watersafecheck.com"
+                  className="text-sky-400 hover:text-sky-300 transition-colors break-all"
+                >
+                  contact@watersafecheck.com
+                </a>
+                <span className="text-slate-600 hidden xs:inline">&bull;</span>
+                <a
+                  href="https://x.com/saddamh58509953"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-0.5 text-sky-400 hover:text-sky-300 transition-colors"
+                >
+                  <span>@saddamh58509953</span>
+                  <ArrowUpRight className="w-3 h-3" />
+                </a>
+              </div>
             </div>
           </div>
 
-          {/* Browse by State */}
+          {/* Directory States */}
           <div className="lg:col-span-2">
-            <h3 className="text-white font-semibold text-sm mb-4 uppercase tracking-wide">
-              Browse Water Quality by State
+            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-4 text-slate-200">
+              Browse by State
             </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-1">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-2 text-xs">
               {US_STATES_TOP.map(([name, code]) => (
                 <Link
                   key={code}
                   href={`/state/${code}`}
-                  className="text-xs text-gray-400 hover:text-white transition-colors py-0.5 truncate"
+                  className="text-slate-400 hover:text-white transition-colors truncate"
                 >
                   {name}
                 </Link>
               ))}
             </div>
             <Link
-              href="/"
-              className="text-xs text-blue-400 hover:text-blue-300 mt-2 inline-block"
+              href="/#states"
+              className="text-xs text-sky-400 hover:text-sky-300 font-medium mt-3 inline-block transition-colors"
             >
-              View all 50 states →
+              Explore all 50 states &rarr;
             </Link>
           </div>
 
-          {/* Links column */}
+          {/* Quick Links */}
           <div>
-            <h3 className="text-white font-semibold text-sm mb-4 uppercase tracking-wide">Resources</h3>
-            <ul className="space-y-2">
+            <h3 className="text-white font-semibold text-xs tracking-wider uppercase mb-4 text-slate-200">
+              Resources & Legal
+            </h3>
+            <ul className="space-y-2 text-xs">
               {[
-                ['/blog', 'Blog & Articles'],
                 ['/water-quality-guide', 'Water Safety Guide'],
-                ['/about', 'About & Our Team'],
+                ['/blog', 'Research & Articles'],
+                ['/about', 'Methodology & Team'],
                 ['/contact', 'Contact Us'],
                 ['/terms', 'Terms of Service'],
-                ['/disclaimer', 'Disclaimer'],
+                ['/disclaimer', 'Data Disclaimer'],
                 ['/privacy', 'Privacy Policy'],
               ].map(([href, label]) => (
                 <li key={href}>
-                  <Link href={href} className="text-sm text-gray-400 hover:text-white transition-colors">
+                  <Link href={href} className="text-slate-400 hover:text-white transition-colors block py-0.5">
                     {label}
                   </Link>
                 </li>
               ))}
-              <li>
-                <a href="https://www.epa.gov/ground-water-and-drinking-water" target="_blank" rel="noopener noreferrer"
-                  className="text-sm text-gray-400 hover:text-white transition-colors">
-                  EPA Safe Water ↗
-                </a>
-              </li>
-              <li>
-                <a href="https://echo.epa.gov" target="_blank" rel="noopener noreferrer"
-                  className="text-sm text-gray-400 hover:text-white transition-colors">
-                  EPA ECHO Database ↗
-                </a>
-              </li>
             </ul>
           </div>
         </div>
 
-        {/* Trust badges row */}
-        <div className="border-t border-gray-800 pt-6 mb-6">
-          <div className="flex flex-wrap gap-6 justify-center sm:justify-start">
-            {[
-              { icon: '🏛', text: 'Data from EPA SDWIS' },
-              { icon: '🔬', text: 'UCMR5 PFAS Data Included' },
-              { icon: '📋', text: 'Consumer Confidence Reports' },
-              { icon: '🔒', text: 'No Registration Required' },
-              { icon: '💰', text: '100% Free' },
-            ].map(({ icon, text }) => (
-              <div key={text} className="flex items-center gap-1.5 text-xs text-gray-500">
-                <span>{icon}</span>
-                <span>{text}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Bottom bar */}
-      <div className="border-t border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-          <p className="text-xs text-gray-600 leading-relaxed mb-3">
-            <strong className="text-gray-500">Data Notice:</strong> WaterSafeCheck aggregates publicly available data from EPA SDWIS, EPA ECHO, UCMR5, and Consumer Confidence Reports. Data reflects historical compliance records and may not represent current conditions. Always contact your local water utility for current advisories. WaterSafeCheck is not affiliated with the EPA or any government agency.
+        {/* Disclaimer & Bottom Bar */}
+        <div className="pt-8 border-t border-slate-800/60 text-[11px] text-slate-400 space-y-3">
+          <p className="leading-relaxed">
+            <strong className="text-slate-400 font-medium">Official Notice:</strong> WaterSafeCheck is an independent public interest data aggregator. All testing data and violation records are sourced from public disclosures by the U.S. Environmental Protection Agency (EPA SDWIS) and municipal Consumer Confidence Reports. WaterSafeCheck is not affiliated with or endorsed by the EPA or any government utility.
           </p>
-          <p className="text-xs text-gray-600 leading-relaxed mb-4">
-            <strong className="text-gray-500">Not Medical Advice:</strong> Information on this site is for educational purposes only and does not constitute medical or legal advice. For urgent concerns, call the EPA Safe Drinking Water Hotline: <strong className="text-gray-400">1-800-426-4791</strong>.
-          </p>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <p className="text-xs text-gray-600">
-              © {year} WaterSafeCheck.com · All rights reserved · Made with ❤️ for cleaner drinking water
-            </p>
-            <div className="flex gap-4 flex-wrap">
-              <Link href="/privacy" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">Privacy Policy</Link>
-              <Link href="/terms" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">Terms of Service</Link>
-              <Link href="/disclaimer" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">Disclaimer</Link>
-              <Link href="/contact" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">Contact</Link>
-              <Link href="/about" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">About Us</Link>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 text-slate-400">
+            <div>
+              &copy; {year} WaterSafeCheck. All rights reserved.
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="flex items-center gap-1 text-slate-400">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                Verified Public Domain Data
+              </span>
             </div>
           </div>
         </div>

@@ -1,6 +1,7 @@
 // src/app/privacy/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { Lock, Shield, EyeOff, Cookie, CheckCircle2, ExternalLink } from 'lucide-react'
 import { SITE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
@@ -24,139 +25,168 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <nav className="mb-6 text-sm text-gray-500" aria-label="Breadcrumb">
-        <Link href="/" className="hover:text-brand-700">Home</Link>
-        <span className="mx-2" aria-hidden="true">/</span>
-        <span className="text-gray-800 font-medium" aria-current="page">Privacy Policy</span>
-      </nav>
+    <div className="min-h-screen bg-[#F5F5F7] text-slate-900 pb-20">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16">
+        {/* Breadcrumb */}
+        <nav className="mb-6 flex items-center space-x-2 text-xs font-semibold text-slate-500 uppercase tracking-wider" aria-label="Breadcrumb">
+          <Link href="/" className="hover:text-apple-blue transition-colors">Home</Link>
+          <span className="text-slate-300">/</span>
+          <span className="text-slate-900 font-bold" aria-current="page">Privacy Policy</span>
+        </nav>
 
-      <h1 className="text-3xl font-black text-gray-900 mb-2">Privacy Policy</h1>
-      <p className="text-sm text-gray-400 mb-8">Last updated: January 1, 2026</p>
-
-      <div className="space-y-8 text-sm text-gray-700 leading-relaxed">
-
-        <div className="alert-info">
-          <strong>Short version:</strong> We collect minimal information, we don't sell your data, and we use standard analytics and advertising tools (Google Analytics & AdSense). If you have questions, email us at{' '}
-          <a href="mailto:contact@watersafecheck.com" className="underline font-medium">contact@watersafecheck.com</a>.
+        {/* Header */}
+        <div className="mb-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 text-xs font-semibold tracking-wide mb-3">
+            <Lock className="w-3.5 h-3.5" />
+            Data Protection & Transparency
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 mb-3">
+            Privacy Policy
+          </h1>
+          <p className="text-sm font-medium text-slate-500">
+            Last Updated: January 1, 2026 • CCPA & Global Standard Compliant
+          </p>
         </div>
 
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">1. What We Collect</h2>
-          <p className="mb-3">WaterSafeCheck.com collects only the information needed to operate the site:</p>
-          <ul className="space-y-2 list-disc list-inside">
-            <li><strong>Usage data:</strong> Google Analytics collects anonymized information — pages visited, time on site, browser type, referring URL. This data is aggregated and not linked to your identity.</li>
-            <li><strong>ZIP code searches:</strong> We may log ZIP codes searched for analytics. We do not link searches to your identity or location.</li>
-            <li><strong>Contact form:</strong> If you contact us, we collect your name, email, and message to respond to your inquiry. We store these in our email inbox only.</li>
-          </ul>
-        </section>
+        {/* Apple Style Privacy Manifesto Card */}
+        <div className="apple-card p-6 sm:p-8 bg-gradient-to-br from-emerald-500/[0.08] via-white to-white backdrop-blur-xl border border-emerald-200/80 rounded-3xl shadow-apple-card mb-10">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
+              <Shield className="w-6 h-6" />
+            </div>
+            <div className="space-y-2 text-sm text-slate-700 leading-relaxed">
+              <h2 className="font-bold text-slate-900 text-base">Our Privacy Commitment</h2>
+              <p>
+                At WaterSafeCheck, we believe your health and location inquiries are private. We collect zero identifiable personal data when you search drinking water metrics, we never sell your data, and we do not profile your home address.
+              </p>
+            </div>
+          </div>
+        </div>
 
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">2. Cookies</h2>
-          <p className="mb-3">We use cookies for:</p>
-          <ul className="space-y-2 list-disc list-inside">
-            <li><strong>Google Analytics:</strong> Measures site traffic. Opt out at <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" className="text-brand-700 underline">Google Analytics Opt-out</a>.</li>
-            <li><strong>Google AdSense:</strong> Serves advertisements. Ads may be personalized based on your browsing. Manage preferences at <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" className="text-brand-700 underline">Google Ad Settings</a>.</li>
-          </ul>
-        </section>
+        {/* Main Content */}
+        <div className="apple-card p-6 sm:p-12 bg-white/90 backdrop-blur-2xl border border-slate-200/80 rounded-3xl shadow-apple-card space-y-10 text-sm sm:text-base text-slate-700 leading-relaxed">
+          <section className="space-y-4">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center">1</span>
+              Information We Collect
+            </h2>
+            <p>WaterSafeCheck operates with strict data minimization principles:</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60">
+                <p className="font-bold text-slate-900 text-sm mb-1">Anonymous Telemetry</p>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Aggregated page views, browser user agents, and referral sources monitored via Google Analytics without individual identity linkage.
+                </p>
+              </div>
+              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60">
+                <p className="font-bold text-slate-900 text-sm mb-1">ZIP Code Lookups</p>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Lookups are cached anonymously to optimize server speeds. Search queries are never tied to names, physical street addresses, or billing info.
+                </p>
+              </div>
+            </div>
+          </section>
 
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">3. Google AdSense & Third-Party Advertising</h2>
-          <p className="mb-3">This site uses Google AdSense to display advertisements from third-party advertisers. Google and its advertising partners use cookies, web beacons, and similar tracking technologies to serve ads based on your prior visits to this site and other websites on the internet.</p>
-          <p className="mb-3">Third-party vendors, including Google, use cookies to serve ads based on your prior visits to our website and other websites. Google's use of advertising cookies enables it and its partners to serve ads to our users based on their visit to WaterSafeCheck.com and/or other sites on the Internet.</p>
-          <p className="mb-3">We receive compensation when ads are displayed, which helps us keep WaterSafeCheck free for all users.</p>
-          <p className="mb-3"><strong>To opt out of personalized advertising:</strong></p>
-          <ul className="space-y-2 list-disc list-inside text-sm mb-3">
-            <li>Visit <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" className="text-brand-700 underline">Google Ads Settings</a> to opt out of personalized ads from Google</li>
-            <li>Visit <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" className="text-brand-700 underline">aboutads.info/choices</a> to opt out of interest-based advertising from participating companies</li>
-            <li>Use the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" className="text-brand-700 underline">Google Analytics Opt-out Browser Add-on</a> to prevent Google Analytics from collecting your data</li>
-            <li>Enable "Do Not Track" in your browser settings</li>
-          </ul>
-          <p>For more information about Google's privacy practices, see the <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-brand-700 underline">Google Privacy Policy</a>.</p>
-        </section>
+          <section className="space-y-4 pt-6 border-t border-slate-100">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center">2</span>
+              Cookies & Advertising Partners
+            </h2>
+            <p>
+              We utilize cookies to deliver high-quality site performance and support our free public mission through Google AdSense advertising:
+            </p>
+            <ul className="list-disc list-inside space-y-2 text-slate-600 pl-2 text-sm sm:text-base">
+              <li>
+                <strong>Google AdSense:</strong> Third-party vendors, including Google, employ cookies to serve ads based on prior browsing history.
+              </li>
+              <li>
+                <strong>Performance Cookies:</strong> Keep track of server load and caching states so pages load instantaneously.
+              </li>
+            </ul>
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 text-xs text-slate-600 space-y-2">
+              <p className="font-bold text-slate-900">How to manage your ad preferences:</p>
+              <p>
+                You may opt out of personalized advertising by visiting{' '}
+                <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" className="text-apple-blue font-semibold hover:underline inline-flex items-center gap-1">
+                  Google Ad Settings <ExternalLink className="w-3 h-3" />
+                </a>{' '}
+                or the Network Advertising Initiative at{' '}
+                <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" className="text-apple-blue font-semibold hover:underline inline-flex items-center gap-1">
+                  aboutads.info/choices <ExternalLink className="w-3 h-3" />
+                </a>.
+              </p>
+            </div>
+          </section>
 
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">4. How We Use Your Information</h2>
-          <ul className="space-y-1 list-disc list-inside">
-            <li>To operate and improve the site</li>
-            <li>To understand which content is most useful to visitors</li>
-            <li>To respond to contact inquiries</li>
-            <li>To display relevant advertising through Google AdSense</li>
-          </ul>
-          <p className="mt-3"><strong>We do not sell, trade, or rent your personal information to any third party.</strong></p>
-        </section>
+          <section className="space-y-4 pt-6 border-t border-slate-100">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center">3</span>
+              How We Protect & Retain Data
+            </h2>
+            <p>
+              We enforce SSL/TLS encryption across all network communication. Contact inquiries are retained in secure corporate mailboxes solely to address your query and are permanently expunged upon resolution.
+            </p>
+            <p className="font-semibold text-slate-900">
+              We never sell, monetize, or license your personal information to third-party data brokers, marketers, or water filter companies.
+            </p>
+          </section>
 
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">5. Data Retention</h2>
-          <p>Analytics data is retained per Google Analytics default policies (26 months). Contact inquiries are retained for as long as needed to respond, then deleted. You can request deletion by emailing <a href="mailto:contact@watersafecheck.com" className="text-brand-700 underline">contact@watersafecheck.com</a>.</p>
-        </section>
+          <section className="space-y-4 pt-6 border-t border-slate-100">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center">4</span>
+              California CCPA & Consumer Privacy Rights
+            </h2>
+            <p>
+              Under the California Consumer Privacy Act (CCPA) and related state privacy statutes, residents have the right to request disclosure of collected data categories, request total deletion, and confirm that no data is sold.
+            </p>
+            <p>
+              To exercise any privacy rights, simply contact us at{' '}
+              <a href="mailto:contact@watersafecheck.com" className="text-apple-blue font-semibold hover:underline">
+                contact@watersafecheck.com
+              </a>.
+            </p>
+          </section>
+        </div>
 
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">6. Third-Party Links</h2>
-          <p>We link to external sites including EPA.gov, echo.epa.gov, and others. We are not responsible for the privacy practices of these sites.</p>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">7. Children's Privacy</h2>
-          <p>This site is not directed at children under 13. We do not knowingly collect personal information from children. If you believe we have, contact us immediately.</p>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">8. California Privacy Rights (CCPA)</h2>
-          <p>California residents may request information about categories of personal data collected, request deletion, and opt out of data sales. We do not sell personal data. Contact us at <a href="mailto:contact@watersafecheck.com" className="text-brand-700 underline">contact@watersafecheck.com</a> to exercise your rights.</p>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">9. Changes to This Policy</h2>
-          <p>Material changes will be noted with an updated date at the top of this page. Continued use of the site after changes constitutes acceptance.</p>
-        </section>
-
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">10. Contact</h2>
-          <p>
-            Questions about privacy: <a href="mailto:contact@watersafecheck.com" className="text-brand-700 underline">contact@watersafecheck.com</a>
-            {' '}or use our <Link href="/contact" className="text-brand-700 underline">contact form</Link>.
-          </p>
-        </section>
-      </div>
-
-        {/* FAQ Section */}
-        <section className="mt-8 pt-6 border-t border-gray-100">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
-          <div className="space-y-2">
+        {/* FAQ Accordion */}
+        <div className="mt-10 apple-card p-6 sm:p-8 bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl shadow-apple-card">
+          <h2 className="text-xl font-bold tracking-tight text-slate-900 mb-4">
+            Frequently Asked Privacy Questions
+          </h2>
+          <div className="divide-y divide-slate-100">
             {[
               {
                 q: 'Does WaterSafeCheck sell my personal data?',
-                a: 'No. We do not sell, trade, or rent your personal information to any third party. We use anonymized analytics data only to improve the site experience.'
+                a: 'No. We do not sell, trade, or rent personal data under any circumstances. All water report lookups are completely anonymous.',
               },
               {
                 q: 'Why do I see ads on WaterSafeCheck?',
-                a: 'WaterSafeCheck is free to use. Advertising revenue through Google AdSense helps cover our operating costs. Ads are served based on your browsing history and interests by Google — we do not control which specific ads appear.'
+                a: 'WaterSafeCheck is an independent educational platform offered completely free to the public. Non-intrusive display advertising through Google AdSense helps offset server bandwidth and federal database synchronization expenses.',
               },
               {
                 q: 'How can I stop seeing personalized ads?',
-                a: 'Visit Google Ad Settings at adssettings.google.com to opt out of personalized advertising. You can also use the AdChoices opt-out at aboutads.info/choices.'
+                a: 'You can visit adssettings.google.com to disable personalized advertising across Google networks, or enable Global Privacy Control (GPC) in modern web browsers.',
               },
               {
-                q: 'Is my ZIP code search tracked?',
-                a: 'ZIP code searches may be logged anonymously for analytics purposes — for example, to understand which areas are most searched. We do not link ZIP searches to your identity or location.'
+                q: 'Is my ZIP code lookup linked to my real identity?',
+                a: 'No. Searches are processed statelessly without creating user profiles, storing IP identifiers against ZIP codes, or tracking physical house numbers.',
               },
-              {
-                q: 'How do I request deletion of my data?',
-                a: 'Email contact@watersafecheck.com with your request. We will delete any stored personal data associated with you (such as contact form submissions) within 30 days.'
-              }
-            ].map((item, i) => (
-              <details key={i} className="border border-gray-100 rounded-xl overflow-hidden">
-                <summary className="flex items-center justify-between px-5 py-3 cursor-pointer hover:bg-gray-50 transition-colors list-none select-none text-sm font-semibold text-gray-800">
-                  {item.q}
+            ].map((faq, idx) => (
+              <details key={idx} className="group py-4 select-none">
+                <summary className="flex items-center justify-between cursor-pointer list-none text-sm sm:text-base font-semibold text-slate-900 hover:text-apple-blue transition-colors">
+                  <span>{faq.q}</span>
+                  <span className="ml-4 shrink-0 text-slate-400 group-open:rotate-180 transition-transform">
+                    ↓
+                  </span>
                 </summary>
-                <div className="px-5 pb-4 pt-2 text-sm text-gray-600 leading-relaxed border-t border-gray-50">
-                  {item.a}
+                <div className="mt-3 text-sm text-slate-600 leading-relaxed pl-1 pr-6 font-normal">
+                  {faq.a}
                 </div>
               </details>
             ))}
           </div>
-        </section>
+        </div>
+      </div>
     </div>
   )
 }

@@ -2,20 +2,23 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import Script from 'next/script'
+import Image from 'next/image'
 import { getCityData, getNearbyCities, getCityZips, STATE_NAMES, STATE_AGENCIES } from '@/lib/data'
 import { getCityTestingGuide } from '@/lib/content'
 import type { ZipData } from '@/lib/types'
-import { SITE_URL, safeJsonLd, cityPageMeta, cityJsonLd, breadcrumbJsonLd, faqJsonLd } from '@/lib/seo'
-import { GradeBadge, Breadcrumb, ZipCard, FaqItem, StatCard } from '@/components/ui'
+import { SITE_URL, safeJsonLd, cityPageMeta, cityJsonLd, faqJsonLd } from '@/lib/seo'
+import { GradeBadge, ScoreRing, Breadcrumb, FaqItem, StatCard } from '@/components/ui'
 import { CityZipDirectory } from '@/components/sections/CityZipDirectory'
-import { AdTop, AdInContent, AdBottom } from '@/components/ui/AdSense'
+import { DisplayAd, InArticleAd, MultiplexAd } from '@/components/ui/AdSense'
 
-import { Sparkles, ShieldCheck, Droplets, Activity, Beaker, CheckCircle2, AlertTriangle, ArrowRight, MapPin } from 'lucide-react'
+import {
+  Sparkles, ShieldCheck, Droplets, Activity, Beaker, CheckCircle2,
+  AlertTriangle, ArrowRight, MapPin, ChevronRight, Phone, ExternalLink,
+  Search, Building2, Users
+} from 'lucide-react'
 
 interface Props { params: { slug: string } }
 
-export const runtime = 'edge'
 export const revalidate = 604800
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -55,7 +58,6 @@ export default async function CityPage({ params }: Props) {
   const stateName = data.state_name || STATE_NAMES[data.state] || data.state
   const testingGuide = getCityTestingGuide(data)
 
-  // Sort ZIPs by score descending
   const sortedZips = cityZips.sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
   const avgScore = cityZips.length
     ? Math.round(cityZips.reduce((s: number, z) => s + (z.score ?? 0), 0) / cityZips.length)
@@ -63,7 +65,6 @@ export default async function CityPage({ params }: Props) {
   const totalViol = cityZips.reduce((s: number, z) => s + z.health_violations, 0)
   const highLeadCount = cityZips.filter(z => z.lead_risk === 'High' || z.lead_risk === 'Very High').length
 
-  // Dynamically calculate Top Contaminants based on City's ZIP data
   const contaminantCounts: Record<string, number> = {}
   cityZips.forEach(z => {
     if (!z.contaminants) return
@@ -87,35 +88,31 @@ export default async function CityPage({ params }: Props) {
     { label: `${data.city} Water Quality & Testing` },
   ]
 
-  // City Hardness profile
   const isGround = (data.water_source || '').toLowerCase().includes('ground')
   const hardPpm = isGround ? 160 : 105
   const hardGpg = parseFloat((hardPpm / 17.1).toFixed(1))
   const hardCategory = hardPpm > 180 ? 'Very Hard' : hardPpm > 120 ? 'Hard' : hardPpm > 60 ? 'Moderately Hard' : 'Soft'
 
   const directAnswer = grade === 'A' || grade === 'B'
-    ? `Yes, tap water in ${data.city}, ${data.state} is safe to drink under EPA Safe Drinking Water Act standards. The city earns an average EPA Safety Grade of ${grade} (${avgScore ?? 85}/100) across ${data.zip_count} ZIP codes with ${totalViol} health violations and ${hardCategory.toLowerCase()} (${hardPpm} mg/L / ${hardGpg} GPG) water. Certified testing is recommended for older plumbing or private wells.`
-    : `Tap water in ${data.city}, ${data.state} receives an EPA Safety Grade of ${grade} (${avgScore ?? 50}/100) due to ${totalViol} health-based violation(s) and elevated lead risk. While treated by local utilities, residents are advised to test tap water and use an NSF/ANSI 53 certified filter for drinking and cooking.`
+    ? `Yes, tap water in ${data.city}, ${data.state} meets EPA primary drinking standards. The city achieves an average EPA Safety Grade of ${grade} (${avgScore ?? 85}/100) across ${data.zip_count} ZIP codes with ${totalViol} health violations and ${hardCategory.toLowerCase()} (${hardPpm} mg/L / ${hardGpg} GPG) mineral profile. In-home testing is advised for structures built before 1986.`
+    : `Tap water in ${data.city}, ${data.state} receives an EPA Safety Grade of ${grade} (${avgScore ?? 50}/100) due to ${totalViol} health-based violation(s) and elevated lead risk. Residents are advised to test tap water and use an NSF/ANSI 53 certified filter for drinking and cooking.`
 
-  // City intro narrative — data-driven
   function getCityIntro() {
     if (!data) return ''
     const g = grade
     const city = data.city
     const state = data.state
     const zipCount = data.zip_count
-    const util = cityZips[0]?.system_name || 'local water utilities'
+    const util = cityZips[0]?.system_name || 'local municipal water authorities'
 
-    let text = `Drinking water in <strong>${city}, ${state}</strong> receives an average water quality grade of <strong>${g}</strong> (score: <strong>${avgScore}/100</strong>) across its ${zipCount} ZIP code${zipCount > 1 ? 's' : ''}. Safe Drinking Water Act compliance monitoring is managed by local utilities including ${util}.`
-
-    return `<p>${text}</p>`
+    return `Drinking water in <strong>${city}, ${state}</strong> receives an average water quality grade of <strong>${g}</strong> (composite score: <strong>${avgScore}/100</strong>) across its ${zipCount} ZIP code${zipCount > 1 ? 's' : ''}. Compliance monitoring is managed by local utilities including ${util}.`
   }
 
   const cityFaqs = [
     {
       q: `Is tap water safe to drink in ${data.city}, ${data.state}?`,
       a: grade === 'A' || grade === 'B'
-        ? `Yes — tap water in ${data.city} meets federal EPA standards and earns a ${grade} grade. It is generally safe for healthy adults. As always, running your tap for 30 seconds before use and using a filter adds extra protection for vulnerable populations.`
+        ? `Yes — tap water in ${data.city} meets federal EPA standards and earns a ${grade} grade. It is generally safe for healthy adults. Running your tap for 30 seconds before use and using an NSF-certified filter provides added protection for infants and vulnerable individuals.`
         : `Tap water in ${data.city} has a grade of ${grade}, indicating compliance concerns in recent years. Families with young children or pregnant women should consider using a certified NSF/ANSI 53 water filter for drinking and cooking.`
     },
     {
@@ -132,7 +129,7 @@ export default async function CityPage({ params }: Props) {
     },
     {
       q: `What is the water quality score for ${data.city}?`,
-      a: `The average water quality score across ${data.zip_count} ZIP code${data.zip_count > 1 ? 's' : ''} in ${data.city}, ${data.state} is <strong>${avgScore ?? 'N/A'}/100</strong>. Scores are derived from EPA violation history, lead levels, enforcement actions, and infrastructure risk indicators. Individual ZIP codes may vary — search your specific ZIP above for a personalized report.`
+      a: `The average water quality score across ${data.zip_count} ZIP code${data.zip_count > 1 ? 's' : ''} in ${data.city}, ${data.state} is <strong>${avgScore ?? 'N/A'}/100</strong>. Scores are derived from EPA violation history, lead levels, enforcement actions, and infrastructure risk indicators.`
     },
     {
       q: `Does ${data.city} have lead in its tap water?`,
@@ -143,8 +140,8 @@ export default async function CityPage({ params }: Props) {
     {
       q: `Where does ${data.city}'s tap water come from?`,
       a: data.water_source
-        ? `Tap water in ${data.city}, ${data.state} primarily comes from <strong>${data.water_source.toLowerCase()}</strong>. ${data.water_source === 'Surface Water' ? 'Surface water systems treat water from rivers, lakes, or reservoirs using filtration, sedimentation, and disinfection before it reaches your tap.' : 'Groundwater systems pump water from underground aquifers, which is naturally filtered through soil and rock but can still contain naturally occurring contaminants.'}`
-        : `Water source information for ${data.city} varies by service area. Check your specific ZIP code for details, or contact your local water utility directly.`
+        ? `Tap water in ${data.city}, ${data.state} primarily comes from <strong>${data.water_source.toLowerCase()}</strong>. ${data.water_source === 'Surface Water' ? 'Surface water systems treat water from rivers, lakes, or reservoirs using filtration, sedimentation, and disinfection.' : 'Groundwater systems pump water from underground aquifers.'}`
+        : `Water source information for ${data.city} varies by service area. Check your specific ZIP code for details.`
     },
   ]
 
@@ -157,7 +154,6 @@ export default async function CityPage({ params }: Props) {
 
   return (
     <>
-      {/* Structured Data — Unified @graph containing Dataset, ItemPage, and BreadcrumbList */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: safeJsonLd(cityJsonLd(data, breadcrumbItems)) }}
@@ -167,271 +163,380 @@ export default async function CityPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(faqJsonLd(cityFaqs)) }}
       />
 
+      <div className="min-h-screen bg-[#F5F5F7] text-slate-900 pb-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+          <Breadcrumb items={breadcrumbs} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Breadcrumb items={breadcrumbs} />
-
-        <div className="flex flex-wrap items-center gap-2 mb-2">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 text-brand-700 border border-brand-200">
-            <ShieldCheck className="w-3.5 h-3.5 text-brand-600" />
-            EPA SDWIS City Overview
-          </span>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-            <Beaker className="w-3.5 h-3.5 text-blue-600" />
-            Water Testing & Safety Guide
-          </span>
-        </div>
-
-        <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mb-1">
-          {data.city}, {data.state} Water Quality Testing & Safety Report
-        </h1>
-        <p className="text-lg text-gray-500 mb-2">
-          EPA compliance records, water testing guidelines, and hardness metrics for all {data.zip_count} ZIP code{data.zip_count > 1 ? 's' : ''} in {data.city}, {stateName}
-        </p>
-        <div className="flex flex-wrap items-center gap-2 mb-6 text-xs text-gray-500">
-          <img
-            src="/images/sahajul-haque.jpg"
-            alt="Sahajul Haque"
-            className="w-5 h-5 rounded-full object-cover border border-gray-200 shadow-xs"
-          />
-          <span>
-            Data aggregated & verified by <Link href="/about" className="font-semibold text-brand-700 hover:underline">Sahajul Haque</Link> from federal SDWIS & ECHO filings
-          </span>
-        </div>
-
-        {/* ── Quick Answer Box (Position 0 Target) ── */}
-        <section
-          aria-label="Direct Water Safety Summary"
-          className="mb-8 p-5 bg-gradient-to-r from-brand-50 via-sky-50 to-blue-50 rounded-2xl border border-brand-200 shadow-sm"
-        >
-          <div className="flex items-center gap-2 mb-2 text-brand-900 font-bold text-xs uppercase tracking-wider">
-            <Sparkles className="w-4 h-4 text-brand-600" />
-            Quick EPA Verified Summary
-          </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-brand-950 mb-2">
-            Is Tap Water Safe to Drink in {data.city}, {data.state}?
-          </h2>
-          <p className="text-gray-800 text-base sm:text-lg leading-relaxed font-medium">
-            {directAnswer}
-          </p>
-        </section>
-
-        <AdTop />
-
-        {/* ── City Summary ── */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-          <StatCard label="Average Score" value={`${avgScore ?? 'N/A'}/100`}
-            color={avgScore && avgScore >= 75 ? 'green' : avgScore && avgScore >= 60 ? 'blue' : 'yellow'} />
-          <StatCard label="Health Violations" value={totalViol}
-            color={totalViol === 0 ? 'green' : totalViol <= 5 ? 'yellow' : 'red'} />
-          <StatCard label="Water Hardness" value={hardCategory} subtext={`${hardPpm} mg/L (${hardGpg} GPG)`} color="blue" />
-          <StatCard label="High Lead Risk" value={highLeadCount} subtext={`of ${cityZips.length} ZIP codes`}
-            color={highLeadCount === 0 ? 'green' : highLeadCount < cityZips.length / 2 ? 'yellow' : 'red'} />
-        </div>
-
-        {/* ── Intro Card ── */}
-        <div className="card mb-8">
-          <div className="flex flex-col sm:flex-row items-start gap-4">
-            <div className="flex-shrink-0">
-              <GradeBadge grade={grade} size="lg" />
+          {/* ── Apple-Style Report Hero Banner ── */}
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white via-white to-sky-50/50 p-6 sm:p-10 border border-slate-200/80 shadow-apple-card mb-8">
+            <div className="flex flex-wrap items-center gap-2 mb-4">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-apple-blue/10 text-apple-blue text-xs font-semibold tracking-wide">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                EPA SDWIS Municipal Audit
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold tracking-wide">
+                <Beaker className="w-3.5 h-3.5 text-slate-500" />
+                Testing &amp; Hardness Profile
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold tracking-wide">
+                <Activity className="w-3.5 h-3.5" />
+                {data.zip_count} Monitored ZIP Codes
+              </span>
             </div>
-            <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-2">
-                About Tap Water in {data.city}, {data.state}
-              </h2>
-              <div
-                className="prose-custom text-sm"
-                dangerouslySetInnerHTML={{ __html: `<p>${getCityIntro()}</p>` }}
+
+            <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mb-2">
+              {data.city}, {data.state} Water Quality &amp; Safety Report
+            </h1>
+            <p className="text-base sm:text-xl text-slate-600 font-normal">
+              EPA compliance records, water testing guidelines, and hardness metrics for all {data.zip_count} ZIP code{data.zip_count > 1 ? 's' : ''} in {data.city}, {stateName}
+            </p>
+
+            <div className="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-slate-100 text-xs text-slate-500">
+              <Image
+                src="/images/sahajul-haque.jpg"
+                alt="Sahajul Haque"
+                width={22}
+                height={22}
+                className="w-5 h-5 rounded-full object-cover border border-slate-200"
               />
+              <span>
+                Data aggregated &amp; verified by <Link href="/about" className="font-semibold text-slate-900 hover:text-apple-blue underline">Sahajul Haque</Link> from federal SDWIS &amp; ECHO filings
+              </span>
             </div>
           </div>
 
-          {data.high_lead && (
-            <div className="mt-4 alert-warning">
-              <strong>⚠ Lead Risk Alert:</strong> Some ZIP codes in {data.city} are rated High or Very High for lead exposure risk based on EPA data. Search your specific ZIP code for a detailed lead level report.
+          {/* ── Direct Answer Quick Callout ── */}
+          <section
+            aria-label="Direct Water Safety Summary"
+            className="mb-8 p-6 sm:p-8 rounded-3xl bg-white/90 backdrop-blur-xl border-2 border-sky-300/80 shadow-[0_8px_30px_-6px_rgba(14,165,233,0.14)] relative overflow-hidden"
+          >
+            <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-sky-400 via-blue-500 to-cyan-400" />
+            <div className="flex items-center gap-2 mb-2 text-sky-600 font-bold text-xs uppercase tracking-wider">
+              <Sparkles className="w-4 h-4" />
+              Quick EPA Verified Summary
             </div>
-          )}
-        </div>
-
-        {/* ── Dedicated Water Quality Testing Guide ── */}
-        <section className="card mb-8 bg-white border-blue-100 shadow-sm">
-          <div className="flex items-center gap-2.5 mb-3">
-            <div className="p-2 rounded-lg bg-blue-100 text-blue-700">
-              <Beaker className="w-5 h-5" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-gray-900">
-                Water Quality Testing in {data.city}, {data.state}
-              </h2>
-              <p className="text-xs text-gray-500">Tap Water & Well Water Testing Recommendations</p>
-            </div>
-          </div>
-
-          <p className="text-sm text-gray-700 leading-relaxed mb-6">
-            {testingGuide.summary}
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            {/* Tap Water Testing Checklist */}
-            <div className="bg-slate-50 rounded-xl p-5 border border-slate-200">
-              <h3 className="text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                Tap Water Testing Checklist
-              </h3>
-              <ul className="space-y-2.5 text-xs text-gray-700 leading-relaxed">
-                {testingGuide.tapTestingSteps.map((step, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <span className="font-bold text-brand-600 min-w-[16px]">{idx + 1}.</span>
-                    <span>{step}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Well Water Testing Checklist */}
-            <div className="bg-amber-50/50 rounded-xl p-5 border border-amber-200">
-              <h3 className="text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-amber-600" />
-                Private Well Water Testing Checklist
-              </h3>
-              <ul className="space-y-2.5 text-xs text-gray-700 leading-relaxed">
-                {testingGuide.wellTestingSteps.map((step, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <span className="font-bold text-amber-700 min-w-[16px]">•</span>
-                    <span>{step}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Key Parameters Table */}
-          <div className="border border-gray-200 rounded-xl overflow-hidden mb-4">
-            <div className="bg-gray-50 px-4 py-2.5 border-b border-gray-200">
-              <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wider">
-                Critical Water Testing Parameters for {data.city} Residents
-              </h4>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 text-xs">
-                <thead className="bg-gray-50 text-gray-600 font-semibold">
-                  <tr>
-                    <th className="px-4 py-2.5 text-left">Parameter</th>
-                    <th className="px-4 py-2.5 text-left">Health Reason</th>
-                    <th className="px-4 py-2.5 text-left">EPA Limit / Standard</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100 bg-white">
-                  {testingGuide.keyParameters.map((param, idx) => (
-                    <tr key={idx} className="hover:bg-slate-50">
-                      <td className="px-4 py-2.5 font-bold text-gray-900 whitespace-nowrap">{param.name}</td>
-                      <td className="px-4 py-2.5 text-gray-600">{param.why}</td>
-                      <td className="px-4 py-2.5 text-brand-700 font-medium whitespace-nowrap">{param.limit}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-800">
-            <strong>State Regulatory Oversight:</strong> Environmental standards and certified water lab registries in {data.state} are maintained by the <strong>{testingGuide.agencyName}</strong>.
-          </div>
-        </section>
-
-        <AdInContent />
-
-        {/* ── Common Contaminants ── */}
-        {topContaminants.length > 0 && (
-          <div className="card mb-8 border-orange-100 bg-orange-50/30">
-            <h2 className="text-xl font-bold text-gray-900 mb-3">Health-Based Contaminant Violations in {data.city}</h2>
-            <p className="text-sm text-gray-600 mb-4">
-              EPA records indicate that the following contaminants have exceeded Safe Drinking Water Act Maximum Contaminant Levels (MCLs) in {data.city} water systems over the past 5 years.
+            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 mb-2 tracking-tight">
+              Is Tap Water Safe to Drink in {data.city}, {data.state}?
+            </h2>
+            <p className="text-slate-700 text-base sm:text-lg leading-relaxed font-normal">
+              {directAnswer}
             </p>
-            <div className="flex flex-wrap gap-2">
-              {topContaminants.map((c, i) => (
-                <span key={i} className="badge bg-white text-orange-800 border-orange-200 shadow-sm">
-                  {c}
-                </span>
-              ))}
-            </div>
-            <p className="text-xs text-gray-400 mt-4">
-              Note: The presence of a past violation does not necessarily mean current water is unsafe. Utilities are required to take corrective action. Review your Consumer Confidence Report for the latest status.
-            </p>
-          </div>
-        )}
+          </section>
 
-        {/* ── Interactive ZIP Codes Directory with Filter Tabs & Search ── */}
-        <CityZipDirectory
-          zips={sortedZips}
-          cityName={data.city}
-          stateCode={data.state}
-        />
+          {/* Ad 1: Top Hero High-Visibility Display Ad */}
+          <DisplayAd className="my-6" />
 
-        {/* ── Nearby Cities Water Quality & Testing (Horizontal Internal Silo) ── */}
-        {nearbyCities.length > 0 && (
-          <div className="card mb-8">
-            <div className="flex items-center gap-2 mb-4">
-              <MapPin className="w-5 h-5 text-brand-600" />
-              <h2 className="text-xl font-bold text-gray-900">
-                Nearby Cities Water Quality & Testing in {stateName}
-              </h2>
-            </div>
-            <p className="text-sm text-gray-600 mb-4">
-              Compare tap water safety, EPA test scores, and water hardness across neighboring cities in {stateName}:
-            </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {nearbyCities.map((nc) => (
-                <Link
-                  key={nc.slug}
-                  href={`/city/${nc.slug}`}
-                  className="p-3.5 rounded-xl border border-gray-200 hover:border-brand-500 hover:bg-brand-50/40 transition group flex flex-col justify-between"
-                >
+          {/* ── 2-Column Responsive Layout with Sticky Sidebar ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            {/* ── Left Column: Main City Content (8 cols) ── */}
+            <main className="lg:col-span-8 space-y-8">
+
+              {/* City Summary Card with ScoreRing & Colorful StatCards */}
+              <div className="apple-card p-6 sm:p-8 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-8 mb-6">
+                  <div className="flex-shrink-0 self-center sm:self-auto">
+                    <ScoreRing score={avgScore} grade={grade} />
+                  </div>
+                  <div className="flex-1 w-full">
+                    <div className="flex items-center gap-3.5 mb-2">
+                      <GradeBadge grade={grade} size="lg" />
+                      <div>
+                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Composite City Grade</p>
+                        <p className="text-base sm:text-lg font-extrabold text-slate-900">
+                          {data.city} Municipal Average ({avgScore ?? 'N/A'}/100)
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      className="text-xs text-slate-600 leading-relaxed mt-2"
+                      dangerouslySetInnerHTML={{ __html: `<p>${getCityIntro()}</p>` }}
+                    />
+                  </div>
+                </div>
+
+                {/* 4 StatCards with Colored Borders */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-slate-100">
+                  <StatCard
+                    label="Average Score"
+                    value={`${avgScore ?? 'N/A'}/100`}
+                    color={avgScore && avgScore >= 75 ? 'green' : avgScore && avgScore >= 60 ? 'blue' : 'yellow'}
+                  />
+                  <StatCard
+                    label="Health Violations"
+                    value={totalViol}
+                    color={totalViol === 0 ? 'green' : totalViol <= 5 ? 'yellow' : 'red'}
+                  />
+                  <StatCard
+                    label="Water Hardness"
+                    value={hardCategory}
+                    subtext={`${hardPpm} mg/L (${hardGpg} GPG)`}
+                    color="blue"
+                  />
+                  <StatCard
+                    label="High Lead Risk"
+                    value={highLeadCount}
+                    subtext={`of ${cityZips.length} ZIP codes`}
+                    color={highLeadCount === 0 ? 'green' : highLeadCount < cityZips.length / 2 ? 'yellow' : 'red'}
+                  />
+                </div>
+
+                {data.high_lead && (
+                  <div className="mt-5 p-4 rounded-2xl bg-amber-500/[0.08] border border-amber-300/60 text-xs text-amber-900 leading-relaxed flex items-start gap-2.5">
+                    <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong>Lead Risk Notice:</strong> Selected ZIP codes in {data.city} carry elevated lead vulnerability indices. Search your specific ZIP code below for household-level plumbing precautions.
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Water Testing Protocol Section */}
+              <section className="apple-card p-6 sm:p-8 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card">
+                <div className="flex items-center gap-3.5 mb-4">
+                  <div className="w-11 h-11 rounded-2xl bg-blue-100/90 border border-blue-200 text-blue-600 flex items-center justify-center font-bold shadow-xs">
+                    <Beaker className="w-5 h-5" />
+                  </div>
                   <div>
-                    <span className="font-semibold text-gray-900 group-hover:text-brand-700 text-sm block">
-                      {nc.city}, {nc.state}
-                    </span>
-                    <span className="text-xs text-gray-500 block mt-0.5">
-                      {nc.zip_count} ZIP code{nc.zip_count > 1 ? 's' : ''}
-                    </span>
+                    <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+                      Water Quality Testing Protocol in {data.city}, {data.state}
+                    </h2>
+                    <p className="text-xs text-slate-400">Certified Tap &amp; Private Well Procedures</p>
                   </div>
-                  <div className="mt-2 flex items-center justify-between">
-                    <span className="text-xs font-bold px-2 py-0.5 rounded bg-gray-100 text-gray-700 group-hover:bg-brand-100 group-hover:text-brand-800">
-                      Grade {nc.best_grade || 'B'}
-                    </span>
-                    <ArrowRight className="w-3.5 h-3.5 text-gray-400 group-hover:text-brand-600 transition-transform group-hover:translate-x-0.5" />
+                </div>
+
+                <p className="text-sm text-slate-600 leading-relaxed mb-6">
+                  {testingGuide.summary}
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  <div className="p-5 rounded-2xl bg-slate-50/80 border border-slate-200/80">
+                    <h3 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      Tap Water Testing Checklist
+                    </h3>
+                    <ul className="space-y-2 text-xs text-slate-600 leading-relaxed">
+                      {testingGuide.tapTestingSteps.map((step, idx) => (
+                        <li key={idx} className="flex items-start gap-2">
+                          <span className="font-bold text-apple-blue min-w-[16px]">{idx + 1}.</span>
+                          <span>{step}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
+
+                  <div className="p-5 rounded-2xl bg-amber-50/60 border border-amber-200/80">
+                    <h3 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 text-amber-600" />
+                      Private Well Testing Checklist
+                    </h3>
+                    <ul className="space-y-2 text-xs text-slate-600 leading-relaxed">
+                      {testingGuide.wellTestingSteps.map((step, idx) => (
+                        <li key={idx} className="flex items-start gap-2">
+                          <span className="font-bold text-amber-700 min-w-[16px]">&bull;</span>
+                          <span>{step}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Key Parameters Table */}
+                <div className="overflow-hidden rounded-2xl border border-slate-200/80 shadow-xs mb-4">
+                  <div className="bg-slate-50/80 px-4 py-3 border-b border-slate-200/70">
+                    <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+                      Critical Water Testing Parameters for {data.city} Residents
+                    </h4>
+                  </div>
+                  <div className="table-scroll overflow-x-auto">
+                    <table className="w-full text-xs text-left border-collapse min-w-[500px]">
+                      <thead className="bg-slate-50/50 text-slate-500 font-semibold border-b border-slate-100">
+                        <tr>
+                          <th className="px-4 py-2.5">Parameter</th>
+                          <th className="px-4 py-2.5">Health Significance</th>
+                          <th className="px-4 py-2.5">EPA Action Limit</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100">
+                        {testingGuide.keyParameters.map((param, idx) => (
+                          <tr key={idx} className="hover:bg-slate-50/60">
+                            <td className="px-4 py-2.5 font-bold text-slate-900 whitespace-nowrap">{param.name}</td>
+                            <td className="px-4 py-2.5 text-slate-600">{param.why}</td>
+                            <td className="px-4 py-2.5 text-apple-blue font-semibold whitespace-nowrap">{param.limit}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="p-3.5 bg-sky-50 rounded-2xl border border-sky-100 text-xs text-slate-700">
+                  <strong>State Regulatory Oversight:</strong> Environmental standards and certified water testing laboratory registries in {data.state} are maintained by the <strong>{testingGuide.agencyName}</strong>.
+                </div>
+              </section>
+
+              {/* Ad 3: In-Content Editorial Fluid Ad (Post-Testing Protocol) */}
+              <InArticleAd className="my-8" />
+
+              {/* Common Contaminants */}
+              {topContaminants.length > 0 && (
+                <div className="apple-card p-6 sm:p-8 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card">
+                  <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight mb-2">Contaminant Violations on Record in {data.city}</h2>
+                  <p className="text-sm text-slate-500 mb-4 leading-relaxed">
+                    EPA records indicate the following compounds have recorded exceedances in {data.city} municipal systems within the past 5-year monitoring cycle.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {topContaminants.map((c, i) => (
+                      <span key={i} className="inline-flex items-center px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200/80 text-xs font-semibold">
+                        {c}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Ad 4: Post-Contaminants / Above ZIP Directory High-CTR Display Ad */}
+              <DisplayAd className="my-8" />
+
+              {/* Interactive ZIP Codes Directory */}
+              <div className="apple-card p-6 sm:p-8 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card">
+                <CityZipDirectory
+                  zips={sortedZips}
+                  cityName={data.city}
+                  stateCode={data.state}
+                />
+              </div>
+
+              {/* Ad 6: Pre-FAQ High-Intent Display Ad */}
+              <DisplayAd className="my-8" />
+
+              {/* City FAQs */}
+              <div className="apple-card p-6 sm:p-8 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card">
+                <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight mb-5">
+                  Frequently Asked Questions &bull; {data.city} Water Quality
+                </h2>
+                <div className="space-y-3">
+                  {cityFaqs.map((faq, i) => (
+                    <FaqItem key={i} q={faq.q} a={faq.a} open={i === 0} />
+                  ))}
+                </div>
+              </div>
+
+              {/* State Directory Callout */}
+              <div className="p-8 rounded-3xl bg-gradient-to-br from-blue-50/70 via-white to-sky-50/50 border border-blue-200/60 text-center shadow-apple-card">
+                <p className="text-slate-800 font-bold mb-4 text-base">
+                  Looking for municipal water quality reports in other cities across {stateName}?
+                </p>
+                <Link href={`/state/${data.state.toLowerCase()}`} className="btn-primary">
+                  <span>Explore All Cities in {stateName}</span>
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
-              ))}
-            </div>
+              </div>
+            </main>
+
+            {/* ── Right Column: Sticky Sidebar (4 cols) ── */}
+            <aside className="lg:col-span-4 sticky top-20 self-start space-y-6">
+              {/* Ad 2: Sticky Sidebar Top Display Ad */}
+              <DisplayAd className="my-2" style={{ minHeight: '250px' }} />
+
+              {/* Quick City Facts Bento */}
+              <div className="apple-card p-5 sm:p-6 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card">
+                <div className="flex items-center gap-2 mb-3">
+                  <Building2 className="w-4 h-4 text-apple-blue" />
+                  <h3 className="font-bold text-xs uppercase tracking-wider text-slate-500">
+                    City Quick Facts
+                  </h3>
+                </div>
+                <div className="grid grid-cols-2 gap-2.5 text-xs">
+                  <div className="bg-slate-50/80 p-3 rounded-2xl border border-slate-200/60">
+                    <span className="text-slate-400 text-[10px] uppercase font-bold tracking-wider">City</span>
+                    <span className="font-bold text-slate-900 text-sm block mt-0.5 truncate">{data.city}</span>
+                  </div>
+                  <div className="bg-slate-50/80 p-3 rounded-2xl border border-slate-200/60">
+                    <span className="text-slate-400 text-[10px] uppercase font-bold tracking-wider">State</span>
+                    <span className="font-bold text-slate-900 text-sm block mt-0.5">{data.state}</span>
+                  </div>
+                  <div className="bg-slate-50/80 p-3 rounded-2xl border border-slate-200/60">
+                    <span className="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Avg Grade</span>
+                    <div className="mt-1 flex items-center justify-between">
+                      <GradeBadge grade={grade} size="sm" />
+                      <span className="font-bold text-slate-800 text-xs">{avgScore ?? '—'}/100</span>
+                    </div>
+                  </div>
+                  <div className="bg-slate-50/80 p-3 rounded-2xl border border-slate-200/60">
+                    <span className="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Monitored ZIPs</span>
+                    <span className="font-bold text-slate-900 text-sm block mt-0.5">{data.zip_count}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Nearby Cities in State */}
+              {nearbyCities.length > 0 && (
+                <div className="apple-card p-5 sm:p-6 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-bold text-xs uppercase tracking-wider text-slate-500">
+                      Nearby Cities in {stateName}
+                    </h3>
+                    <span className="text-[10px] text-slate-400 font-semibold px-2 py-0.5 rounded-full bg-slate-100">{nearbyCities.length}</span>
+                  </div>
+                  <div className="space-y-2">
+                    {nearbyCities.map((nc) => (
+                      <Link
+                        key={nc.slug}
+                        href={`/city/${nc.slug}`}
+                        className="flex items-center justify-between p-2.5 rounded-2xl border border-slate-200/70 bg-slate-50/50 hover:bg-white hover:border-apple-blue/40 hover:shadow-xs transition-all text-xs group active:scale-[0.98]"
+                      >
+                        <div className="truncate pr-2">
+                          <span className="font-bold text-slate-900 group-hover:text-apple-blue block truncate">
+                            {nc.city}
+                          </span>
+                          <span className="text-[10px] text-slate-400 block">
+                            {nc.zip_count} ZIP code{nc.zip_count > 1 ? 's' : ''}
+                          </span>
+                        </div>
+                        <GradeBadge grade={nc.best_grade || 'B'} size="sm" />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Ad 5: Sticky Sidebar Mid Display Ad */}
+              <DisplayAd className="my-2" style={{ minHeight: '250px' }} />
+
+              {/* State Agency Hotline */}
+              <div className="apple-card p-5 bg-gradient-to-br from-amber-500/[0.08] to-amber-500/[0.02] border border-amber-300/40 rounded-3xl">
+                <div className="flex items-center gap-2 text-amber-700 font-bold text-xs mb-2">
+                  <Phone className="w-3.5 h-3.5" />
+                  <span>EPA Safe Drinking Water Hotline</span>
+                </div>
+                <a href="tel:18004264791" className="text-xl font-extrabold text-amber-600 hover:text-amber-700 block mb-1">
+                  1-800-426-4791
+                </a>
+                <p className="text-[11px] text-slate-500">
+                  Mon–Fri, 10 AM–4 PM Eastern. Official federal advice.
+                </p>
+              </div>
+
+              {/* Search ZIP Capsule */}
+              <div className="apple-card p-5 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card text-center">
+                <p className="font-bold text-slate-900 text-sm mb-1">Check Your Exact ZIP</p>
+                <p className="text-xs text-slate-500 mb-4">Explore tap metrics for your street address.</p>
+                <Link
+                  href="/#search"
+                  className="inline-flex items-center justify-center gap-1.5 w-full py-2.5 px-4 rounded-full bg-apple-blue hover:bg-blue-600 text-white font-semibold text-xs transition-all active:scale-[0.98]"
+                >
+                  <Search className="w-3.5 h-3.5" />
+                  <span>Search Any U.S. ZIP Code</span>
+                </Link>
+              </div>
+            </aside>
           </div>
-        )}
 
-        {/* ── FAQ ── */}
-        <div className="card mb-8">
-          <h2 className="text-xl font-bold text-gray-900 mb-5">
-            Frequently Asked Questions — {data.city} Water Quality & Testing
-          </h2>
-          <div className="space-y-2">
-            {cityFaqs.map((faq, i) => (
-              <FaqItem key={i} q={faq.q} a={faq.a} open={i === 0} />
-            ))}
-          </div>
+          {/* Ad 7: Bottom Native Multiplex Recommendations Grid */}
+          <MultiplexAd className="my-10" />
         </div>
-
-        {/* ── Nearby State Link ── */}
-        <div className="bg-brand-50 rounded-xl p-6 text-center mb-8">
-          <p className="text-gray-700 mb-3">
-            Looking for water quality reports in other cities in {stateName}?
-          </p>
-          <Link href={`/state/${data.state.toLowerCase()}`} className="btn-primary inline-flex items-center gap-2">
-            View All Cities & ZIPs in {stateName} <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <AdBottom />
       </div>
     </>
   )
 }
-

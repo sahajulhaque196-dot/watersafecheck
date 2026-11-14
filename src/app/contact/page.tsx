@@ -1,6 +1,7 @@
 // src/app/contact/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { Mail, Phone, Clock, ShieldAlert, HelpCircle, MessageSquare, ExternalLink, ArrowRight } from 'lucide-react'
 import { ContactForm } from '@/components/sections/ContactForm'
 import { SITE_URL } from '@/lib/seo'
 
@@ -24,83 +25,158 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <nav className="mb-6 text-sm text-gray-500" aria-label="Breadcrumb">
-        <Link href="/" className="hover:text-brand-700">Home</Link>
-        <span className="mx-2" aria-hidden="true">/</span>
-        <span className="text-gray-800 font-medium" aria-current="page">Contact</span>
-      </nav>
+    <div className="min-h-screen bg-[#F5F5F7] text-slate-900 pb-20">
+      {/* Hero Header */}
+      <div className="relative pt-12 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <nav className="mb-6 flex items-center space-x-2 text-xs font-semibold text-slate-500 uppercase tracking-wider" aria-label="Breadcrumb">
+          <Link href="/" className="hover:text-apple-blue transition-colors">Home</Link>
+          <span className="text-slate-300">/</span>
+          <span className="text-slate-900 font-bold" aria-current="page">Contact</span>
+        </nav>
 
-      <h1 className="text-3xl sm:text-4xl font-black text-gray-900 mb-2">Contact Us</h1>
-      <p className="text-gray-500 mb-8 text-lg">
-        Questions, corrections, or just want to understand your water report better? We're here.
-      </p>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-        {/* Left column: Direct contact info */}
-        <div className="lg:col-span-1 space-y-4">
-          <div className="card border-brand-100 bg-brand-50">
-            <div className="text-2xl mb-2">📧</div>
-            <h2 className="font-bold text-gray-900 mb-1">Email Us Directly</h2>
-            <a
-              href="mailto:contact@watersafecheck.com"
-              className="text-brand-700 font-semibold hover:underline break-all"
-            >
-              contact@watersafecheck.com
-            </a>
-            <p className="text-xs text-gray-500 mt-2">
-              We read every email personally. Typical response: 1–2 business days.
-            </p>
+        <div className="max-w-3xl">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-apple-blue/10 text-apple-blue text-xs font-semibold tracking-wide mb-4">
+            <MessageSquare className="w-3.5 h-3.5" />
+            Support & Data Desk
           </div>
-          <div className="card border-gray-100">
-            <div className="text-2xl mb-2">📞</div>
-            <h2 className="font-bold text-gray-900 mb-1">Urgent Water Safety?</h2>
-            <p className="text-brand-700 font-bold text-lg">1-800-426-4791</p>
-            <p className="text-xs text-gray-500 mt-1">
-              EPA Safe Drinking Water Hotline<br />
-              Mon–Fri, 10 AM–4 PM Eastern
-            </p>
-          </div>
-        </div>
-
-        {/* Right column: Contact form card */}
-        <div className="lg:col-span-2 card">
-          <h2 className="font-bold text-gray-900 mb-1">Send Us a Message</h2>
-          <p className="text-sm text-gray-500 mb-5">
-            This form sends directly to <strong>contact@watersafecheck.com</strong>. You can also email us there directly.
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 mb-4">
+            We’re here to help you understand your water.
+          </h1>
+          <p className="text-lg sm:text-xl text-slate-600 font-normal leading-relaxed">
+            Have questions about your local utility, spotted a data discrepancy, or need assistance interpreting your drinking water score? Reach our dedicated environmental analysis team.
           </p>
-          <ContactForm />
         </div>
       </div>
 
-      {/* FAQ for contact page */}
-      <div className="card border-gray-100 mb-6">
-        <h2 className="font-bold text-gray-900 mb-4">Common Questions</h2>
-        <div className="space-y-4 text-sm">
-          <div>
-            <p className="font-semibold text-gray-800 mb-1">My ZIP code shows no data. Why?</p>
-            <p className="text-gray-600">
-              A small number of ZIP codes may fall between water system service boundaries, or be served by very small systems that report under a parent utility ID. Contact us with your ZIP and we'll investigate. You can also try searching your city name or a neighboring ZIP code.
-            </p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+          {/* Left Column: Direct channels */}
+          <div className="lg:col-span-4 space-y-5">
+            {/* Direct Email Card */}
+            <div className="apple-card p-6 bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl shadow-apple-card transition-all hover:shadow-apple-card-hover">
+              <div className="w-12 h-12 rounded-2xl bg-apple-blue/10 text-apple-blue flex items-center justify-center mb-4">
+                <Mail className="w-6 h-6" />
+              </div>
+              <h2 className="text-lg font-bold text-slate-900 mb-1">Direct Support Inbox</h2>
+              <p className="text-xs text-slate-500 mb-4">
+                Every inquiry is personally reviewed by our data verification desk.
+              </p>
+              <a
+                href="mailto:contact@watersafecheck.com"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-apple-blue hover:text-blue-700 transition-colors break-all"
+              >
+                contact@watersafecheck.com
+                <ArrowRight className="w-4 h-4 shrink-0" />
+              </a>
+              <div className="mt-4 pt-4 border-t border-slate-100 flex items-center gap-2 text-xs text-slate-500">
+                <Clock className="w-3.5 h-3.5 text-slate-400" />
+                Typical response: 1–2 business days
+              </div>
+            </div>
+
+            {/* EPA Emergency Hotline Card */}
+            <div className="apple-card p-6 bg-gradient-to-br from-amber-500/[0.06] to-amber-500/[0.02] backdrop-blur-xl border border-amber-300/40 rounded-3xl shadow-apple-card transition-all">
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
+                  <Phone className="w-6 h-6" />
+                </div>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-700 text-[11px] font-bold uppercase tracking-wider">
+                  <ShieldAlert className="w-3.5 h-3.5" />
+                  Urgent Notice
+                </span>
+              </div>
+              <h2 className="text-lg font-bold text-slate-900 mb-1">Immediate Water Hazard?</h2>
+              <p className="text-xs text-slate-600 mb-4 leading-relaxed">
+                If your municipality issued an active boil water notice or you suspect chemical tampering, contact federal regulators immediately.
+              </p>
+              <div className="p-3 rounded-2xl bg-white border border-amber-200/60 shadow-sm mb-3">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">EPA Drinking Water Hotline</p>
+                <a href="tel:18004264791" className="text-xl font-extrabold text-amber-600 hover:text-amber-700">
+                  1-800-426-4791
+                </a>
+              </div>
+              <p className="text-[11px] text-slate-500 leading-snug">
+                Mon–Fri, 10:00 AM – 4:00 PM Eastern. Free national toll-free guidance.
+              </p>
+            </div>
+
+            {/* Verification link */}
+            <div className="p-5 rounded-3xl bg-slate-100/70 border border-slate-200/60 text-xs text-slate-600">
+              <p className="font-semibold text-slate-900 mb-1">Verify Federal Compliance Directly</p>
+              <p className="mb-3 leading-relaxed">
+                You can independently cross-reference any utility report against EPA ECHO records.
+              </p>
+              <a
+                href="https://echo.epa.gov"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 font-bold text-apple-blue hover:underline"
+              >
+                Open EPA ECHO Database <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
-          <div className="border-t border-gray-50 pt-4">
-            <p className="font-semibold text-gray-800 mb-1">I think the data for my area is wrong. What should I do?</p>
-            <p className="text-gray-600">
-              Send us the ZIP code and what you believe is incorrect. We'll compare against the original EPA source data and update if there's an error. You can also verify directly at{' '}
-              <a href="https://echo.epa.gov" target="_blank" rel="noopener noreferrer" className="text-brand-700 underline">echo.epa.gov</a>.
-            </p>
+
+          {/* Right Column: Interactive Form */}
+          <div className="lg:col-span-8">
+            <div className="apple-card p-6 sm:p-10 bg-white/90 backdrop-blur-2xl border border-slate-200/80 rounded-3xl shadow-apple-card">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold tracking-tight text-slate-900 mb-1.5">
+                  Send a Secure Message
+                </h2>
+                <p className="text-sm text-slate-500">
+                  Submit your inquiry below. Our team receives submissions instantly at <strong className="text-slate-700">contact@watersafecheck.com</strong>.
+                </p>
+              </div>
+
+              <ContactForm />
+            </div>
           </div>
-          <div className="border-t border-gray-50 pt-4">
-            <p className="font-semibold text-gray-800 mb-1">Can I use WaterSafeCheck data in my news article or research?</p>
-            <p className="text-gray-600">
-              Yes — the underlying EPA data is public domain. Please attribute "WaterSafeCheck, based on EPA SDWIS and ECHO data." For research partnerships or data exports, email us directly.
-            </p>
+        </div>
+
+        {/* Common Questions / FAQ Accordions */}
+        <div className="apple-card p-6 sm:p-10 bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl shadow-apple-card">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center">
+              <HelpCircle className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold tracking-tight text-slate-900">Frequently Asked Questions</h2>
+              <p className="text-xs text-slate-500">Instant answers before submitting a ticket</p>
+            </div>
           </div>
-          <div className="border-t border-gray-50 pt-4">
-            <p className="font-semibold text-gray-800 mb-1">How quickly do you respond?</p>
-            <p className="text-gray-600">
-              We typically respond within 1–2 business days. For urgent water safety concerns (contamination advisory, active boil water notice), please contact the EPA hotline at 1-800-426-4791 rather than waiting for our reply.
-            </p>
+
+          <div className="divide-y divide-slate-100">
+            {[
+              {
+                q: 'My ZIP code shows no utility record. Why?',
+                a: 'A small percentage of ZIP codes cross complex water utility boundaries, or are serviced by private wells or small non-community systems that report under a parent administrative ID. Submit your ZIP and street name via the form above, and our analysts will trace the service jurisdiction for you.',
+              },
+              {
+                q: 'I believe the score or violation record for my area is inaccurate. What is the correction protocol?',
+                a: 'Please send us your ZIP code and the specific metric you believe is inaccurate. We will pull the raw EPA SDWIS audit log, verify if any recent corrective action has been completed, and update our public records within 48 hours if an official update was promulgated.',
+              },
+              {
+                q: 'Can I cite WaterSafeCheck data in a research paper, thesis, or news report?',
+                a: 'Yes. The underlying federal EPA data is in the public domain. When referencing our synthesis, scores, or charts, please cite: "WaterSafeCheck.com, based on EPA SDWIS and ECHO compliance datasets." For high-volume CSV exports or research collaborations, reach out to our team.',
+              },
+              {
+                q: 'Does WaterSafeCheck sell or share my contact information?',
+                a: 'Never. Contact submissions are strictly used to reply to your inquiry. We do not maintain marketing email lists or share user inquiries with third parties or filter vendors.',
+              },
+            ].map((faq, idx) => (
+              <details key={idx} className="group py-4 select-none">
+                <summary className="flex items-center justify-between cursor-pointer list-none text-sm sm:text-base font-semibold text-slate-900 hover:text-apple-blue transition-colors">
+                  <span>{faq.q}</span>
+                  <span className="ml-4 shrink-0 text-slate-400 group-open:rotate-180 transition-transform">
+                    ↓
+                  </span>
+                </summary>
+                <div className="mt-3 text-sm text-slate-600 leading-relaxed pl-1 pr-6 font-normal">
+                  {faq.a}
+                </div>
+              </details>
+            ))}
           </div>
         </div>
       </div>

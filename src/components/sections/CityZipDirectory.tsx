@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
 import { GradeBadge } from '@/components/ui'
+import { Search, LayoutGrid, List, ChevronDown, Check, ArrowRight } from 'lucide-react'
 
 interface ZipItem {
   zip: string
@@ -36,12 +37,10 @@ export function CityZipDirectory({ zips, cityName, stateCode }: CityZipDirectory
   // Filtered list based on search and tab
   const filteredZips = useMemo(() => {
     return zips.filter(z => {
-      // Search matching (ZIP digits or system name)
       const q = search.trim().toLowerCase()
       const matchesSearch = !q || z.zip.includes(q) || (z.system_name && z.system_name.toLowerCase().includes(q))
       if (!matchesSearch) return false
 
-      // Tab filter
       if (filterGrade === 'A') return z.grade === 'A'
       if (filterGrade === 'B') return z.grade === 'B'
       if (filterGrade === 'CF') return ['C', 'D', 'F'].includes(z.grade)
@@ -55,67 +54,55 @@ export function CityZipDirectory({ zips, cityName, stateCode }: CityZipDirectory
   const displayedZips = shouldShowExpand ? filteredZips.slice(0, initialLimit) : filteredZips
 
   return (
-    <div className="mb-10">
+    <div className="mb-12">
       {/* Header & Controls */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-1">
-            Water Quality by ZIP Code — {cityName}, {stateCode}
+          <h2 className="section-title !mb-1">
+            Water Quality by ZIP Code &bull; {cityName}, {stateCode}
           </h2>
-          <p className="text-sm text-gray-500">
-            Showing {filteredZips.length} of {zips.length} monitored ZIP code{zips.length > 1 ? 's' : ''} in {cityName}
+          <p className="text-sm text-slate-500">
+            Monitoring {zips.length} ZIP code{zips.length > 1 ? 's' : ''} across municipal water systems
           </p>
         </div>
 
-        {/* View Toggle (Grid / Table) */}
-        <div className="flex items-center gap-2 self-start md:self-auto">
-          <div className="bg-gray-100 p-1 rounded-xl flex items-center gap-1 border border-gray-200">
-            <button
-              type="button"
-              onClick={() => setViewMode('grid')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
-                viewMode === 'grid'
-                  ? 'bg-white text-brand-800 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-              aria-label="Grid View"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-              </svg>
-              Cards
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode('table')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
-                viewMode === 'table'
-                  ? 'bg-white text-brand-800 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-              aria-label="Table View"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-              </svg>
-              Compact Table
-            </button>
-          </div>
+        {/* View Toggle (Grid / Table) — Apple Segmented Control */}
+        <div className="segmented-control self-start md:self-auto">
+          <button
+            type="button"
+            onClick={() => setViewMode('grid')}
+            data-active={viewMode === 'grid'}
+            className="segmented-control-item flex items-center gap-1.5"
+            aria-label="Grid View"
+          >
+            <LayoutGrid className="w-3.5 h-3.5" />
+            <span>Cards</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewMode('table')}
+            data-active={viewMode === 'table'}
+            className="segmented-control-item flex items-center gap-1.5"
+            aria-label="Table View"
+          >
+            <List className="w-3.5 h-3.5" />
+            <span>Table</span>
+          </button>
         </div>
       </div>
 
       {/* Filter Tabs & Instant Search Bar */}
-      <div className="card mb-6 p-4 sm:p-5 bg-white shadow-sm border border-gray-100">
+      <div className="card mb-6 p-3 sm:p-4 bg-white/90 shadow-apple-sm">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          {/* Quick Filter Tabs */}
+          {/* Quick Filter Tabs — Apple Pill Switcher */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
             <button
               type="button"
               onClick={() => { setFilterGrade('ALL'); setIsExpanded(true) }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all active:scale-95 ${
                 filterGrade === 'ALL'
-                  ? 'bg-brand-700 text-white shadow-sm'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  ? 'bg-slate-900 text-white shadow-xs'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
               All ({zips.length})
@@ -124,10 +111,10 @@ export function CityZipDirectory({ zips, cityName, stateCode }: CityZipDirectory
               <button
                 type="button"
                 onClick={() => { setFilterGrade('A'); setIsExpanded(true) }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all active:scale-95 ${
                   filterGrade === 'A'
-                    ? 'bg-emerald-600 text-white shadow-sm'
-                    : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200/50'
+                    ? 'bg-emerald-600 text-white shadow-xs'
+                    : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200/60'
                 }`}
               >
                 Grade A ({countA})
@@ -137,10 +124,10 @@ export function CityZipDirectory({ zips, cityName, stateCode }: CityZipDirectory
               <button
                 type="button"
                 onClick={() => { setFilterGrade('B'); setIsExpanded(true) }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all active:scale-95 ${
                   filterGrade === 'B'
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200/50'
+                    ? 'bg-apple-blue text-white shadow-xs'
+                    : 'bg-blue-50 text-apple-blue hover:bg-blue-100 border border-blue-200/60'
                 }`}
               >
                 Grade B ({countB})
@@ -150,10 +137,10 @@ export function CityZipDirectory({ zips, cityName, stateCode }: CityZipDirectory
               <button
                 type="button"
                 onClick={() => { setFilterGrade('CF'); setIsExpanded(true) }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all active:scale-95 ${
                   filterGrade === 'CF'
-                    ? 'bg-orange-600 text-white shadow-sm'
-                    : 'bg-orange-50 text-orange-700 hover:bg-orange-100 border border-orange-200/50'
+                    ? 'bg-orange-600 text-white shadow-xs'
+                    : 'bg-orange-50 text-orange-700 hover:bg-orange-100 border border-orange-200/60'
                 }`}
               >
                 Grades C–F ({countCF})
@@ -163,13 +150,13 @@ export function CityZipDirectory({ zips, cityName, stateCode }: CityZipDirectory
               <button
                 type="button"
                 onClick={() => { setFilterGrade('SAFE'); setIsExpanded(true) }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all active:scale-95 ${
                   filterGrade === 'SAFE'
-                    ? 'bg-brand-900 text-white shadow-sm'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-slate-800 text-white shadow-xs'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                 }`}
               >
-                ✓ 0 Violations ({countSafe})
+                0 Violations ({countSafe})
               </button>
             )}
           </div>
@@ -180,17 +167,15 @@ export function CityZipDirectory({ zips, cityName, stateCode }: CityZipDirectory
               type="text"
               value={search}
               onChange={e => { setSearch(e.target.value); setIsExpanded(true) }}
-              placeholder="Search ZIP (e.g. 77002)..."
-              className="w-full pl-9 pr-3 py-1.5 text-xs sm:text-sm rounded-lg border border-gray-200 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 font-medium"
+              placeholder="Search ZIP code..."
+              className="w-full pl-8 pr-7 py-1.5 text-xs sm:text-sm rounded-full bg-slate-100/90 border border-slate-200/70 focus:outline-none focus:ring-2 focus:ring-apple-blue/20 focus:bg-white font-medium transition-all"
             />
-            <svg className="w-4 h-4 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             {search && (
               <button
                 type="button"
                 onClick={() => setSearch('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-gray-400 hover:text-gray-600"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-600"
               >
                 ✕
               </button>
@@ -199,30 +184,30 @@ export function CityZipDirectory({ zips, cityName, stateCode }: CityZipDirectory
         </div>
       </div>
 
-      {/* ── View 1: Card Grid View ── */}
+      {/* ── View 1: Card Grid View (Apple Cards) ── */}
       {viewMode === 'grid' && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5">
           {displayedZips.map(z => (
             <Link
               key={z.zip}
               href={`/zip/${z.zip}`}
-              className="card-hover block group p-4 bg-white rounded-xl border border-gray-100 hover:border-brand-300 transition-all shadow-sm hover:shadow-md"
+              className="card p-4 hover:border-apple-blue/30 transition-all shadow-xs hover:shadow-apple-card active:scale-[0.98] block group"
             >
-              <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center justify-between mb-2.5">
                 <GradeBadge grade={z.grade} size="sm" />
-                <span className="text-xs font-mono font-bold text-gray-700 bg-gray-50 px-2 py-0.5 rounded border border-gray-100">
+                <span className="text-xs font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md">
                   {z.zip}
                 </span>
               </div>
-              <p className="font-bold text-gray-900 text-sm group-hover:text-brand-700 transition-colors truncate">
+              <p className="font-bold text-slate-900 text-sm group-hover:text-apple-blue transition-colors truncate">
                 {z.city}, {z.state}
               </p>
-              <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-gray-50 text-xs">
-                <span className="text-gray-500 font-medium">
-                  Score: <strong className="text-gray-900">{z.score ?? 'N/A'}</strong>/100
+              <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-slate-100 text-xs">
+                <span className="text-slate-500 font-medium">
+                  Score: <strong className="text-slate-900">{z.score ?? '—'}</strong>/100
                 </span>
-                <span className={`font-semibold ${z.health_violations > 0 ? 'text-orange-600' : 'text-emerald-600'}`}>
-                  {z.health_violations > 0 ? `${z.health_violations} violation${z.health_violations > 1 ? 's' : ''}` : '✓ Clean Record'}
+                <span className={`font-semibold ${z.health_violations > 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
+                  {z.health_violations > 0 ? `${z.health_violations} viol.` : '✓ Safe'}
                 </span>
               </div>
             </Link>
@@ -230,91 +215,91 @@ export function CityZipDirectory({ zips, cityName, stateCode }: CityZipDirectory
         </div>
       )}
 
-      {/* ── View 2: Compact Table View ── */}
+      {/* ── View 2: Compact Table View (Apple Settings Rows) ── */}
       {viewMode === 'table' && (
-        <div className="w-full overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
-          <table className="w-full text-xs sm:text-sm text-left border-collapse min-w-[500px]">
-            <thead>
-              <tr className="bg-gray-50 text-gray-600 text-xs uppercase tracking-wider border-b border-gray-200">
-                <th className="py-3 px-4 font-bold">ZIP Code</th>
-                <th className="py-3 px-4 font-bold">Grade</th>
-                <th className="py-3 px-4 font-bold">Safety Score</th>
-                <th className="py-3 px-4 font-bold">Violations (5-Yr)</th>
-                <th className="py-3 px-4 font-bold text-right">Report</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {displayedZips.map(z => (
-                <tr key={z.zip} className="hover:bg-brand-50/40 transition-colors">
-                  <td className="py-2.5 px-4 font-mono font-bold text-brand-700">
-                    <Link href={`/zip/${z.zip}`} className="hover:underline">
-                      {z.zip}
-                    </Link>
-                  </td>
-                  <td className="py-2.5 px-4">
-                    <GradeBadge grade={z.grade} size="sm" />
-                  </td>
-                  <td className="py-2.5 px-4 font-semibold text-gray-800">
-                    {z.score !== null ? `${z.score}/100` : '—'}
-                  </td>
-                  <td className="py-2.5 px-4">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${
-                      z.health_violations > 0
-                        ? 'bg-orange-50 text-orange-700 border border-orange-200'
-                        : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                    }`}>
-                      {z.health_violations > 0 ? `${z.health_violations} violations` : '0 violations'}
-                    </span>
-                  </td>
-                  <td className="py-2.5 px-4 text-right">
-                    <Link
-                      href={`/zip/${z.zip}`}
-                      className="inline-flex items-center text-xs font-bold text-brand-600 hover:text-brand-800"
-                    >
-                      View Report →
-                    </Link>
-                  </td>
+        <div className="card p-0 overflow-hidden border border-slate-200/80 shadow-apple-sm">
+          <div className="table-scroll">
+            <table className="w-full text-xs sm:text-sm text-left border-collapse min-w-[500px]">
+              <thead>
+                <tr className="bg-slate-50/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200/70">
+                  <th className="py-3 px-4">ZIP Code</th>
+                  <th className="py-3 px-4">Grade</th>
+                  <th className="py-3 px-4">Safety Score</th>
+                  <th className="py-3 px-4">Violations (5-Yr)</th>
+                  <th className="py-3 px-4 text-right">Report</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {displayedZips.map(z => (
+                  <tr key={z.zip} className="hover:bg-slate-50/70 transition-colors">
+                    <td className="py-3 px-4 font-mono font-bold text-slate-900">
+                      <Link href={`/zip/${z.zip}`} className="hover:text-apple-blue hover:underline">
+                        {z.zip}
+                      </Link>
+                    </td>
+                    <td className="py-3 px-4">
+                      <GradeBadge grade={z.grade} size="sm" />
+                    </td>
+                    <td className="py-3 px-4 font-semibold text-slate-800">
+                      {z.score !== null ? `${z.score}/100` : '—'}
+                    </td>
+                    <td className="py-3 px-4">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                        z.health_violations > 0
+                          ? 'bg-rose-50 text-rose-700 border border-rose-200/60'
+                          : 'bg-emerald-50 text-emerald-700 border border-emerald-200/60'
+                      }`}>
+                        {z.health_violations > 0 ? `${z.health_violations} violations` : '0 violations'}
+                      </span>
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      <Link
+                        href={`/zip/${z.zip}`}
+                        className="inline-flex items-center text-xs font-semibold text-apple-blue hover:underline"
+                      >
+                        View Report &rarr;
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
       {/* Show All / Load More Button for Big Cities */}
       {shouldShowExpand && (
-        <div className="mt-6 text-center">
+        <div className="mt-8 text-center">
           <button
             type="button"
             onClick={() => setIsExpanded(true)}
-            className="btn-primary py-3 px-8 text-sm font-bold shadow-md hover:shadow-lg inline-flex items-center gap-2"
+            className="btn-secondary py-3 px-8 text-sm font-semibold shadow-xs hover:shadow-apple-card inline-flex items-center gap-2"
           >
             <span>Show all {zips.length} ZIP codes in {cityName}</span>
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
+            <ChevronDown className="w-4 h-4 text-slate-500" />
           </button>
         </div>
       )}
 
       {/* If search has no results */}
       {filteredZips.length === 0 && (
-        <div className="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-          <p className="text-gray-600 font-semibold mb-1">No ZIP codes found matching "{search}"</p>
-          <p className="text-xs text-gray-400 mb-4">Try searching with a 5-digit number or reset filter</p>
+        <div className="text-center py-12 card bg-slate-50/50 border border-dashed border-slate-200">
+          <p className="text-slate-800 font-semibold mb-1">No ZIP codes found matching &ldquo;{search}&rdquo;</p>
+          <p className="text-xs text-slate-400 mb-4">Try searching with another 5-digit number or reset filter</p>
           <button
             type="button"
             onClick={() => { setSearch(''); setFilterGrade('ALL') }}
-            className="text-xs text-brand-700 font-bold underline"
+            className="text-xs text-apple-blue font-bold hover:underline"
           >
             Reset all filters
           </button>
         </div>
       )}
 
-      {/* ── Complete SSR Crawl Directory (Ensures 100% Googlebot Crawl Coverage) ── */}
-      <div className="mt-8 pt-6 border-t border-gray-100">
-        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">
+      {/* SSR Crawl Directory */}
+      <div className="mt-8 pt-6 border-t border-slate-100">
+        <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
           All {cityName}, {stateCode} ZIP Code Reports ({zips.length} Total)
         </h3>
         <div className="flex flex-wrap gap-1.5 text-xs">
@@ -322,7 +307,7 @@ export function CityZipDirectory({ zips, cityName, stateCode }: CityZipDirectory
             <Link
               key={`dir-${z.zip}`}
               href={`/zip/${z.zip}`}
-              className="px-2.5 py-1 rounded bg-gray-50 hover:bg-brand-50 text-gray-700 hover:text-brand-700 font-mono text-xs border border-gray-200 hover:border-brand-200 transition-colors"
+              className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-white text-slate-700 hover:text-apple-blue font-mono text-xs border border-slate-200/60 hover:border-apple-blue/30 transition-colors"
             >
               {z.zip}
             </Link>

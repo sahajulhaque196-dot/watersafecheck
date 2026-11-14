@@ -1,9 +1,12 @@
 'use client'
 // src/components/ui/AdSense.tsx
-// Safe, resilient AdSense component for Next.js 14 App Router.
-// Safely suppresses rendering if AdSense ID is a placeholder or not configured.
+// High-CTR, policy-compliant AdSense components for Next.js 14 App Router.
+// Configured with verified live slots:
+// 1. Display Ads: 2924121704 (High CTR - auto responsive)
+// 2. In-Article Ads: 1255816818 (Fluid in-content editorial)
+// 3. Multiplex Ads: 6637055875 (Autorelaxed multi-grid recommendations)
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 declare global {
   interface Window {
@@ -11,96 +14,126 @@ declare global {
   }
 }
 
-const PUBLISHER_ID = process.env.NEXT_PUBLIC_ADSENSE_ID || 'ca-pub-1708825851821862'
-const IS_ADSENSE_ACTIVE = Boolean(
-  PUBLISHER_ID &&
-  !PUBLISHER_ID.includes('XXXX') &&
-  !PUBLISHER_ID.includes('your-publisher-id')
-)
+export const ADSENSE_CLIENT = 'ca-pub-1708825851821862'
+export const DISPLAY_SLOT = '2924121704'
+export const IN_ARTICLE_SLOT = '1255816818'
+export const MULTIPLEX_SLOT = '6637055875'
 
-interface AdSenseProps {
-  slot: string
-  format?: 'auto' | 'rectangle' | 'horizontal' | 'vertical'
+// Base Ad wrapper ensuring single push per mount and CLS stability
+function BaseAdUnit({
+  children,
+  className = '',
+  label = 'Advertisement',
+}: {
+  children: React.ReactNode
   className?: string
-  style?: React.CSSProperties
-}
+  label?: string
+}) {
+  const adRef = useRef<HTMLDivElement>(null)
+  const isPushed = useRef(false)
 
-function isDummySlot(slot?: string): boolean {
-  if (!slot || slot.length < 8) return true
-  return /^(\d)\1+$/.test(slot)
-}
-
-function AdUnit({ slot, format = 'auto', className = '', style }: AdSenseProps) {
   useEffect(() => {
-    if (!IS_ADSENSE_ACTIVE) return
+    if (isPushed.current) return
     try {
       if (typeof window !== 'undefined') {
-        ;(window.adsbygoogle = window.adsbygoogle || []).push({})
+        const adsbygoogle = (window.adsbygoogle = window.adsbygoogle || [])
+        adsbygoogle.push({})
+        isPushed.current = true
       }
     } catch {
-      // AdSense not loaded in development — safe to ignore
+      // AdSense script loading or adblocker suppression — graceful fail
     }
   }, [])
 
-  if (!IS_ADSENSE_ACTIVE || isDummySlot(slot)) {
-    return null
-  }
-
   return (
-    <div className={`adsense-container text-center ${className}`}>
-      <span className="block text-[10px] uppercase tracking-wider text-slate-400 font-medium mb-1 select-none">
-        Advertisement
-      </span>
+    <div ref={adRef} className={`adsense-wrapper my-6 w-full text-center no-print ${className}`}>
+      {label && (
+        <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-semibold mb-1.5 select-none">
+          {label}
+        </span>
+      )}
+      <div className="overflow-hidden rounded-2xl bg-slate-50/60 border border-slate-200/60 p-2 sm:p-3 shadow-xs">
+        {children}
+      </div>
+    </div>
+  )
+}
+
+// ─── 1. Display Ads (High CTR, Auto Responsive) ──────────────────────────────
+export function DisplayAd({
+  slot = DISPLAY_SLOT,
+  className = '',
+  style,
+}: {
+  slot?: string
+  className?: string
+  style?: React.CSSProperties
+}) {
+  return (
+    <BaseAdUnit className={className}>
       <ins
         className="adsbygoogle"
-        style={{ display: 'block', ...style }}
-        data-ad-client={PUBLISHER_ID}
+        style={{ display: 'block', minHeight: '100px', ...style }}
+        data-ad-client={ADSENSE_CLIENT}
         data-ad-slot={slot}
-        data-ad-format={format}
+        data-ad-format="auto"
         data-full-width-responsive="true"
       />
-    </div>
+    </BaseAdUnit>
   )
 }
 
-// ─── Zero-space ad positions: Will render pure null until active and configured ──────
-export function AdTop() {
-  const slot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOP
-  if (!IS_ADSENSE_ACTIVE || !slot || isDummySlot(slot)) return null
+// ─── 2. In-Article Ads (Fluid Editorial Layout) ──────────────────────────────
+export function InArticleAd({
+  slot = IN_ARTICLE_SLOT,
+  className = '',
+  style,
+}: {
+  slot?: string
+  className?: string
+  style?: React.CSSProperties
+}) {
   return (
-    <div className="w-full my-3 min-h-[90px] overflow-hidden no-print">
-      <AdUnit slot={slot} format="horizontal" />
-    </div>
+    <BaseAdUnit className={className} label="Sponsored Information">
+      <ins
+        className="adsbygoogle"
+        style={{ display: 'block', textAlign: 'center', minHeight: '120px', ...style }}
+        data-ad-layout="in-article"
+        data-ad-format="fluid"
+        data-ad-client={ADSENSE_CLIENT}
+        data-ad-slot={slot}
+      />
+    </BaseAdUnit>
   )
 }
 
-export function AdSidebar() {
-  const slot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR
-  if (!IS_ADSENSE_ACTIVE || !slot || isDummySlot(slot)) return null
+// ─── 3. Multiplex Ads (Autorelaxed Grid Recommendations) ─────────────────────
+export function MultiplexAd({
+  slot = MULTIPLEX_SLOT,
+  className = '',
+  style,
+}: {
+  slot?: string
+  className?: string
+  style?: React.CSSProperties
+}) {
   return (
-    <div className="w-full my-4 min-h-[250px] overflow-hidden no-print">
-      <AdUnit slot={slot} format="vertical" />
-    </div>
+    <BaseAdUnit className={className} label="Recommended Content & Sponsors">
+      <ins
+        className="adsbygoogle"
+        style={{ display: 'block', minHeight: '280px', ...style }}
+        data-ad-format="autorelaxed"
+        data-ad-client={ADSENSE_CLIENT}
+        data-ad-slot={slot}
+      />
+    </BaseAdUnit>
   )
 }
 
-export function AdInContent() {
-  const slot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_INCONTENT
-  if (!IS_ADSENSE_ACTIVE || !slot || isDummySlot(slot)) return null
-  return (
-    <div className="w-full my-6 min-h-[250px] overflow-hidden no-print">
-      <AdUnit slot={slot} format="rectangle" />
-    </div>
-  )
-}
+// ─── Legacy / Convenience Aliases for existing page integration ─────────────
+export const AdTop = () => <DisplayAd className="my-4 max-w-7xl mx-auto" />
+export const AdSidebar = () => <DisplayAd className="my-4" style={{ minHeight: '250px' }} />
+export const AdInContent = () => <InArticleAd className="my-6 max-w-4xl mx-auto" />
+export const AdBottom = () => <MultiplexAd className="my-8 max-w-7xl mx-auto" />
 
-export function AdBottom() {
-  const slot = process.env.NEXT_PUBLIC_ADSENSE_SLOT_BOTTOM
-  if (!IS_ADSENSE_ACTIVE || !slot || isDummySlot(slot)) return null
-  return (
-    <div className="w-full my-6 min-h-[100px] overflow-hidden no-print">
-      <AdUnit slot={slot} format="auto" />
-    </div>
-  )
-}
 

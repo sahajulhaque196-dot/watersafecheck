@@ -1,6 +1,7 @@
 // src/app/terms/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { FileText, ShieldCheck, Scale, ArrowRight, ExternalLink } from 'lucide-react'
 import { SITE_URL } from '@/lib/seo'
 
 export const metadata: Metadata = {
@@ -24,116 +25,163 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <nav className="mb-6 text-sm text-gray-500" aria-label="Breadcrumb">
-        <Link href="/" className="hover:text-brand-700">Home</Link>
-        <span className="mx-2" aria-hidden="true">/</span>
-        <span className="text-gray-800 font-medium" aria-current="page">Terms of Service</span>
-      </nav>
+    <div className="min-h-screen bg-[#F5F5F7] text-slate-900 pb-20">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16">
+        {/* Breadcrumb */}
+        <nav className="mb-6 flex items-center space-x-2 text-xs font-semibold text-slate-500 uppercase tracking-wider" aria-label="Breadcrumb">
+          <Link href="/" className="hover:text-apple-blue transition-colors">Home</Link>
+          <span className="text-slate-300">/</span>
+          <span className="text-slate-900 font-bold" aria-current="page">Terms of Service</span>
+        </nav>
 
-      <h1 className="text-3xl font-black text-gray-900 mb-2">Terms of Service</h1>
-      <p className="text-sm text-gray-400 mb-8">Last updated: January 1, 2026</p>
-
-      <div className="space-y-8 text-sm text-gray-700 leading-relaxed">
-        <div className="alert-info">
-          <strong>Summary:</strong> By accessing and using WaterSafeCheck.com, you agree to these Terms of Service. WaterSafeCheck provides educational drinking water data based on public U.S. EPA records. We are an independent resource, not a government agency.
+        {/* Header */}
+        <div className="mb-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-apple-blue/10 text-apple-blue text-xs font-semibold tracking-wide mb-3">
+            <Scale className="w-3.5 h-3.5" />
+            Legal & Compliance
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 mb-3">
+            Terms of Service
+          </h1>
+          <p className="text-sm font-medium text-slate-500">
+            Effective Date: January 1, 2026 • Version 2.4
+          </p>
         </div>
 
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">1. Acceptance of Terms</h2>
-          <p>
-            By accessing or using WaterSafeCheck.com (the &quot;Website&quot;), you agree to be bound by these Terms of Service (&quot;Terms&quot;) and our{' '}
-            <Link href="/privacy" className="text-brand-700 underline font-medium">Privacy Policy</Link>. If you do not agree with any part of these Terms, you must discontinue use of the Website immediately.
-          </p>
-        </section>
+        {/* Executive Summary Card */}
+        <div className="apple-card p-6 sm:p-8 bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl shadow-apple-card mb-10">
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <div className="space-y-2 text-sm text-slate-700 leading-relaxed">
+              <h2 className="font-bold text-slate-900 text-base">Key Takeaways</h2>
+              <p>
+                By accessing WaterSafeCheck.com, you agree to these Terms. WaterSafeCheck is an independent educational platform aggregating public federal drinking water compliance data published by the U.S. EPA under the Safe Drinking Water Act (SDWA). We are not a government agency, and our reports do not replace certified physical tap water testing or medical consultation.
+              </p>
+            </div>
+          </div>
+        </div>
 
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">2. Description of Service</h2>
-          <p className="mb-3">
-            WaterSafeCheck is an independent data analysis and public education project. We aggregate, process, and present publicly available data published by the U.S. Environmental Protection Agency (EPA), state environmental agencies, and public water utilities under the Safe Drinking Water Act (SDWA).
-          </p>
-          <p>
-            Our service includes water safety grades, historical violation records, lead risk indicators, water hardness estimates, and water testing guidance for U.S. ZIP codes and municipalities.
-          </p>
-        </section>
+        {/* Policy Body */}
+        <div className="apple-card p-6 sm:p-12 bg-white/90 backdrop-blur-2xl border border-slate-200/80 rounded-3xl shadow-apple-card space-y-10 text-sm sm:text-base text-slate-700 leading-relaxed">
+          <section className="space-y-3">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center">1</span>
+              Acceptance of Terms
+            </h2>
+            <p>
+              By accessing or using WaterSafeCheck.com (the &quot;Website&quot;), you acknowledge that you have read, understood, and agreed to be bound by these Terms of Service and our{' '}
+              <Link href="/privacy" className="text-apple-blue font-semibold hover:underline">Privacy Policy</Link>. If you do not agree with any part of these Terms, you must discontinue use of the Website immediately.
+            </p>
+          </section>
 
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">3. Informational & Educational Use Only</h2>
-          <p className="mb-3">
-            All content, data, guides, and scores provided on WaterSafeCheck are for general educational and informational purposes only. The information does not constitute medical, health, environmental engineering, or legal advice.
-          </p>
-          <p className="mb-3">
-            Water quality conditions can change quickly due to seasonal variations, main breaks, or local infrastructure changes. Do not rely solely on this website for critical health or medical decisions. If you have immediate water contamination concerns, contact your local water utility or call the EPA Safe Drinking Water Hotline at <strong>1-800-426-4791</strong>.
-          </p>
-          <p>
-            For more details, please review our full{' '}
-            <Link href="/disclaimer" className="text-brand-700 underline font-medium">Disclaimer</Link>.
-          </p>
-        </section>
+          <section className="space-y-3 pt-6 border-t border-slate-100">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center">2</span>
+              Description of Service
+            </h2>
+            <p>
+              WaterSafeCheck provides a free public data interface for exploring municipal drinking water records across U.S. ZIP codes, cities, and states. We aggregate, process, and summarize public records published by the U.S. Environmental Protection Agency (EPA SDWIS, ECHO, and UCMR5) and municipal Consumer Confidence Reports (CCR).
+            </p>
+            <p className="text-slate-600 text-sm">
+              Our safety grades, lead risk levels, water hardness metrics, and filter recommendations are analytical interpretations designed to help homeowners make informed water choices.
+            </p>
+          </section>
 
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">4. Intellectual Property & Fair Use</h2>
-          <p className="mb-3">
-            The underlying government data sourced from EPA SDWIS, ECHO, and UCMR5 is in the public domain. However, the unique website design, compilation, proprietary scoring algorithms, editorial articles, graphics, and branding on WaterSafeCheck are protected by copyright and intellectual property laws.
-          </p>
-          <p>
-            You may cite or link to our pages for journalistic, educational, or non-commercial research purposes with appropriate attribution to &quot;WaterSafeCheck (watersafecheck.com)&quot;. Automated mass scraping or unauthorized reproduction of entire datasets for commercial resale without prior written permission is prohibited.
-          </p>
-        </section>
+          <section className="space-y-3 pt-6 border-t border-slate-100">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center">3</span>
+              Informational & Educational Use Only
+            </h2>
+            <p>
+              All materials on this website are published solely for general informational and educational guidance. Nothing on WaterSafeCheck constitutes medical, toxicological, plumbing, engineering, or legal advice.
+            </p>
+            <p>
+              Water quality varies by building age, internal plumbing fixtures, and seasonal shifts. Do not rely solely on this website for critical health decisions. If you suspect immediate contamination or notice an active boil-water notice, contact your municipal water authority or call the EPA Safe Drinking Water Hotline at <strong className="text-slate-900">1-800-426-4791</strong>.
+            </p>
+            <p>
+              Please read our comprehensive{' '}
+              <Link href="/disclaimer" className="text-apple-blue font-semibold hover:underline">Medical & Data Disclaimer</Link>.
+            </p>
+          </section>
 
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">5. User Conduct & Prohibited Activities</h2>
-          <p className="mb-2">When using our Website, you agree not to:</p>
-          <ul className="space-y-1.5 list-disc list-inside">
-            <li>Use the Website in any manner that could disable, overburden, or impair our servers or networks;</li>
-            <li>Attempt to gain unauthorized access to any part of the Website or API endpoints;</li>
-            <li>Use automated bots or scripts to disrupt normal website operation;</li>
-            <li>Misrepresent your identity or affiliation with WaterSafeCheck or any government agency.</li>
-          </ul>
-        </section>
+          <section className="space-y-3 pt-6 border-t border-slate-100">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center">4</span>
+              Intellectual Property & Fair Use
+            </h2>
+            <p>
+              Underlying government datasets (such as EPA SDWIS violation logs) reside in the public domain. However, WaterSafeCheck’s unique site architecture, scoring algorithms, interactive widgets, editorial analyses, and visual representations are proprietary assets protected by copyright and intellectual property laws.
+            </p>
+            <p>
+              You are permitted to quote, link, or reference our findings for non-commercial educational or journalistic purposes, provided you credit &quot;WaterSafeCheck (watersafecheck.com)&quot;. Systematic high-frequency web scraping or automated data extraction without prior written consent is strictly prohibited.
+            </p>
+          </section>
 
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">6. Third-Party Links & Advertising</h2>
-          <p className="mb-3">
-            WaterSafeCheck contains links to external third-party websites (such as EPA.gov, state water boards, and educational public health resources) as well as display advertisements served via Google AdSense.
-          </p>
-          <p>
-            We are not responsible for the content, privacy policies, or commercial practices of third-party websites. When you click on third-party links or advertisements, you do so at your own risk.
-          </p>
-        </section>
+          <section className="space-y-3 pt-6 border-t border-slate-100">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center">5</span>
+              User Conduct & Fair Use Guidelines
+            </h2>
+            <p>When utilizing our service, you agree not to:</p>
+            <ul className="list-disc list-inside space-y-2 text-slate-600 pl-2 text-sm sm:text-base">
+              <li>Launch denial-of-service attempts or overwhelm server infrastructure;</li>
+              <li>Circumvent rate limiting or security perimeters;</li>
+              <li>Misrepresent your identity as an official EPA or state regulator;</li>
+              <li>Repackage our proprietary scoring engine for commercial software sales.</li>
+            </ul>
+          </section>
 
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">7. Disclaimer of Warranties</h2>
-          <p className="mb-3">
-            THE WEBSITE AND ALL CONTENT ARE PROVIDED ON AN &quot;AS IS&quot; AND &quot;AS AVAILABLE&quot; BASIS WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED.
-          </p>
-          <p>
-            WE DO NOT WARRANT THAT THE DATA IS ERROR-FREE, UNINTERRUPTED, OR FREE OF TECHNICAL INACCURACIES, NOR DO WE WARRANT THE ACTUAL SAFETY OF ANY INDIVIDUAL TAP OR PRIVATE WELL.
-          </p>
-        </section>
+          <section className="space-y-3 pt-6 border-t border-slate-100">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center">6</span>
+              Third-Party Links & Advertising
+            </h2>
+            <p>
+              WaterSafeCheck displays standard third-party advertising via Google AdSense to fund ongoing server maintenance and research operations. Advertisements are served automatically by Google’s advertising networks.
+            </p>
+            <p>
+              We do not endorse any specific commercial product, filter manufacturer, or private testing lab that may appear within Google Ad units. For details on how cookies power these services, review our{' '}
+              <Link href="/privacy" className="text-apple-blue font-semibold hover:underline">Privacy Policy</Link>.
+            </p>
+          </section>
 
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">8. Limitation of Liability</h2>
-          <p>
-            TO THE FULLEST EXTENT PERMITTED BY LAW, WATERSAFECHECK AND ITS OPERATORS, EMPLOYEES, AND AFFILIATES SHALL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES RESULTING FROM YOUR USE OF OR INABILITY TO USE THE SITE.
-          </p>
-        </section>
+          <section className="space-y-3 pt-6 border-t border-slate-100">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center">7</span>
+              Disclaimer of Warranties
+            </h2>
+            <p className="uppercase text-xs sm:text-sm font-semibold text-slate-600 tracking-wider">
+              THE WEBSITE AND ALL MATERIALS ARE PROVIDED ON AN &quot;AS IS&quot; AND &quot;AS AVAILABLE&quot; BASIS. WATERSAFECHECK EXPRESSLY DISCLAIMS ALL WARRANTIES OF ANY KIND, WHETHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO FITNESS FOR A PARTICULAR PURPOSE, ACCURACY OF HISTORICAL REGULATORY RECORDS, AND FREEDOM FROM SERVICE INTERRUPTIONS.
+            </p>
+          </section>
 
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">9. Modifications to Terms</h2>
-          <p>
-            We reserve the right to revise or update these Terms of Service at any time. Any changes will be posted on this page with an updated &quot;Last updated&quot; date. Continued use of the Website following any changes constitutes acceptance of the new Terms.
-          </p>
-        </section>
+          <section className="space-y-3 pt-6 border-t border-slate-100">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center">8</span>
+              Limitation of Liability
+            </h2>
+            <p className="uppercase text-xs sm:text-sm font-semibold text-slate-600 tracking-wider">
+              IN NO EVENT SHALL WATERSAFECHECK, ITS OPERATORS, DIRECTORS, OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES RESULTING FROM YOUR RELIANCE ON DATA PUBLISHED ON THIS PLATFORM OR ANY FAILURE OF MUNICIPAL WATER INFRASTRUCTURE.
+            </p>
+          </section>
 
-        <section>
-          <h2 className="text-lg font-bold text-gray-900 mb-3">10. Contact Us</h2>
-          <p>
-            If you have any questions or concerns regarding these Terms of Service, please contact us at{' '}
-            <a href="mailto:contact@watersafecheck.com" className="text-brand-700 underline font-medium">contact@watersafecheck.com</a> or visit our{' '}
-            <Link href="/contact" className="text-brand-700 underline font-medium">Contact Page</Link>.
-          </p>
-        </section>
+          <section className="space-y-3 pt-6 border-t border-slate-100">
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              <span className="w-7 h-7 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold flex items-center justify-center">9</span>
+              Inquiries & Official Notice
+            </h2>
+            <p>
+              For legal inquiries, copyright notices, or questions regarding these Terms, contact our legal desk directly:
+            </p>
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/70 text-sm">
+              <p className="font-semibold text-slate-900">WaterSafeCheck Legal & Regulatory Desk</p>
+              <p className="text-slate-600">Email: <a href="mailto:contact@watersafecheck.com" className="text-apple-blue font-semibold hover:underline">contact@watersafecheck.com</a></p>
+              <p className="text-slate-600">Response Window: 2–3 Business Days</p>
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   )

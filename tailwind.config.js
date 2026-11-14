@@ -26,6 +26,9 @@ module.exports = {
     'text-yellow-700','bg-yellow-50','text-red-700','bg-red-50','text-gray-700','bg-gray-50',
     // Alert text
     'text-green-900','text-yellow-900','text-orange-900','text-red-900','text-purple-900','text-blue-900',
+    // Apple system tokens safelist
+    'bg-emerald-500', 'text-emerald-500', 'bg-sky-500', 'text-sky-500', 'bg-amber-500', 'text-amber-500',
+    'bg-rose-500', 'text-rose-500', 'border-emerald-200', 'border-sky-200', 'border-amber-200', 'border-rose-200',
   ],
   theme: {
     extend: {
@@ -38,9 +41,34 @@ module.exports = {
           400: '#2dd4bf',
           500: '#14b8a6',
           600: '#0f766e',
-          700: '#0f172a', // Deep slate for primary brand (text/dark mode)
+          700: '#0f172a',
           800: '#0b1120',
           900: '#020617',
+        },
+        apple: {
+          blue: '#0071e3',
+          'blue-hover': '#0077ed',
+          'blue-deep': '#0058b0',
+          'blue-light': '#e8f2ff',
+          gray: {
+            50: '#fbfbfd',
+            100: '#f5f5f7',
+            200: '#e5e5ea',
+            300: '#d1d1d6',
+            400: '#aeaeb2',
+            500: '#8e8e93',
+            600: '#636366',
+            700: '#48484a',
+            800: '#2c2c2e',
+            900: '#1d1d1f',
+          },
+          teal: '#00c7be',
+          cyan: '#32ade6',
+          green: '#34c759',
+          amber: '#ff9500',
+          red: '#ff3b30',
+          purple: '#af52de',
+          indigo: '#5856d6',
         },
         water: {
           300: '#67e8f9',
@@ -52,7 +80,28 @@ module.exports = {
         danger:  { DEFAULT: '#ef4444', light: '#fee2e2' },
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        sans: [
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"SF Pro Text"',
+          '"SF Pro Display"',
+          'var(--font-inter)',
+          'system-ui',
+          'sans-serif',
+        ],
+      },
+      boxShadow: {
+        'apple-sm': '0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.02)',
+        'apple-card': '0 2px 10px -2px rgba(0, 0, 0, 0.04), 0 12px 30px -4px rgba(0, 0, 0, 0.06)',
+        'apple-card-hover': '0 12px 28px -6px rgba(0, 0, 0, 0.09), 0 24px 48px -10px rgba(0, 0, 0, 0.10)',
+        'apple-glass': '0 8px 32px 0 rgba(0, 0, 0, 0.06)',
+        'apple-float': '0 20px 50px -12px rgba(0, 113, 227, 0.22), 0 8px 24px -4px rgba(0, 0, 0, 0.08)',
+        'apple-glow': '0 0 30px -5px rgba(0, 113, 227, 0.35)',
+      },
+      borderRadius: {
+        '2xl': '1rem',
+        '3xl': '1.5rem',
+        '4xl': '2rem',
       },
       screens: {
         xs: '375px',

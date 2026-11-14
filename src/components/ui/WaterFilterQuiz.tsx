@@ -1,7 +1,7 @@
 'use client'
 // src/components/ui/WaterFilterQuiz.tsx
 import { useState } from 'react'
-import { CheckCircle2, AlertTriangle, ShieldCheck, HelpCircle, ArrowRight, RotateCcw } from 'lucide-react'
+import { CheckCircle2, ShieldCheck, Sparkles, RotateCcw, ArrowRight, Beaker } from 'lucide-react'
 
 interface WaterFilterQuizProps {
   zip: string
@@ -36,7 +36,6 @@ export function WaterFilterQuiz({
     setShowResult(false)
   }
 
-  // Determine smart personalized recommendation
   const isPre1986 = homeAge === 'pre-1986'
   const isLeadConcern = concern === 'lead' || isPre1986 || leadStatus === 'warning' || leadStatus === 'danger'
   const isHardnessConcern = concern === 'hardness' || hardnessCategory === 'Hard' || hardnessCategory === 'Very Hard'
@@ -56,76 +55,89 @@ export function WaterFilterQuiz({
   }
 
   return (
-    <div className="card bg-gradient-to-br from-white via-sky-50/30 to-blue-50/40 border-2 border-brand-200/80 shadow-md p-6 rounded-2xl relative overflow-hidden">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <span className="p-2 rounded-xl bg-brand-100 text-brand-700">
-            <ShieldCheck className="w-5 h-5 text-brand-600" />
-          </span>
+    <div className="card border-slate-200/90 shadow-apple-card relative overflow-hidden bg-white/95 backdrop-blur-xl">
+      {/* Apple specular top glow */}
+      <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-500 via-sky-400 to-indigo-500" />
+
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-apple-blue/10 text-apple-blue flex items-center justify-center font-bold">
+            <Beaker className="w-4 h-4" />
+          </div>
           <div>
-            <h3 className="text-lg font-black text-gray-900">
-              Interactive Water Safety & Filter Matcher
+            <h3 className="font-bold text-slate-900 text-base tracking-tight">
+              Personalized Water Filter Finder
             </h3>
-            <p className="text-xs text-gray-500">
-              Personalized for ZIP {zip} ({city}, {state})
+            <p className="text-xs text-slate-500">
+              Tailored to {city ? `${city}, ` : ''}{zip} water chemistry
             </p>
           </div>
         </div>
-        <span className="text-[11px] font-bold uppercase tracking-wider text-brand-700 bg-brand-50 border border-brand-200 px-2.5 py-1 rounded-full">
-          Free Tool
-        </span>
+
+        {showResult && (
+          <button
+            onClick={handleReset}
+            className="text-xs font-semibold text-slate-500 hover:text-slate-900 flex items-center gap-1 transition-colors px-2.5 py-1 rounded-full bg-slate-100 hover:bg-slate-200"
+          >
+            <RotateCcw className="w-3 h-3" />
+            <span>Retake</span>
+          </button>
+        )}
       </div>
 
       {!showResult ? (
-        <div className="space-y-4">
+        <div className="space-y-5">
+          {/* Question 1: Home Age */}
           <div>
-            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
-              1. When was your home or apartment building built?
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+              1. When was your home or building constructed?
             </label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               {[
-                { id: 'pre-1986', label: 'Before 1986', sub: 'High risk of lead solder/pipes' },
-                { id: 'post-1986', label: '1986 or Newer', sub: 'Lead pipes banned by EPA' },
+                { id: 'pre-1986', title: 'Before 1986', subtitle: 'Higher lead risk' },
+                { id: '1986-2014', title: '1986 – 2014', subtitle: 'Moderate risk' },
+                { id: 'post-2014', title: '2014 or Newer', subtitle: 'Lead-free standard' },
               ].map(opt => (
                 <button
                   key={opt.id}
                   type="button"
                   onClick={() => setHomeAge(opt.id)}
-                  className={`text-left p-3 rounded-xl border-2 transition-all ${
+                  className={`p-3 rounded-2xl text-left border transition-all active:scale-[0.98] ${
                     homeAge === opt.id
-                      ? 'border-brand-600 bg-brand-50 text-brand-900 shadow-xs'
-                      : 'border-gray-200 hover:border-brand-300 bg-white text-gray-700'
+                      ? 'border-apple-blue bg-apple-blue/5 text-slate-900 ring-2 ring-apple-blue/20'
+                      : 'border-slate-200 bg-slate-50/50 hover:bg-slate-100 text-slate-700'
                   }`}
                 >
-                  <p className="text-sm font-bold">{opt.label}</p>
-                  <p className="text-xs text-gray-500">{opt.sub}</p>
+                  <p className="text-xs font-bold">{opt.title}</p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">{opt.subtitle}</p>
                 </button>
               ))}
             </div>
           </div>
 
+          {/* Question 2: Primary Concern */}
           <div>
-            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
               2. What is your primary drinking water priority?
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               {[
-                { id: 'lead', label: 'Lead & Toxins', sub: 'Kids / Pregnancy' },
-                { id: 'taste', label: 'Taste & Odor', sub: 'Chlorine taste' },
-                { id: 'hardness', label: 'Hard Water & Scale', sub: 'White residue' },
+                { id: 'lead', title: 'Lead & Heavy Metals', subtitle: 'Protect infants & kids' },
+                { id: 'taste', title: 'Taste & Chlorine Odor', subtitle: 'Aesthetic purification' },
+                { id: 'hardness', title: 'Hard Water & Scale', subtitle: 'Mineral buildup relief' },
               ].map(opt => (
                 <button
                   key={opt.id}
                   type="button"
                   onClick={() => setConcern(opt.id)}
-                  className={`text-left p-3 rounded-xl border-2 transition-all ${
+                  className={`p-3 rounded-2xl text-left border transition-all active:scale-[0.98] ${
                     concern === opt.id
-                      ? 'border-brand-600 bg-brand-50 text-brand-900 shadow-xs'
-                      : 'border-gray-200 hover:border-brand-300 bg-white text-gray-700'
+                      ? 'border-apple-blue bg-apple-blue/5 text-slate-900 ring-2 ring-apple-blue/20'
+                      : 'border-slate-200 bg-slate-50/50 hover:bg-slate-100 text-slate-700'
                   }`}
                 >
-                  <p className="text-sm font-bold">{opt.label}</p>
-                  <p className="text-xs text-gray-500">{opt.sub}</p>
+                  <p className="text-xs font-bold">{opt.title}</p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">{opt.subtitle}</p>
                 </button>
               ))}
             </div>
@@ -135,52 +147,41 @@ export function WaterFilterQuiz({
             type="button"
             disabled={!homeAge || !concern}
             onClick={handleCalculate}
-            className={`w-full py-3 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-all ${
-              homeAge && concern
-                ? 'bg-brand-600 hover:bg-brand-700 text-white shadow-md cursor-pointer'
-                : 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
-            }`}
+            className="w-full py-3.5 bg-apple-blue hover:bg-apple-blue-hover active:scale-[0.98] disabled:opacity-40 text-white rounded-full font-semibold text-sm transition-all shadow-[0_4px_14px_rgba(0,113,227,0.3)] flex items-center justify-center gap-2"
           >
-            <span>See Personalized Filter Recommendation</span>
+            <span>Analyze Filter Recommendation</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
       ) : (
-        <div className="bg-white border border-brand-100 rounded-xl p-5 animate-in fade-in duration-300">
-          <div className="flex items-center justify-between mb-3">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-              Optimal Match for ZIP {zip}
-            </span>
-            <button
-              onClick={handleReset}
-              className="text-xs text-gray-500 hover:text-brand-700 flex items-center gap-1 font-medium cursor-pointer"
-            >
-              <RotateCcw className="w-3 h-3" />
-              Retake Check
-            </button>
+        <div className="space-y-4 animate-in fade-in zoom-in-95 duration-200">
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-blue-50/80 via-sky-50/50 to-white border border-blue-200/60 shadow-xs">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-apple-blue text-white shadow-xs">
+                <Sparkles className="w-3 h-3" />
+                Recommended System
+              </span>
+              <span className="text-xs text-slate-400 font-medium">&bull;</span>
+              <span className="text-xs font-semibold text-slate-600">Verified NSF Standard</span>
+            </div>
+
+            <h4 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight mb-1">
+              {filterType}
+            </h4>
+            <p className="text-xs font-semibold text-apple-blue mb-3">
+              Key Targets: {bestFor}
+            </p>
+            <p className="text-sm text-slate-600 leading-relaxed">
+              {reason}
+            </p>
           </div>
 
-          <h4 className="text-lg font-black text-brand-950 mb-1">
-            Recommended: {filterType}
-          </h4>
-          <p className="text-xs font-semibold text-brand-700 mb-3">
-            Target Removal: {bestFor}
-          </p>
-
-          <p className="text-sm text-gray-700 leading-relaxed mb-4 bg-sky-50/50 p-3 rounded-lg border border-sky-100">
-            {reason}
-          </p>
-
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            <div className="p-2.5 rounded-lg bg-gray-50 border border-gray-100">
-              <p className="text-gray-500">Certified Standard</p>
-              <p className="font-bold text-gray-900 mt-0.5">NSF/ANSI 53 or 58</p>
-            </div>
-            <div className="p-2.5 rounded-lg bg-gray-50 border border-gray-100">
-              <p className="text-gray-500">Tested EPA Status</p>
-              <p className="font-bold text-gray-900 mt-0.5">Official SDWIS Match</p>
-            </div>
+          <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 pt-1">
+            <span className="flex items-center gap-1">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+              Look for NSF/ANSI 53 or 58 certification seal
+            </span>
+            <span className="text-slate-400">Independent laboratory tested</span>
           </div>
         </div>
       )}
