@@ -429,10 +429,10 @@ export default function WaterQualityGuidePage() {
               </div>
             </main>
 
-            {/* ── Right Column: Sticky Sidebar (4 cols) ── */}
-            <aside className="lg:col-span-4 sticky top-20 self-start space-y-6">
-              {/* Ad 2: Sticky Sidebar Top Display Ad */}
-              <DisplayAd className="my-2" style={{ minHeight: '250px' }} />
+            {/* ── Right Column: Sidebar with Dual Display Ads (4 cols) ── */}
+            <aside className="lg:col-span-4 space-y-6">
+              {/* Sidebar Ad 1: Top High-Visibility Display Ad */}
+              <DisplayAd className="my-0" style={{ minHeight: '250px' }} />
 
               {/* Sticky Table of Contents Directory */}
               <div className="apple-card p-5 sm:p-6 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card">
@@ -455,8 +455,10 @@ export default function WaterQualityGuidePage() {
                 </nav>
               </div>
 
-              {/* Ad 6: Sticky Sidebar Mid Display Ad */}
-              <DisplayAd className="my-2" style={{ minHeight: '250px' }} />
+              {/* Sidebar Ad 2: Sticky Mid-Page Display Ad */}
+              <div className="sticky top-20 z-10">
+                <DisplayAd className="my-0" style={{ minHeight: '250px' }} />
+              </div>
 
               {/* Hotline Callout */}
               <div className="apple-card p-5 bg-gradient-to-br from-amber-500/[0.08] to-amber-500/[0.02] border border-amber-300/40 rounded-3xl">

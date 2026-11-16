@@ -446,10 +446,10 @@ export default async function CityPage({ params }: Props) {
               </div>
             </main>
 
-            {/* ── Right Column: Sticky Sidebar (4 cols) ── */}
-            <aside className="lg:col-span-4 sticky top-20 self-start space-y-6">
-              {/* Ad 2: Sticky Sidebar Top Display Ad */}
-              <DisplayAd className="my-2" style={{ minHeight: '250px' }} />
+            {/* ── Right Column: Sidebar with Dual Display Ads (4 cols) ── */}
+            <aside className="lg:col-span-4 space-y-6">
+              {/* Sidebar Ad 1: Top High-Visibility Display Ad */}
+              <DisplayAd className="my-0" style={{ minHeight: '250px' }} />
 
               {/* Quick City Facts Bento */}
               <div className="apple-card p-5 sm:p-6 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card">
@@ -513,8 +513,10 @@ export default async function CityPage({ params }: Props) {
                 </div>
               )}
 
-              {/* Ad 5: Sticky Sidebar Mid Display Ad */}
-              <DisplayAd className="my-2" style={{ minHeight: '250px' }} />
+              {/* Sidebar Ad 2: Sticky Mid-Page Display Ad */}
+              <div className="sticky top-20 z-10">
+                <DisplayAd className="my-0" style={{ minHeight: '250px' }} />
+              </div>
 
               {/* Research & Testing Pillar Guides */}
               <div className="apple-card p-5 bg-gradient-to-br from-blue-50/70 to-sky-50/40 rounded-3xl border border-blue-200/70 shadow-apple-card">
