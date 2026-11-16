@@ -57,7 +57,7 @@ export default function BlogPage() {
       </div>
 
       {/* Ad 1: Top Hero High-Visibility Display Ad */}
-      <DisplayAd className="my-6" />
+      <DisplayAd className="my-3 sm:my-4" />
 
       {/* 2-Column Responsive Layout with Sticky Sidebar */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -112,7 +112,7 @@ export default function BlogPage() {
           </Link>
 
           {/* Ad 2: Mid-Feed In-Article Ad */}
-          <InArticleAd className="my-6" />
+          <InArticleAd className="my-4 sm:my-5" />
 
           {/* Article Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -164,7 +164,7 @@ export default function BlogPage() {
           </div>
 
           {/* Ad 5: Bottom Native Multiplex Recommendations Grid */}
-          <MultiplexAd className="my-8" />
+          <MultiplexAd className="my-6 sm:my-8" />
         </main>
 
         {/* ── Right Column: Sticky Sidebar (4 cols) ── */}

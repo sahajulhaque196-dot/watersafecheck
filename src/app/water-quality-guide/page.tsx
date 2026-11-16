@@ -171,7 +171,7 @@ export default function WaterQualityGuidePage() {
           </div>
 
           {/* Ad 1: Top Hero High-Visibility Display Ad */}
-          <DisplayAd className="my-6" />
+          <DisplayAd className="my-3 sm:my-4" />
 
           {/* ── 2-Column Responsive Layout with Sticky Sidebar ── */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -285,7 +285,7 @@ export default function WaterQualityGuidePage() {
               </section>
 
               {/* Ad 3: In-Content Editorial Fluid Ad (Post-Lead) */}
-              <InArticleAd className="my-8" />
+              <InArticleAd className="my-5 sm:my-6" />
 
               {/* Section 7: MCL Reference Table */}
               <section id="mcl-table" className="apple-card p-6 sm:p-8 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card scroll-mt-24">
@@ -323,7 +323,7 @@ export default function WaterQualityGuidePage() {
               </section>
 
               {/* Ad 4: Post-MCL Table / Pre-Filters High-CTR Display Ad */}
-              <DisplayAd className="my-8" />
+              <DisplayAd className="my-5 sm:my-6" />
 
               {/* Section 8: Certified Filters */}
               <section id="water-filters" className="apple-card p-6 sm:p-8 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card scroll-mt-24">
@@ -350,7 +350,7 @@ export default function WaterQualityGuidePage() {
               </section>
 
               {/* Ad 5: In-Content Editorial Fluid Ad (Post-Filters) */}
-              <InArticleAd className="my-8" />
+              <InArticleAd className="my-5 sm:my-6" />
 
               {/* Section 10: Regulatory Action */}
               <section id="take-action" className="apple-card p-6 sm:p-8 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card scroll-mt-24">
@@ -385,7 +385,7 @@ export default function WaterQualityGuidePage() {
               </section>
 
               {/* Ad 7: Pre-FAQ High-Intent Display Ad */}
-              <DisplayAd className="my-8" />
+              <DisplayAd className="my-5 sm:my-6" />
 
               {/* Section 11: FAQs */}
               <section id="faqs" className="apple-card p-6 sm:p-8 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card scroll-mt-24">
@@ -509,7 +509,7 @@ export default function WaterQualityGuidePage() {
           </div>
 
           {/* Ad 8: Bottom Native Multiplex Recommendations Grid */}
-          <MultiplexAd className="my-10" />
+          <MultiplexAd className="my-6 sm:my-8" />
         </div>
       </div>
     </>

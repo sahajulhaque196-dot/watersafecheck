@@ -196,7 +196,7 @@ export default async function ZipPage({ params }: Props) {
           </section>
 
           {/* Ad 1: Top Hero High-Visibility Display Ad */}
-          <DisplayAd className="my-6" />
+          <DisplayAd className="my-3 sm:my-4" />
 
           {/* ── 2-Column Responsive Layout with Sticky Sidebar ── */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -392,7 +392,7 @@ export default async function ZipPage({ params }: Props) {
               </div>
 
               {/* Ad 3: In-Content Editorial Fluid Ad (Post-Lead) */}
-              <InArticleAd className="my-8" />
+              <InArticleAd className="my-5 sm:my-6" />
 
               {/* ── Water Hardness & Minerals Section ── */}
               <div className="apple-card p-6 sm:p-8 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card">
@@ -463,7 +463,7 @@ export default async function ZipPage({ params }: Props) {
               </div>
 
               {/* Ad 4: Post-EPA Banner High-CTR Display Ad */}
-              <DisplayAd className="my-8" />
+              <DisplayAd className="my-5 sm:my-6" />
 
               {/* ── Violations Section ── */}
               <div className="apple-card p-6 sm:p-8 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card">
@@ -561,7 +561,7 @@ export default async function ZipPage({ params }: Props) {
               </div>
 
               {/* Ad 5: In-Content Editorial Ad (Post-Contaminants) */}
-              <InArticleAd className="my-8" />
+              <InArticleAd className="my-5 sm:my-6" />
 
               {/* ── Water Source + Environment ── */}
               <div className="apple-card p-6 sm:p-8 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card">
@@ -701,7 +701,7 @@ export default async function ZipPage({ params }: Props) {
               </div>
 
               {/* Ad 7: Pre-FAQ High-Intent Display Ad */}
-              <DisplayAd className="my-8" />
+              <DisplayAd className="my-5 sm:my-6" />
 
               {/* ── FAQ Section ── */}
               <div className="apple-card p-6 sm:p-8 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card">
@@ -725,7 +725,7 @@ export default async function ZipPage({ params }: Props) {
               </div>
 
               {/* Ad 8: Bottom Native Multiplex Recommendations Grid */}
-              <MultiplexAd className="my-10" />
+              <MultiplexAd className="my-6 sm:my-8" />
             </main>
 
             {/* ── Right Column: Sticky Sidebar (4 cols) ── */}

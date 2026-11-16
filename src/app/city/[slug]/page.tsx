@@ -225,7 +225,7 @@ export default async function CityPage({ params }: Props) {
           </section>
 
           {/* Ad 1: Top Hero High-Visibility Display Ad */}
-          <DisplayAd className="my-6" />
+          <DisplayAd className="my-3 sm:my-4" />
 
           {/* ── 2-Column Responsive Layout with Sticky Sidebar ── */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -388,7 +388,7 @@ export default async function CityPage({ params }: Props) {
               </section>
 
               {/* Ad 3: In-Content Editorial Fluid Ad (Post-Testing Protocol) */}
-              <InArticleAd className="my-8" />
+              <InArticleAd className="my-5 sm:my-6" />
 
               {/* Common Contaminants */}
               {topContaminants.length > 0 && (
@@ -408,7 +408,7 @@ export default async function CityPage({ params }: Props) {
               )}
 
               {/* Ad 4: Post-Contaminants / Above ZIP Directory High-CTR Display Ad */}
-              <DisplayAd className="my-8" />
+              <DisplayAd className="my-5 sm:my-6" />
 
               {/* Interactive ZIP Codes Directory */}
               <div className="apple-card p-6 sm:p-8 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card">
@@ -420,7 +420,7 @@ export default async function CityPage({ params }: Props) {
               </div>
 
               {/* Ad 6: Pre-FAQ High-Intent Display Ad */}
-              <DisplayAd className="my-8" />
+              <DisplayAd className="my-5 sm:my-6" />
 
               {/* City FAQs */}
               <div className="apple-card p-6 sm:p-8 bg-white/95 backdrop-blur-2xl rounded-3xl border border-slate-200/80 shadow-apple-card">
@@ -562,7 +562,7 @@ export default async function CityPage({ params }: Props) {
           </div>
 
           {/* Ad 7: Bottom Native Multiplex Recommendations Grid */}
-          <MultiplexAd className="my-10" />
+          <MultiplexAd className="my-6 sm:my-8" />
         </div>
       </div>
     </>

@@ -46,13 +46,13 @@ function BaseAdUnit({
   }, [])
 
   return (
-    <div ref={adRef} className={`adsense-wrapper my-6 w-full text-center no-print ${className}`}>
+    <div ref={adRef} className={`adsense-wrapper w-full text-center no-print ${className || 'my-4'}`}>
       {label && (
-        <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-semibold mb-1.5 select-none">
+        <span className="block text-[10px] uppercase tracking-widest text-slate-400 font-semibold mb-1 select-none">
           {label}
         </span>
       )}
-      <div className="overflow-hidden rounded-2xl bg-slate-50/60 border border-slate-200/60 p-2 sm:p-3 shadow-xs">
+      <div className="overflow-hidden rounded-2xl bg-slate-50/50 border border-slate-200/50 p-1.5 sm:p-2 shadow-xs">
         {children}
       </div>
     </div>
@@ -131,9 +131,9 @@ export function MultiplexAd({
 }
 
 // ─── Legacy / Convenience Aliases for existing page integration ─────────────
-export const AdTop = () => <DisplayAd className="my-4 max-w-7xl mx-auto" />
-export const AdSidebar = () => <DisplayAd className="my-4" style={{ minHeight: '250px' }} />
-export const AdInContent = () => <InArticleAd className="my-6 max-w-4xl mx-auto" />
-export const AdBottom = () => <MultiplexAd className="my-8 max-w-7xl mx-auto" />
+export const AdTop = () => <DisplayAd className="my-3 max-w-7xl mx-auto" />
+export const AdSidebar = () => <DisplayAd className="my-2" style={{ minHeight: '250px' }} />
+export const AdInContent = () => <InArticleAd className="my-4 max-w-4xl mx-auto" />
+export const AdBottom = () => <MultiplexAd className="my-6 max-w-7xl mx-auto" />
 
 

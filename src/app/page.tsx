@@ -198,7 +198,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── Apple Health Summary Island (National Metrics Bento Grid) ── */}
-      <section className="relative z-20 -mt-12 sm:-mt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+      <section className="relative z-20 -mt-12 sm:-mt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-5 sm:mb-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {/* Card 1: Database Size */}
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-sky-50/70 via-white to-white backdrop-blur-2xl p-4 sm:p-6 border-2 border-sky-400 hover:border-sky-500 shadow-[0_10px_30px_-4px_rgba(14,165,233,0.22)] hover:shadow-[0_18px_40px_-4px_rgba(14,165,233,0.35)] transition-all duration-300 group">
@@ -254,9 +254,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-6">
         {/* Ad 1: Top High-Visibility Display Ad */}
-        <DisplayAd className="my-6" />
+        <DisplayAd className="my-2 sm:my-3" />
 
         {/* ── Apple 3-Step Feature Process ── */}
         <section className="mb-16">
@@ -333,7 +333,7 @@ export default async function HomePage() {
         </section>
 
         {/* Ad 2: Mid-Page High-CTR Display Ad */}
-        <DisplayAd className="my-12" />
+        <DisplayAd className="my-5 sm:my-6" />
 
         {/* ── Interactive Water Filter Quiz Teaser ── */}
         <section className="mb-20">
@@ -446,7 +446,7 @@ export default async function HomePage() {
         </section>
 
         {/* Ad 3: In-Content Editorial Ad (After Contaminants) */}
-        <InArticleAd className="my-12 max-w-4xl mx-auto" />
+        <InArticleAd className="my-5 sm:my-6 max-w-4xl mx-auto" />
 
         {/* ── Trending Water Quality Reports ── */}
         <section className="mb-16">
@@ -519,7 +519,7 @@ export default async function HomePage() {
         </section>
 
         {/* Ad 4: Directory Break Display Ad */}
-        <DisplayAd className="my-12" />
+        <DisplayAd className="my-5 sm:my-6" />
 
         {/* ── Browse Water Quality by State ── */}
         <section id="states" className="mb-16">
@@ -591,7 +591,7 @@ export default async function HomePage() {
         </section>
 
         {/* Ad 5: High-Intent Pre-FAQ Display Ad */}
-        <DisplayAd className="my-12" />
+        <DisplayAd className="my-5 sm:my-6" />
 
         {/* ── Apple-Style FAQ Accordion ── */}
         <section className="mb-16">
@@ -647,7 +647,7 @@ export default async function HomePage() {
         </section>
 
         {/* Ad 6: Bottom Native Multiplex Recommendations Grid */}
-        <MultiplexAd className="my-14" />
+        <MultiplexAd className="my-6 sm:my-8" />
 
         {/* ── Author / Founder E-E-A-T Signature Box ── */}
         <section className="card p-6 sm:p-10 mb-8 border border-slate-200/90 shadow-apple-card">

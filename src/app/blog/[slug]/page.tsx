@@ -183,7 +183,7 @@ export default function BlogArticlePage({ params }: Props) {
           </header>
 
           {/* Ad 1: Top Hero High-Visibility Display Ad */}
-          <DisplayAd className="my-6" />
+          <DisplayAd className="my-3 sm:my-4" />
 
           {/* ── 2-Column Responsive Layout with Sticky Sidebar ── */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -227,10 +227,10 @@ export default function BlogArticlePage({ params }: Props) {
                     </section>
 
                     {/* Ad 3: Early In-Content Fluid Ad (after section 1) */}
-                    {idx === 1 && <InArticleAd className="my-8" />}
+                    {idx === 1 && <InArticleAd className="my-5 sm:my-6" />}
 
                     {/* Ad 4: Mid-Article High-CTR Display Ad (after section 3) */}
-                    {idx === 3 && <DisplayAd className="my-8" />}
+                    {idx === 3 && <DisplayAd className="my-5 sm:my-6" />}
                   </div>
                 ))}
 
@@ -268,7 +268,7 @@ export default function BlogArticlePage({ params }: Props) {
                 </section>
 
                 {/* Ad 6: Pre-FAQ High-Intent Display Ad */}
-                {article.faqs.length > 0 && <DisplayAd className="my-8" />}
+                {article.faqs.length > 0 && <DisplayAd className="my-5 sm:my-6" />}
 
                 {/* FAQ Accordions */}
                 {article.faqs.length > 0 && (
@@ -408,7 +408,7 @@ export default function BlogArticlePage({ params }: Props) {
           )}
 
           {/* Ad 7: Bottom Native Multiplex Recommendations Grid */}
-          <MultiplexAd className="my-12" />
+          <MultiplexAd className="my-6 sm:my-8" />
         </div>
       </div>
     </>

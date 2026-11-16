@@ -161,7 +161,7 @@ export default async function StatePage({ params }: Props) {
         </div>
 
         {/* Ad 1: Top High-Visibility Display Ad */}
-        <DisplayAd className="my-6" />
+        <DisplayAd className="my-3 sm:my-4" />
 
         {/* State Summary Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
@@ -249,7 +249,7 @@ export default async function StatePage({ params }: Props) {
         </div>
 
         {/* Ad 2: In-Content Editorial Fluid Ad (Post-Grade Distribution) */}
-        <InArticleAd className="my-10" />
+        <InArticleAd className="my-5 sm:my-6" />
 
         {/* Cities Grid */}
         <div className="mb-10">
@@ -279,7 +279,7 @@ export default async function StatePage({ params }: Props) {
         </div>
 
         {/* Ad 3: Directory Break High-CTR Display Ad */}
-        <DisplayAd className="my-10" />
+        <DisplayAd className="my-5 sm:my-6" />
 
         {/* Alphabetical Cities Directory */}
         <div className="card mb-8">
@@ -315,7 +315,7 @@ export default async function StatePage({ params }: Props) {
         </div>
 
         {/* Ad 4: Post-Directory High-CTR Display Ad */}
-        <DisplayAd className="my-10" />
+        <DisplayAd className="my-5 sm:my-6" />
 
         {/* Best & Worst ZIPs Bento */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -378,7 +378,7 @@ export default async function StatePage({ params }: Props) {
         </div>
 
         {/* Ad 5: Pre-FAQ High-Intent Display Ad */}
-        <DisplayAd className="my-10" />
+        <DisplayAd className="my-5 sm:my-6" />
 
         {/* State FAQs */}
         <div className="card mb-8">
@@ -420,7 +420,7 @@ export default async function StatePage({ params }: Props) {
         </div>
 
         {/* Ad 6: Bottom Native Multiplex Recommendations Grid */}
-        <MultiplexAd className="my-12" />
+        <MultiplexAd className="my-6 sm:my-8" />
       </div>
     </>
   )
