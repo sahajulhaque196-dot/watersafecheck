@@ -45,6 +45,12 @@ const nextConfig = {
         destination: '/sitemap-index.xml',
         permanent: true,
       },
+      // 4. Malformed slug redirects (fixes 404 from historical crawls)
+      {
+        source: '/city/naval-air-station/:path*',
+        destination: '/city/naval-air-station-jrb-tx',
+        permanent: true,
+      },
     ]
   },
   async headers() {
