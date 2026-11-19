@@ -12,6 +12,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'sw
 
 // Configuration — reads from env with fallback
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-WN6QCSJNY3'
+const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || 'GTM-MXSZRKP5'
 const ADSENSE_PUBLISHER_ID = process.env.NEXT_PUBLIC_ADSENSE_ID || 'ca-pub-1708825851821862'
 const SEARCH_CONSOLE_TOKEN = '4rwnkoJKqRTw6f1ePOF3zd-m7qzxtOCTh0t80dymWR8'
 
@@ -151,6 +152,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+            height="0"
+            width="0"
+            style={{ display: 'none', visibility: 'hidden' }}
+          />
+        </noscript>
+
         {/* Accessibility: skip navigation link */}
         <a
           href="#main-content"
@@ -163,18 +174,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main-content">{children}</main>
         <Footer />
 
-        {/* ── Google Analytics 4 ── */}
+        {/* ── Google Tag Manager & Google Analytics (GTM-MXSZRKP5) ── */}
         <Script
-          id="ga-script"
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          id="gtm-script"
+          src={`https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`}
           strategy="afterInteractive"
         />
         <Script
-          id="ga-init"
+          id="gtm-init"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               window.dataLayer = window.dataLayer || [];
+              window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
               gtag('config', '${GA_MEASUREMENT_ID}', {
